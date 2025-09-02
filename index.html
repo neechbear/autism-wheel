@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autism Wheel</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        #selectionContainer, #appContainer {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        #appContainer {
+            display: none; /* Initially hidden */
+        }
+        canvas {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        #controls {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Autism Wheel Generator</h1>
+
+    <div id="selectionContainer">
+        <label for="metric-selection">Choose a set of metrics:</label>
+        <select id="metric-selection">
+            <option value="">--Please choose an option--</option>
+            <option value="default">Default predefined metrics</option>
+        </select>
+    </div>
+
+    <div id="appContainer">
+        <canvas id="autismWheel" width="600" height="600"></canvas>
+        <div id="controls">
+            <button id="saveBtn">Save as Image</button>
+        </div>
+    </div>
+
+    <script>
+        const metricSelection = document.getElementById('metric-selection');
+        const selectionContainer = document.getElementById('selectionContainer');
+        const appContainer = document.getElementById('appContainer');
+        const canvas = document.getElementById('autismWheel');
+        const ctx = canvas.getContext('2d');
+        const saveBtn = document.getElementById('saveBtn');
+
+        const predefinedMetrics = {
+            'default': [
+                "Social interaction",
+                "Communication",
+                "Sensory processing",
+                "Repetitive behaviors and restricted interests",
+                "Executive functioning",
+                "Emotional regulation",
+                "Cognitive abilities and learning style",
+                "Motor skills and coordination",
+                "Co-occurring conditions"
+            ]
+        };
+
+        let currentMetrics = [];
+
+        let selections = {}; // To store user selections { metricIndex: [level1, level2] }
+        let activeSlice = null; // To track the slice currently being edited
+        let hoveredSegment = null; // To track the segment under the mouse
+
+        const chartConfig = {
+            centerX: canvas.width / 2,
+            centerY: canvas.height / 2,
+            radius: canvas.width / 2 - 60, // Leave space for labels
+            levels: 10,
+            labelFont: "12px Arial",
+            dataFont: "10px Arial",
+            lineColor: "#ccc",
+            labelColor: "#333",
+        };
+
+        const sliceColors = [
+            'rgba(255, 99, 132, 0.6)',
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 206, 86, 0.6)',
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(153, 102, 255, 0.6)',
+            'rgba(255, 159, 64, 0.6)',
+            'rgba(199, 199, 199, 0.6)',
+            'rgba(83, 102, 255, 0.6)',
+            'rgba(4, 216, 216, 0.6)'
+        ];
+
+        function drawChart() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const numMetrics = currentMetrics.length;
+            if (numMetrics === 0) return;
+
+            const angleSlice = (Math.PI * 2) / numMetrics;
+
+            // Draw the user's selection area
+            ctx.lineStyle = "none";
+            for (let i = 0; i < numMetrics; i++) {
+                const sliceSelections = selections[i] || [];
+                if (sliceSelections.length === 0) continue;
+
+                const anglePadding = 0.015;
+                const startAngle = (i * angleSlice - Math.PI / 2) + anglePadding;
+                const endAngle = ((i + 1) * angleSlice - Math.PI / 2) - anglePadding;
+
+                if (i === activeSlice && sliceSelections.length === 1) {
+                    // Dynamically highlight the range between the first click and the current hover position.
+                    const firstLevel = sliceSelections[0];
+                    const hoverLevel = (hoveredSegment && hoveredSegment.slice === i) ? hoveredSegment.level : firstLevel;
+
+                    const range = [firstLevel, hoverLevel].sort((a,b) => a - b);
+                    const minRadius = (chartConfig.radius / chartConfig.levels) * (range[0] - 1);
+                    const maxRadius = (chartConfig.radius / chartConfig.levels) * range[1];
+
+                    ctx.beginPath();
+                    ctx.arc(chartConfig.centerX, chartConfig.centerY, maxRadius, startAngle, endAngle, false);
+                    ctx.arc(chartConfig.centerX, chartConfig.centerY, minRadius, endAngle, startAngle, true);
+                    ctx.closePath();
+                    ctx.fillStyle = "rgba(255, 215, 0, 0.6)"; // Gold for active selection
+                    ctx.fill();
+                } else if (sliceSelections.length === 2) {
+                    // Highlight the final selected range for a completed slice
+                    const minRadius = (chartConfig.radius / chartConfig.levels) * (sliceSelections[0] - 1);
+                    const maxRadius = (chartConfig.radius / chartConfig.levels) * sliceSelections[1];
+                    ctx.beginPath();
+                    ctx.arc(chartConfig.centerX, chartConfig.centerY, maxRadius, startAngle, endAngle, false);
+                    ctx.arc(chartConfig.centerX, chartConfig.centerY, minRadius, endAngle, startAngle, true);
+                    ctx.closePath();
+                    ctx.fillStyle = sliceColors[i % sliceColors.length];
+                    ctx.fill();
+                }
+            }
+
+
+            // Draw the hover highlight
+            if (hoveredSegment) {
+                const { slice, level } = hoveredSegment;
+                const anglePadding = 0.015;
+                const startAngle = (slice * angleSlice - Math.PI / 2) + anglePadding;
+                const endAngle = ((slice + 1) * angleSlice - Math.PI / 2) - anglePadding;
+
+                const minRadius = (chartConfig.radius / chartConfig.levels) * (level - 1);
+                const maxRadius = (chartConfig.radius / chartConfig.levels) * level;
+
+                ctx.beginPath();
+                ctx.arc(chartConfig.centerX, chartConfig.centerY, maxRadius, startAngle, endAngle, false);
+                ctx.arc(chartConfig.centerX, chartConfig.centerY, minRadius, endAngle, startAngle, true);
+                ctx.closePath();
+                ctx.strokeStyle = "#000000";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.lineWidth = 1; // Reset line width
+            }
+
+            // Draw the concentric circles (web)
+            ctx.strokeStyle = chartConfig.lineColor;
+            for (let i = 1; i <= chartConfig.levels; i++) {
+                const levelRadius = (chartConfig.radius / chartConfig.levels) * i;
+                ctx.beginPath();
+                ctx.arc(chartConfig.centerX, chartConfig.centerY, levelRadius, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+
+            // Draw the radial lines (spokes)
+            for (let i = 0; i < numMetrics; i++) {
+                const angle = i * angleSlice - Math.PI / 2;
+                ctx.beginPath();
+                ctx.moveTo(chartConfig.centerX, chartConfig.centerY);
+                ctx.lineTo(chartConfig.centerX + chartConfig.radius * Math.cos(angle), chartConfig.centerY + chartConfig.radius * Math.sin(angle));
+                ctx.stroke();
+            }
+
+            // Draw metric labels
+            ctx.font = chartConfig.labelFont;
+            ctx.fillStyle = chartConfig.labelColor;
+            const labelRadius = chartConfig.radius + 20; // Increased padding
+
+            for (let i = 0; i < numMetrics; i++) {
+                const angle = (i * angleSlice) + (angleSlice / 2) - (Math.PI / 2);
+                const x = chartConfig.centerX + labelRadius * Math.cos(angle);
+                const y = chartConfig.centerY + labelRadius * Math.sin(angle);
+
+                ctx.save();
+                ctx.translate(x, y);
+
+                // Rotate the text to align with the slice
+                let rotation = angle + Math.PI / 2;
+                ctx.textAlign = "center";
+
+                // Set vertical alignment based on quadrant
+                if (angle > 0 && angle < Math.PI) {
+                    ctx.textBaseline = "top"; // Bottom half of the wheel
+                } else {
+                    ctx.textBaseline = "bottom"; // Top half of the wheel
+                }
+
+                // Flip text on the left side to keep it upright
+                if (angle > Math.PI / 2 || angle < -Math.PI / 2) {
+                    rotation += Math.PI;
+                }
+
+                ctx.rotate(rotation);
+
+                // Advanced text wrapping and alignment
+                const lineHeight = 14;
+                const maxWidth = (chartConfig.radius * angleSlice) * 0.8; // Use 80% of slice width
+                const words = currentMetrics[i].split(' ');
+                const lines = [];
+                let currentLine = '';
+
+                for (const word of words) {
+                    const testLine = currentLine ? currentLine + ' ' + word : word;
+                    const metrics = ctx.measureText(testLine);
+                    if (metrics.width > maxWidth && currentLine) {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine = testLine;
+                    }
+                }
+                lines.push(currentLine);
+
+                let start_y = 0;
+                if (ctx.textBaseline === 'bottom') {
+                    start_y = -(lines.length - 1) * lineHeight;
+                }
+
+                for (let j = 0; j < lines.length; j++) {
+                    ctx.fillText(lines[j], 0, start_y + (j * lineHeight));
+                }
+
+                ctx.restore();
+            }
+
+            // Draw level numbers
+            ctx.font = chartConfig.dataFont;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            for (let i = 1; i <= chartConfig.levels; i++) {
+                const levelRadius = (chartConfig.radius / chartConfig.levels) * i;
+                // Draw numbers along the top spoke
+                const angle = -Math.PI/2;
+                const x = chartConfig.centerX + levelRadius * Math.cos(angle);
+                const y = chartConfig.centerY + levelRadius * Math.sin(angle);
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.beginPath();
+                ctx.arc(x, y-1, 8, 0, 2 * Math.PI);
+                ctx.fill();
+
+                ctx.fillStyle = chartConfig.labelColor;
+                ctx.fillText(i, x, y);
+            }
+        }
+
+        function updateURL() {
+            const params = new URLSearchParams();
+            const metricKey = Object.keys(predefinedMetrics).find(key => predefinedMetrics[key] === currentMetrics);
+            if (metricKey) {
+                params.set('metrics', metricKey);
+
+                const selectionString = currentMetrics.map((_, i) => {
+                    return selections[i] ? selections[i].join(',') : '';
+                }).join(';');
+                params.set('s', selectionString);
+            }
+            history.pushState(null, '', '?' + params.toString());
+        }
+
+        function loadStateFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const metricKey = params.get('metrics');
+            const selectionString = params.get('s');
+
+            if (predefinedMetrics[metricKey]) {
+                currentMetrics = predefinedMetrics[metricKey];
+
+                if (selectionString) {
+                    const selectionArray = selectionString.split(';');
+                    selections = Object.fromEntries(currentMetrics.map((_, i) => {
+                        if (selectionArray[i]) {
+                            return [i, selectionArray[i].split(',').map(Number)];
+                        }
+                        return [i, []];
+                    }));
+                } else {
+                     selections = Object.fromEntries(currentMetrics.map((_, i) => [i, []]));
+                }
+
+                selectionContainer.style.display = 'none';
+                appContainer.style.display = 'block';
+                drawChart();
+                return true; // State loaded
+            }
+            return false; // No state loaded
+        }
+
+        function handleCanvasClick(event) {
+            const rect = canvas.getBoundingClientRect();
+            const segment = getSegmentFromCoordinates(event.clientX - rect.left, event.clientY - rect.top);
+
+            if (!segment) return;
+
+            const { slice: metricIndex, level } = segment;
+
+            if (activeSlice === null) {
+                // This is the first click, starting a new selection for a slice.
+                selections[metricIndex] = [level];
+                activeSlice = metricIndex;
+            } else {
+                // A slice is already active.
+                if (activeSlice === metricIndex) {
+                    // This is the second click, completing the selection for the active slice.
+                    selections[metricIndex].push(level);
+                    // Ensure the selection is always [min, max]
+                    selections[metricIndex].sort((a, b) => a - b);
+                    activeSlice = null; // Unlock to allow selection of other slices.
+                }
+                // If activeSlice is not null and not equal to metricIndex, do nothing.
+            }
+            drawChart();
+            updateURL();
+        }
+
+        metricSelection.addEventListener('change', (event) => {
+            const selectedValue = event.target.value;
+            if (predefinedMetrics[selectedValue]) {
+                currentMetrics = predefinedMetrics[selectedValue];
+                // Reset selections when metrics change
+                selections = Object.fromEntries(currentMetrics.map((_, i) => [i, []]));
+                selectionContainer.style.display = 'none';
+                appContainer.style.display = 'block';
+                drawChart();
+                updateURL();
+            }
+        });
+
+        function handleSaveImage() {
+            // Temporarily draw with a white background for the saved image
+            // 1. Save current canvas state
+            const originalCanvasState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+            // 2. Draw a white background
+            ctx.globalCompositeOperation = 'destination-over';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 3. Get the data URL
+            const dataURL = canvas.toDataURL('image/png');
+
+            // 4. Restore original canvas state
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.putImageData(originalCanvasState, 0, 0);
+            ctx.globalCompositeOperation = 'source-over'; // reset to default
+
+            // 5. Trigger download
+            const link = document.createElement('a');
+            link.download = 'autism-wheel.png';
+            link.href = dataURL;
+            link.click();
+        }
+
+        function getSegmentFromCoordinates(x, y) {
+            const dx = x - chartConfig.centerX;
+            const dy = y - chartConfig.centerY;
+
+            const angle = Math.atan2(dy, dx);
+            const radius = Math.sqrt(dx * dx + dy * dy);
+
+            if (radius > chartConfig.radius) return null;
+
+            const numMetrics = currentMetrics.length;
+            const angleSlice = (Math.PI * 2) / numMetrics;
+            const normalizedAngle = (angle + Math.PI / 2 + 2 * Math.PI) % (2 * Math.PI);
+            const slice = Math.floor(normalizedAngle / angleSlice);
+            const level = Math.floor((radius / chartConfig.radius) * chartConfig.levels) + 1;
+
+            if (level > chartConfig.levels) return null;
+            return { slice, level };
+        }
+
+        function handleMouseMove(event) {
+            const rect = canvas.getBoundingClientRect();
+            const segment = getSegmentFromCoordinates(event.clientX - rect.left, event.clientY - rect.top);
+
+            if (segment) {
+                if (!hoveredSegment || hoveredSegment.slice !== segment.slice || hoveredSegment.level !== segment.level) {
+                    hoveredSegment = segment;
+                    drawChart();
+                }
+            } else if (hoveredSegment !== null) {
+                hoveredSegment = null;
+                drawChart();
+            }
+        }
+
+        function handleMouseOut() {
+            if (hoveredSegment !== null) {
+                hoveredSegment = null;
+                drawChart();
+            }
+        }
+
+        canvas.addEventListener('click', handleCanvasClick);
+        saveBtn.addEventListener('click', handleSaveImage);
+        canvas.addEventListener('mousemove', handleMouseMove);
+        canvas.addEventListener('mouseout', handleMouseOut);
+
+
+        // Initial load
+        function init() {
+            if (!loadStateFromURL()) {
+                // No state in URL, show default selection screen
+                selectionContainer.style.display = 'block';
+                appContainer.style.display = 'none';
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
