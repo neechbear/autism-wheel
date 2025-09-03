@@ -3,25 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autism Wheel Template Browser</title>
+    <title>Autism Wheel Generator</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 </head>
 <body>
-    <h1>Autism Wheel Template Browser</h1>
+    <h1>Autism Wheel Generator</h1>
+
     <div class="container">
         <div class="selector-container">
-            <label for="template-selector">Select a Template:</label>
-            <select id="template-selector"></select>
+            <label for="template-selector">Choose a template to begin:</label>
+            <select id="template-selector">
+                <option value="">--Please choose a template--</option>
+            </select>
         </div>
-        <div id="template-info" class="template-info-container">
+
+        <div id="template-info">
             <h2 id="template-name"></h2>
             <p id="template-description"></p>
             <a id="template-source" href="" target="_blank"></a>
-            <h3>Metrics</h3>
-            <ul id="template-metrics"></ul>
+        </div>
+
+        <div id="chart-container">
+            <canvas id="autismWheel" width="600" height="600"></canvas>
+            <div id="controls">
+                <button id="saveBtn">Save as Image</button>
+            </div>
         </div>
     </div>
+
+    <script src="js/chart.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
