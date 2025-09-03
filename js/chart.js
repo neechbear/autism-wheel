@@ -194,13 +194,16 @@ const AutismWheelChart = {
         if (!segment) return;
 
         const { slice: metricIndex, level } = segment;
+
         if (this.activeSlice === null) {
             this.selections[metricIndex] = [level];
             this.activeSlice = metricIndex;
-        } else if (this.activeSlice === metricIndex) {
-            this.selections[metricIndex].push(level);
-            this.selections[metricIndex].sort((a, b) => a - b);
-            this.activeSlice = null;
+        } else {
+            if (this.activeSlice === metricIndex) {
+                this.selections[metricIndex].push(level);
+                this.selections[metricIndex].sort((a, b) => a - b);
+                this.activeSlice = null;
+            }
         }
         this.drawChart();
     },
