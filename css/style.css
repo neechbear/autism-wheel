@@ -1,0 +1,31 @@
+body {
+    font-family: sans-serif;
+    margin: 2em;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2em;
+}
+
+.selector-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#template-selector {
+    padding: 0.5em;
+    font-size: 1em;
+}
+
+.template-info-container {
+    border: 1px solid #ccc;
+    padding: 1em;
+    border-radius: 5px;
+}
+
+#template-metrics {
+    list-style-type: disc;
+    padding-left: 20px;
+}
