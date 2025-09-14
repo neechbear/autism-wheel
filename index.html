@@ -1,38 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autism Wheel Generator</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
-</head>
-<body>
-    <h1>Autism Wheel Generator</h1>
 
-    <div class="container">
-        <div class="selector-container">
-            <label for="template-selector">Choose a template to begin:</label>
-            <select id="template-selector">
-                <option value="">--Please choose a template--</option>
-            </select>
-        </div>
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Single Page Web Application</title>
+    </head>
 
-        <div id="template-info">
-            <h2 id="template-name"></h2>
-            <p id="template-description"></p>
-            <a id="template-source" href="" target="_blank"></a>
-        </div>
-
-        <div id="chart-container">
-            <canvas id="autismWheel" width="600" height="600"></canvas>
-            <div id="controls">
-                <button id="saveBtn">Save as Image</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/chart.js"></script>
-    <script src="js/main.js"></script>
-</body>
-</html>
+    <body>
+      <div id="root"></div>
+      <script type="module" src="/src/main.tsx"></script>
+    </body>
+  </html>
+  
