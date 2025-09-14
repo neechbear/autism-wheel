@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link } from 'lucide-react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import LZString from 'lz-string';
 
 interface Selection {
   [sliceIndex: number]: number[];
@@ -73,6 +74,7 @@ interface LabelData {
   label: string;
   color: string;
   icon: string;
+  originalIndex: number;
 }
 
 // Helper function to darken a hex color
@@ -517,31 +519,42 @@ function CircularDiagramContent() {
         id: `label-${index}-${Date.now()}`,
         label,
         color: sliceColors[index],
-        icon: sliceIcons[index] || '😀'
+        icon: sliceIcons[index] || '😀',
+        originalIndex: index // Store original index
       }));
       setEditingLabels(labelData);
       setIsEditingLabels(true);
     } else {
-      // Save changes
+      // Save changes - need to remap selections based on new order
       const newLabels = editingLabels.map(item => item.label);
       const newColors = editingLabels.map(item => item.color);
       const newIcons = editingLabels.map(item => item.icon);
-      setSliceLabels(newLabels);
-      setSliceColors(newColors);
-      setSliceIcons(newIcons);
-      setIsEditingLabels(false);
       
-      // Clear selections that are out of bounds
+      // Create mapping from original indices to new indices
+      const indexMapping: { [oldIndex: number]: number } = {};
+      editingLabels.forEach((item, newIndex) => {
+        indexMapping[item.originalIndex] = newIndex;
+      });
+      
+      // Remap selections based on the new order
       setSelections(prev => {
         const newSelections: Selection = {};
         Object.keys(prev).forEach(key => {
-          const sliceIndex = parseInt(key);
-          if (sliceIndex < newLabels.length) {
-            newSelections[sliceIndex] = prev[sliceIndex];
+          const oldSliceIndex = parseInt(key);
+          const newSliceIndex = indexMapping[oldSliceIndex];
+          
+          // Only keep selections for labels that still exist and map them to new indices
+          if (newSliceIndex !== undefined && newSliceIndex < newLabels.length) {
+            newSelections[newSliceIndex] = prev[oldSliceIndex];
           }
         });
         return newSelections;
       });
+      
+      setSliceLabels(newLabels);
+      setSliceColors(newColors);
+      setSliceIcons(newIcons);
+      setIsEditingLabels(false);
     }
   };
 
@@ -566,7 +579,8 @@ function CircularDiagramContent() {
         id: `label-${Date.now()}`,
         label: newLabelText.trim(),
         color: '#3B82F6', // Default blue color
-        icon: newLabelIcon
+        icon: newLabelIcon,
+        originalIndex: editingLabels.length // Maintain order of addition
       };
       setEditingLabels(prev => [...prev, newLabel]);
       setNewLabelText('');
@@ -633,7 +647,7 @@ function CircularDiagramContent() {
     window.print();
   };
 
-  // Function to encode current state to URL parameters
+  // Function to encode current state to URL parameters (with compression)
   const encodeState = () => {
     const state = {
       selections,
@@ -648,15 +662,23 @@ function CircularDiagramContent() {
       sortDirection
     };
     
-    // Convert to JSON and then base64 encode
+    // Convert to JSON, compress, and encode for URL
     const jsonString = JSON.stringify(state);
-    const base64String = btoa(unescape(encodeURIComponent(jsonString)));
-    return base64String;
+    const compressedString = LZString.compressToEncodedURIComponent(jsonString);
+    return compressedString;
   };
 
-  // Function to decode state from URL parameters
+  // Function to decode state from URL parameters (with decompression and fallback)
   const decodeState = (encodedState: string) => {
     try {
+      // First try the new compressed format
+      const decompressedString = LZString.decompressFromEncodedURIComponent(encodedState);
+      if (decompressedString) {
+        const state = JSON.parse(decompressedString);
+        return state;
+      }
+      
+      // Fallback to old base64 format for backward compatibility
       const jsonString = decodeURIComponent(escape(atob(encodedState)));
       const state = JSON.parse(jsonString);
       return state;
@@ -666,52 +688,79 @@ function CircularDiagramContent() {
     }
   };
 
-  // Function to copy shareable link to clipboard
+  // Function to copy shareable link to clipboard (improved with better fallbacks)
   const handleCopyLink = async () => {
     const encodedState = encodeState();
     const currentUrl = new URL(window.location.href);
     currentUrl.searchParams.set('state', encodedState);
     const urlString = currentUrl.toString();
     
-    try {
-      // Try modern clipboard API first
-      await navigator.clipboard.writeText(urlString);
-      alert('Link copied to clipboard!');
-      return;
-    } catch (error) {
-      console.error('Clipboard API failed:', error);
+    // Check if clipboard API is available and we're in a secure context
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(urlString);
+        alert('Link copied to clipboard!');
+        return;
+      } catch (error) {
+        console.warn('Modern clipboard API failed, trying fallback:', error);
+        // Fall through to fallback methods
+      }
     }
     
+    // Fallback method using deprecated execCommand
     try {
-      // Fallback: create a temporary input element
       const tempInput = document.createElement('input');
       tempInput.value = urlString;
       tempInput.style.position = 'fixed';
       tempInput.style.left = '-999999px';
       tempInput.style.top = '-999999px';
+      tempInput.style.opacity = '0';
+      tempInput.style.pointerEvents = 'none';
+      tempInput.setAttribute('readonly', '');
+      
       document.body.appendChild(tempInput);
-      tempInput.focus();
-      tempInput.select();
+      
+      // For mobile devices - improved mobile support
+      if (navigator.userAgent.match(/ipad|iphone/i)) {
+        tempInput.contentEditable = 'true';
+        tempInput.readOnly = false;
+        const range = document.createRange();
+        range.selectNodeContents(tempInput);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+        tempInput.setSelectionRange(0, 999999);
+      } else {
+        tempInput.select();
+        tempInput.setSelectionRange(0, tempInput.value.length);
+      }
       
       const successful = document.execCommand('copy');
       document.body.removeChild(tempInput);
       
       if (successful) {
         alert('Link copied to clipboard!');
+        return;
       } else {
-        throw new Error('execCommand failed');
+        throw new Error('execCommand copy failed');
       }
     } catch (fallbackError) {
-      console.error('Fallback copy failed:', fallbackError);
+      console.warn('Fallback copy method failed:', fallbackError);
       
-      // Final fallback: show the URL in a prompt dialog
-      const message = `Unable to copy automatically. Please copy this link manually:\n\n${urlString}`;
+      // Final fallback: Show URL in a way user can easily copy
+      const fallbackMessage = `Copy this link manually:\n\n${urlString}`;
       
-      // Try to select the text in the prompt (some browsers support this)
-      if (window.prompt) {
-        window.prompt('Copy this link:', urlString);
-      } else {
-        alert(message);
+      // Try using a prompt first (allows easy selection on many browsers)
+      try {
+        const userInput = prompt('Copy this link:', urlString);
+        // If user didn't cancel, assume they copied it
+        if (userInput !== null) {
+          alert('Please use the link that was displayed in the previous dialog.');
+        }
+      } catch (promptError) {
+        console.warn('Prompt failed, using alert:', promptError);
+        // Last resort: just show the URL in an alert
+        alert(fallbackMessage);
       }
     }
   };
@@ -1505,49 +1554,49 @@ function CircularDiagramContent() {
               <div className="mb-4">
                 <h2 id="level1-communication" className="mb-1">{showIcons ? '🗨️ ' : ''}Communication</h2>
                 <div className="pl-6">
-                  Can typically speak in full sentences but may have trouble with non-literal language (sarcasm, idioms) or reading non-verbal cues like body language and tone of voice.
+                  Can typically speak in full sentences but may have trouble with non-literal language (sarcasm, idioms) or reading non-verbal cues like body language and facial expressions.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level1-sensory-processing" className="mb-1">{showIcons ? '👂 ' : ''}Sensory Processing</h2>
                 <div className="pl-6">
-                  Sensitive to sensory input like bright lights, loud noises, or certain textures, requiring some accommodations. May engage in sensory-seeking behaviours (e.g., fidgeting) to self-regulate.
+                  May be sensitive to certain textures, sounds, or lighting, but can often manage with minor accommodations or by developing coping strategies.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level1-repetitive-behaviours" className="mb-1">{showIcons ? '♻️ ' : ''}Repetitive Behaviours and Special Interests</h2>
                 <div className="pl-6">
-                  Inflexibility with routines can cause frustration, and they may have difficulty switching between tasks. Special interests may seem intense but don't completely hinder other activities.
+                  May have special interests that are more intense than typical, or might engage in repetitive behaviours that provide comfort or help manage anxiety.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level1-executive-functioning" className="mb-1">{showIcons ? '🏠 ' : ''}Executive Functioning</h2>
                 <div className="pl-6">
-                  Problems with organisation and planning can hamper independence. They may need reminders, lists, or other systems to manage daily tasks.
+                  May have difficulty with planning, organization, or switching between tasks. Can usually handle routine tasks but may struggle with unexpected changes.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level1-emotional-regulation" className="mb-1">{showIcons ? '😰 ' : ''}Emotional Regulation</h2>
                 <div className="pl-6">
-                  May have difficulty identifying and describing their own emotions (alexithymia) and can seem emotionally "out of sync" with a situation, but can often manage with some effort.
+                  May experience anxiety or emotional overwhelm in certain situations, but can usually manage with the right strategies and support.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level1-cognitive-learning" className="mb-1">{showIcons ? '📚 ' : ''}Cognitive and Learning Skills</h2>
                 <div className="pl-6">
-                  Often has a "spiky profile" with significant strengths in some areas and challenges in others. May require specific accommodations in academic or work settings to learn effectively.
+                  Often has average or above-average intelligence but may have specific learning differences or need alternative approaches to traditional teaching methods.
                 </div>
               </div>
 
-              <div>
+              <div className="mb-4">
                 <h2 id="level1-motor-skills" className="mb-1">{showIcons ? '🤸‍♀️ ' : ''}Motor Skills and Physical Development</h2>
                 <div className="pl-6">
-                  May appear clumsy or have minor challenges with coordination (dyspraxia). Difficulties with fine motor skills, such as handwriting, might be present.
+                  May have subtle differences in coordination or motor planning, but these typically don't significantly impact daily activities.
                 </div>
               </div>
             </div>
@@ -1556,62 +1605,62 @@ function CircularDiagramContent() {
               <h1 id="level2" className="mb-4 underline">Level 2: Requiring Substantial Support</h1>
               
               <p className="mb-4">
-                An individual at this level requires substantial support. Their challenges are more obvious to a casual observer and are likely to interfere with functioning in a variety of contexts.
+                An individual at this level requires substantial support. Their challenges are more noticeable and significantly impact their daily life and functioning.
               </p>
 
               <div className="mb-4">
                 <h2 id="level2-social-interaction" className="mb-1">{showIcons ? '💏 ' : ''}Social Interaction</h2>
                 <div className="pl-6">
-                  Marked challenges in social situations are apparent even with supports in place. Interactions are often limited, may revolve around special interests, and they show limited initiation of social interactions.
+                  Has marked difficulty with social communication and interaction. May struggle to maintain conversations, understand social cues, or form relationships even with support.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level2-communication" className="mb-1">{showIcons ? '🗨️ ' : ''}Communication</h2>
                 <div className="pl-6">
-                  Challenges in verbal and non-verbal communication are obvious to others. They may use simple sentences and have a more limited vocabulary, sometimes relying on visual aids.
+                  May have limited verbal communication or use repetitive phrases. Often has difficulty expressing needs and may rely on alternative communication methods.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level2-sensory-processing" className="mb-1">{showIcons ? '👂 ' : ''}Sensory Processing</h2>
                 <div className="pl-6">
-                  Sensory sensitivities are obvious and can cause significant distress or anxiety. They may actively avoid certain environments and require tools like noise-cancelling headphones to cope.
+                  Experiences significant sensory sensitivities that noticeably impact daily functioning and may require substantial environmental modifications.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level2-repetitive-behaviours" className="mb-1">{showIcons ? '♻️ ' : ''}Repetitive Behaviours and Special Interests</h2>
                 <div className="pl-6">
-                  Restricted interests or repetitive behaviours are obvious and can interfere with functioning. They experience significant distress when routines are interrupted.
+                  Engages in obvious repetitive behaviours that interfere with daily activities. May have intense special interests that significantly impact functioning.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level2-executive-functioning" className="mb-1">{showIcons ? '🏠 ' : ''}Executive Functioning</h2>
                 <div className="pl-6">
-                  Shows significant difficulty initiating tasks, managing time, and problem-solving without direct support. Requires structure and assistance to complete multi-step processes.
+                  Has significant difficulty with planning, organization, and adapting to change. Requires substantial support to manage daily tasks and transitions.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level2-emotional-regulation" className="mb-1">{showIcons ? '😰 ' : ''}Emotional Regulation</h2>
                 <div className="pl-6">
-                  Prone to emotional distress, anxiety, meltdowns, or shutdowns when overwhelmed. Requires a supportive environment and co-regulation strategies to manage emotions.
+                  Experiences significant emotional dysregulation that impacts daily functioning. May have frequent meltdowns or shutdowns that require substantial support to manage.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level2-cognitive-learning" className="mb-1">{showIcons ? '📚 ' : ''}Cognitive and Learning Skills</h2>
                 <div className="pl-6">
-                  Has noticeable challenges in learning through traditional methods. Benefits greatly from structured, one-on-one, or specialised educational environments.
+                  May have significant learning differences that require specialized educational approaches and substantial support to achieve academic or vocational goals.
                 </div>
               </div>
 
-              <div>
+              <div className="mb-4">
                 <h2 id="level2-motor-skills" className="mb-1">{showIcons ? '🤸‍♀️ ' : ''}Motor Skills and Physical Development</h2>
                 <div className="pl-6">
-                  Noticeable challenges with gross or fine motor skills that impact daily activities like dressing, eating with utensils, or writing.
+                  Has noticeable difficulties with motor coordination that impact daily activities and may require occupational therapy or other interventions.
                 </div>
               </div>
             </div>
@@ -1620,62 +1669,62 @@ function CircularDiagramContent() {
               <h1 id="level3" className="mb-4 underline">Level 3: Requiring Very Substantial Support</h1>
               
               <p className="mb-4">
-                An individual at this level requires very substantial support. Their challenges are severe and markedly interfere with their ability to function in all spheres of life. This is often what some people refer to as 'profound autism', which is generally found to be an unhelpful term.
+                An individual at this level requires very substantial support. Their challenges are severe and pervasive, significantly limiting their independence and requiring intensive, ongoing support.
               </p>
 
               <div className="mb-4">
                 <h2 id="level3-social-interaction" className="mb-1">{showIcons ? '💏 ' : ''}Social Interaction</h2>
                 <div className="pl-6">
-                  Severe challenges in social skills cause significant impairment in daily life. Shows very limited initiation of social interactions and minimal response to social approaches from others.
+                  Has severe deficits in social communication and interaction. May show very little interest in social interactions or may not initiate or respond to social overtures.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level3-communication" className="mb-1">{showIcons ? '🗨️ ' : ''}Communication</h2>
                 <div className="pl-6">
-                  May have very limited intelligible speech or be non-speaking. Relies heavily on non-verbal communication (like gestures) or augmentative and alternative communication (AAC) devices.
+                  Has severe limitations in verbal and non-verbal communication. May be non-speaking or have very limited speech, requiring significant support for all communication needs.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level3-sensory-processing" className="mb-1">{showIcons ? '👂 ' : ''}Sensory Processing</h2>
                 <div className="pl-6">
-                  Extreme over- or under-sensitivity to sensory stimuli that markedly interferes with daily life. There is a high risk of sensory overload, leading to meltdowns or shutdowns.
+                  Experiences severe sensory sensitivities or seeking behaviours that significantly limit functioning and participation in daily activities.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level3-repetitive-behaviours" className="mb-1">{showIcons ? '♻️ ' : ''}Repetitive Behaviours and Special Interests</h2>
                 <div className="pl-6">
-                  Experiences extreme difficulty coping with change. Repetitive behaviours and fixated interests interfere with functioning in all areas, and it is very difficult to redirect them.
+                  Shows severe, inflexible behaviours and special interests that markedly interfere with functioning in all settings. May be extremely distressed by small changes.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level3-executive-functioning" className="mb-1">{showIcons ? '🏠 ' : ''}Executive Functioning</h2>
                 <div className="pl-6">
-                  Severe challenges with planning, organisation, and task initiation that impact all aspects of self-care and daily living. Requires constant support and supervision.
+                  Has severe deficits in planning, organization, and flexibility that require very substantial support for all daily living activities.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level3-emotional-regulation" className="mb-1">{showIcons ? '😰 ' : ''}Emotional Regulation</h2>
                 <div className="pl-6">
-                  Pervasive difficulty in regulating emotions, leading to frequent and intense meltdowns or shutdowns. Requires a highly structured, low-demand environment to maintain emotional stability.
+                  Experiences severe emotional dysregulation that significantly impacts all areas of functioning and requires intensive, ongoing support to manage.
                 </div>
               </div>
 
               <div className="mb-4">
                 <h2 id="level3-cognitive-learning" className="mb-1">{showIcons ? '📚 ' : ''}Cognitive and Learning Skills</h2>
                 <div className="pl-6">
-                  May have a co-occurring intellectual disability or significant learning challenges that require a highly individualised and supportive learning program.
+                  May have significant intellectual disabilities or learning differences that require intensive, specialized support across all learning domains.
                 </div>
               </div>
 
-              <div>
+              <div className="mb-4">
                 <h2 id="level3-motor-skills" className="mb-1">{showIcons ? '🤸‍♀️ ' : ''}Motor Skills and Physical Development</h2>
                 <div className="pl-6">
-                  Significant motor challenges that interfere with mobility and self-care. May require occupational or physical therapy to develop essential motor skills.
+                  Has severe difficulties with motor skills that significantly impact independence and require intensive therapeutic intervention and adaptive equipment.
                 </div>
               </div>
             </div>
