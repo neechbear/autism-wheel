@@ -45,12 +45,16 @@ const INITIAL_SLICE_ICONS = [
 // Common emoji categories for the picker
 const EMOJI_CATEGORIES = {
   'People': ['😀', '😊', '🥰', '😎', '🤔', '😰', '😭', '🥱', '😴', '🤗', '🤓', '😇', '🙂', '😉', '😍', '🤩', '😘', '😗', '☺️', '😚', '😙', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤭', '🤫', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😔', '😪', '🤤', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '🧐'],
+  'Body Parts': ['👁️', '👀', '👂', '👃', '👄', '👅', '🦷', '🧠', '🫀', '🫁', '👶', '🧒', '👦', '👧', '🧑', '👨', '👩', '🧓', '👴', '👵', '👤', '👥', '🗣️', '👣', '🦴', '🦵', '🦶', '💪', '🤳', '👈', '👉', '👆', '👇', '☝️', '✋', '🤚', '🖐️', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👍', '👎', '👊', '✊', '🤛', '🤜', '🫳', '🫴', '👐', '🙌', '👏', '🤝', '🙏'],
+  'Animals': ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🪲', '🐛', '🦋', '🐌', '🐞', '🐜', '🪰', '🪱', '🦗', '🕷️', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🦬', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🦙', '🐐', '🦌', '🐕', '🐩', '🦮', '🐕‍🦺', '🐈', '🐈‍⬛'],
+  'Food': ['🍎', '🍏', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🫑', '🌽', '🥕', '🫒', '🧄', '🧅', '🥔', '🍠', '🥐', '🥖', '🍞', '🥨', '🥯', '🥞', '🧇', '🧀', '🍖', '🍗', '🥩', '🥓', '🍔', '🍟', '🍕', '🌭', '🥪', '🌮', '🌯', '🫔', '🥙', '🧆', '🥚', '🍳', '🥘', '🍲', '🫕', '🥗', '🍿', '🧈', '🧂', '🥫', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🍝', '🍠', '🍢', '🍣', '🍤', '🍥', '🥮', '🍡', '🥟', '🥠', '🥡', '🦪', '🍦', '🍧', '🍨', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯', '🍼', '🥛', '☕', '🫖', '🍵', '🍶', '🍾', '🍷', '🍸', '🍹', '🍺', '🍻', '🥂', '🥃', '🫗', '🥤', '🧋', '🧃', '🧉', '🧊'],
+  'Medical & Therapy': ['🏥', '⚕️', '🩺', '💊', '💉', '🩹', '🩼', '🦽', '🦼', '🧑‍⚕️', '👨‍⚕️', '👩‍⚕️', '🧬', '🦠', '🧪', '🔬', '🌡️', '🩸', '🫁', '🧠', '🫀', '🦴', '👁️‍🗨️', '🗨️', '💬', '🗣️', '👂', '👁️', '🔍', '🔎', '📋', '📝', '📊', '📈', '📉', '🎯', '🧩', '🎲', '🃏', '🎴', '🀄'],
   'Gestures': ['👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '👊', '✊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏'],
-  'Activities': ['🤸‍♀️', '🤸‍♂️', '🏃‍♀️', '🏃‍♂️', '🚶‍♀️', '🚶‍♂️', '🧘‍♀️', '🧘‍♂️', '🏋️‍♀️', '🏋️‍♂️', '🤾‍♀️', '🤾‍♂️', '🏌️‍♀️', '🏌️‍♂️', '🏄‍♀️', '🏄‍♂️', '🚣‍♀️', '🚣‍♂️', '🏊‍♀️', '🏊‍♂️', '⛹️‍♀️', '⛹️‍♂️', '🏇', '🧗‍♀️', '🧗‍♂️', '🚴‍♀️', '🚴‍♂️', '🤹‍♀️', '🤹‍♂️'],
-  'Objects': ['📱', '💻', '⌚', '📷', '🎥', '📺', '🎮', '🕹️', '🎧', '🎤', '🎵', '🎶', '🎼', '🎹', '🥁', '🎷', '🎺', '🎸', '🪕', '🎻', '📚', '📖', '📝', '✏️', '🖍️', '🖊️', '🖋️', '✒️', '🖌️', '📐', '📏', '🧮', '📌', '📍', '✂️', '🗃️', '🗂️', '📂', '📁', '🗄️'],
-  'Symbols': ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚡', '💫', '⭐', '🌟', '✨', '☄️', '💥', '🔥', '🌈', '☀️', '🌞', '🌙', '🌛', '🌜', '🌚', '🌕', '🌖', '🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '☁️', '⛅', '⛈️', '🌤️', '🌦️', '🌧️', '🌩️', '🌨️', '❄️', '☃️', '⛄', '🌬️', '💨', '🌪️', '🌫️', '☂️', '☔', '💧', '💦', '🌊'],
-  'Buildings': ['🏠', '🏡', '🏘️', '🏚️', '🏗️', '🏭', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '🏩', '💒', '🏛️', '⛪', '🕌', '🛕', '🕍', '⛩️', '🕋', '⛲', '⛺', '🌁', '🌃', '🏙️', '🌄', '🌅', '🌆', '🌇', '🌉', '♨️', '���', '🎡', '🎢', '💈', '🎪'],
-  'Misc': ['♻️', '🔄', '🔁', '🔂', '⏩', '⏪', '⏫', '⏬', '◀️', '▶️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️', '⤴️', '⤵️', '🔀', '🔃', '➕', '➖', '➗', '✖️', '♾️', '💲', '💱', '™️', '©️', '®️', '〰️', '➰', '➿', '🔚', '🔙', '🔛', '🔝', '🔜']
+  'Activities': ['🤸‍♀️', '🤸‍♂️', '🏃‍♀️', '🏃‍♂️', '🚶‍♀️', '🚶‍♂️', '🧘‍♀️', '🧘‍♂️', '🏋️‍♀️', '🏋️‍♂️', '🤾‍♀️', '🤾‍♂️', '🏌️‍♀️', '🏌️‍♂️', '🏄‍♀️', '🏄‍♂️', '🚣‍♀️', '🚣‍♂️', '🏊‍♀️', '🏊‍♂️', '⛹️‍♀️', '⛹️‍♂️', '🏇', '🧗‍♀️', '🧗‍♂️', '🚴‍♀️', '🚴‍♂️', '🤹‍♀️', '🤹‍♂️', '🎭', '🎨', '🎪', '🎬', '🎤', '🎧', '🎼', '🎵', '🎶', '🥁', '🎹', '🎸', '🎺', '🎷', '🎻', '🪕'],
+  'Objects': ['📱', '💻', '⌚', '📷', '🎥', '📺', '🎮', '🕹️', '🎧', '🎤', '🎵', '🎶', '🎼', '🎹', '🥁', '🎷', '🎺', '🎸', '🪕', '🎻', '📚', '📖', '📝', '✏️', '🖍️', '🖊️', '🖋️', '✒️', '🖌️', '📐', '📏', '🧮', '📌', '📍', '✂️', '🗃️', '🗂️', '📂', '📁', '🗄️', '🔧', '🔨', '⚒️', '🛠️', '⛏️', '🪓', '🔩', '⚙️', '🧰', '🪜', '🪣', '🧽', '🧼', '🪥', '🪒', '🧴', '🪞', '🪟', '🛏️', '🪑', '🚪', '🪜', '🧸', '🎈', '🎁', '🎀', '🪩', '🎊', '🎉'],
+  'Symbols': ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚡', '💫', '⭐', '🌟', '✨', '☄️', '💥', '🔥', '🌈', '☀️', '🌞', '🌙', '🌛', '🌜', '🌚', '🌕', '🌖', '🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '☁️', '⛅', '⛈️', '🌤️', '🌦️', '🌧️', '🌩️', '🌨️', '❄️', '☃️', '⛄', '🌬️', '💨', '🌪️', '🌫️', '☂️', '☔', '💧', '💦', '🌊', '✅', '❌', '⭕', '🛑', '⛔', '📵', '🚫', '💯', '💢', '♨️', '💤', '💨', '🕳️', '💣', '💬', '👁️‍🗨️', '🗨️', '🗯️', '💭', '💤'],
+  'Buildings': ['🏠', '🏡', '🏘️', '🏚️', '🏗️', '🏭', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '🏩', '💒', '🏛️', '⛪', '🕌', '🛕', '🕍', '⛩️', '🕋', '⛲', '⛺', '🌁', '🌃', '🏙️', '🌄', '🌅', '🌆', '🌇', '🌉', '♨️', '🎠', '🎡', '🎢', '💈', '🎪'],
+  'Misc': ['♻️', '🔄', '🔁', '🔂', '⏩', '⏪', '⏫', '⏬', '◀️', '▶️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️', '⤴️', '⤵️', '🔀', '🔃', '➕', '➖', '➗', '✖️', '♾️', '💲', '💱', '™️', '©️', '®️', '〰️', '➰', '➿', '🔚', '🔙', '🔛', '🔝', '🔜', '🔒', '🔓', '🔏', '🔐', '🔑', '🗝️', '🔨', '🪓', '⛏️', '⚒️', '🛠️', '🗡️', '⚔️', '💣', '🪃', '🏹', '🛡️', '🪚', '🔧', '🪛', '🔩', '⚙️', '🗜️', '⚖️', '🦯', '🔗', '⛓️', '🪝', '🧰', '🧲', '🪜', '⚗️', '🧪', '🧫', '🧬', '🔬', '🔭', '📡', '💉', '🩸', '💊', '🩹', '🩼', '🩺', '🪶']
 };
 
 const INITIAL_SLICE_COLORS = [
@@ -735,7 +739,12 @@ function CircularDiagramContent() {
     }
   }, []);
 
-  // Helper function to create anchor links for ASD levels
+  // Helper function to normalize strings for matching
+  const normalizeString = (str: string): string => {
+    return str.toLowerCase().replace(/[^a-z0-9]/g, '');
+  };
+
+  // Helper function to create anchor links for ASD levels with robust matching
   const getAnchorLink = (number: number, label: string) => {
     let level = "";
     if (number >= 1 && number <= 4) level = "level1";
@@ -743,24 +752,114 @@ function CircularDiagramContent() {
     else if (number >= 8 && number <= 10) level = "level3";
     else return level;
 
-    // Create category-specific anchor if there's a match
-    const categoryMap: { [key: string]: string } = {
-      'Social Interaction': 'social-interaction',
-      'Communication': 'communication',
-      'Sensory Processing': 'sensory-processing',
-      'Repetitive Behaviours and Special Interests': 'repetitive-behaviours',
-      'Executive Functioning': 'executive-functioning',
-      'Emotional Regulation': 'emotional-regulation',
-      'Cognitive and Learning Skills': 'cognitive-learning',
-      'Motor Skills and Physical Development': 'motor-skills'
+    // Available anchor categories for each level
+    const availableAnchors = [
+      'social-interaction',
+      'communication', 
+      'sensory-processing',
+      'repetitive-behaviours',
+      'executive-functioning',
+      'emotional-regulation',
+      'cognitive-learning',
+      'motor-skills'
+    ];
+
+    // Original category mapping for reference
+    const originalCategories = [
+      'Social Interaction',
+      'Communication',
+      'Sensory Processing', 
+      'Repetitive Behaviours and Special Interests',
+      'Executive Functioning',
+      'Emotional Regulation',
+      'Cognitive and Learning Skills',
+      'Motor Skills and Physical Development'
+    ];
+
+    // Normalize the input label
+    const normalizedLabel = normalizeString(label);
+    
+    // Step 1: Try exact match with normalized original categories
+    for (let i = 0; i < originalCategories.length; i++) {
+      const normalizedOriginal = normalizeString(originalCategories[i]);
+      if (normalizedLabel === normalizedOriginal) {
+        return `${level}-${availableAnchors[i]}`;
+      }
+    }
+
+    // Step 2: Try partial match - check if whole normalized label exists in any normalized original category
+    for (let i = 0; i < originalCategories.length; i++) {
+      const normalizedOriginal = normalizeString(originalCategories[i]);
+      if (normalizedOriginal.includes(normalizedLabel)) {
+        return `${level}-${availableAnchors[i]}`;
+      }
+    }
+
+    // Step 3: Try reverse partial match - check if any normalized original category exists in the normalized label
+    for (let i = 0; i < originalCategories.length; i++) {
+      const normalizedOriginal = normalizeString(originalCategories[i]);
+      if (normalizedLabel.includes(normalizedOriginal)) {
+        return `${level}-${availableAnchors[i]}`;
+      }
+    }
+
+    // Step 4: Try keyword-based matching for common terms
+    const keywordMap: { [key: string]: string } = {
+      'social': 'social-interaction',
+      'interaction': 'social-interaction',
+      'communication': 'communication',
+      'communicate': 'communication',
+      'speech': 'communication',
+      'language': 'communication',
+      'sensory': 'sensory-processing',
+      'processing': 'sensory-processing',
+      'sound': 'sensory-processing',
+      'noise': 'sensory-processing',
+      'touch': 'sensory-processing',
+      'texture': 'sensory-processing',
+      'light': 'sensory-processing',
+      'repetitive': 'repetitive-behaviours',
+      'behaviour': 'repetitive-behaviours',
+      'behavior': 'repetitive-behaviours',
+      'routine': 'repetitive-behaviours',
+      'interest': 'repetitive-behaviours',
+      'obsession': 'repetitive-behaviours',
+      'executive': 'executive-functioning',
+      'functioning': 'executive-functioning',
+      'planning': 'executive-functioning',
+      'organization': 'executive-functioning',
+      'organisation': 'executive-functioning',
+      'memory': 'executive-functioning',
+      'emotional': 'emotional-regulation',
+      'emotion': 'emotional-regulation',
+      'regulation': 'emotional-regulation',
+      'feeling': 'emotional-regulation',
+      'mood': 'emotional-regulation',
+      'meltdown': 'emotional-regulation',
+      'shutdown': 'emotional-regulation',
+      'cognitive': 'cognitive-learning',
+      'learning': 'cognitive-learning',
+      'academic': 'cognitive-learning',
+      'education': 'cognitive-learning',
+      'school': 'cognitive-learning',
+      'study': 'cognitive-learning',
+      'motor': 'motor-skills',
+      'movement': 'motor-skills',
+      'coordination': 'motor-skills',
+      'physical': 'motor-skills',
+      'balance': 'motor-skills',
+      'dexterity': 'motor-skills'
     };
 
-    const categorySlug = categoryMap[label];
-    if (categorySlug) {
-      return `${level}-${categorySlug}`;
+    // Check for keyword matches
+    for (const [keyword, anchor] of Object.entries(keywordMap)) {
+      if (normalizedLabel.includes(keyword)) {
+        return `${level}-${anchor}`;
+      }
     }
     
-    return level; // Fall back to general level if no category match
+    // Fall back to general level if no category match found
+    return level;
   };
 
   return (
