@@ -4,6 +4,7 @@
   import path from 'path';
 
   export default defineConfig({
+    base: '/autism-wheel/',
     plugins: [react()],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
