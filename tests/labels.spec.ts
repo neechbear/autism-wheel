@@ -34,11 +34,9 @@ const INITIAL_SLICE_COLORS = [
 ];
 
 test.describe('Default labels button', () => {
-  const BASE_URL = 'http://localhost:3000';
-  const BASE_PATH = process.env.VITE_BASE_PATH || '/autism-wheel/';
-
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${BASE_URL}${BASE_PATH}`);
+    // The test server serves the app at the root, so we navigate to the root.
+    await page.goto('http://localhost:3000/');
     // Wait for the main heading to be visible before running any test.
     // This ensures the page and its initial React components have loaded.
     await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible({ timeout: 15000 });
