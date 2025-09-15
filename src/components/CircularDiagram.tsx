@@ -565,6 +565,18 @@ function CircularDiagramContent() {
     setNewLabelIcon('😀');
   };
 
+  const handleDefaultLabels = () => {
+    // Reset to hard-coded default values
+    const defaultLabelData = INITIAL_SLICE_LABELS.map((label, index) => ({
+      id: `label-${index}-${Date.now()}`,
+      label,
+      color: INITIAL_SLICE_COLORS[index],
+      icon: INITIAL_SLICE_ICONS[index],
+      originalIndex: index
+    }));
+    setEditingLabels(defaultLabelData);
+  };
+
   const handleDeleteLabel = (id: string) => {
     // Prevent deletion if there are 2 or fewer labels
     if (editingLabels.length <= 2) {
@@ -1311,13 +1323,22 @@ function CircularDiagramContent() {
         </Button>
         
         {isEditingLabels && (
-          <Button 
-            onClick={handleRevertChanges}
-            variant="destructive"
-            className="h-10"
-          >
-            Revert changes
-          </Button>
+          <>
+            <Button 
+              onClick={handleRevertChanges}
+              variant="destructive"
+              className="h-10"
+            >
+              Revert changes
+            </Button>
+            <Button 
+              onClick={handleDefaultLabels}
+              variant="destructive"
+              className="h-10"
+            >
+              Default labels
+            </Button>
+          </>
         )}
       </div>
 
