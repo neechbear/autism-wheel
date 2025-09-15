@@ -42,10 +42,16 @@ jobs:
         run: npm install
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-      - name: Run Playwright tests
-        run: npm test
       - name: Build
         run: npm run build
+        env:
+          VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
+      - name: Start server
+        run: |
+          npm install -g http-server
+          http-server build -p 3000 &
+      - name: Run Playwright tests
+        run: npm test
         env:
           VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
       - name: Setup Pages

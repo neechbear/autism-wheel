@@ -34,9 +34,11 @@ const INITIAL_SLICE_COLORS = [
 ];
 
 test.describe('Default labels button', () => {
+  const BASE_URL = 'http://localhost:3000';
+  const BASE_PATH = process.env.VITE_BASE_PATH || '/autism-wheel/';
+
   test.beforeEach(async ({ page }) => {
-    // Note: The dev server runs on port 3000 with a base path.
-    await page.goto('http://localhost:3000/autism-wheel/');
+    await page.goto(`${BASE_URL}${BASE_PATH}`);
   });
 
   test('should not be visible by default', async ({ page }) => {
