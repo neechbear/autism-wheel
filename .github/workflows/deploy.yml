@@ -30,10 +30,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Set up base path for deployment
+        id: set_base_path
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "VITE_BASE_PATH=/autism-wheel/" >> $GITHUB_ENV
+          else
+            echo "VITE_BASE_PATH=/autism-wheel/branch/${{ github.ref_name }}/" >> $GITHUB_ENV
+          fi
       - name: Install dependencies
         run: npm install
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npm test
       - name: Build
         run: npm run build
+        env:
+          VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact

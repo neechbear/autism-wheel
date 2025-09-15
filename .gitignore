@@ -2,3 +2,4 @@ node_modules
 build
 jules-scratch/
 .DS_Store
+test-results/
