@@ -39,6 +39,9 @@ test.describe('Default labels button', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto(`${BASE_URL}${BASE_PATH}`);
+    // Wait for the main heading to be visible before running any test.
+    // This ensures the page and its initial React components have loaded.
+    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible({ timeout: 15000 });
   });
 
   test('should not be visible by default', async ({ page }) => {
@@ -51,23 +54,8 @@ test.describe('Default labels button', () => {
   });
 
   test('should reset labels to default values', async ({ page }) => {
-    // SKIPPED: This test is consistently failing because Playwright is unable to find the
-    // input fields within the label editing table, even though the table itself is visible.
-    //
-    // Debugging steps taken:
-    // 1. Verified functionality manually (works as expected).
-    // 2. Tested against local dev server and live production URL.
-    // 3. Tried various selectors (direct, chained, role-based).
-    // 4. Added explicit waits for elements to be visible.
-    // 5. Added timeouts.
-    //
-    // The root cause is likely an incompatibility between Playwright and the react-dnd library
-    // used for drag-and-drop reordering, which may be interfering with how the DOM is
-    // exposed to the test runner.
-    //
-    // The test is left here in a skipped state to document the intended behavior and the
-    // existing issue.
-    test.skip(true, 'This test is flaky and needs further investigation.');
+    // This test was previously flaky. It is now re-enabled with the more robust
+    // loading check in beforeEach.
 
     await page.getByRole('button', { name: 'Edit labels' }).click();
 
