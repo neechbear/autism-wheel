@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import CircularDiagram from './components/CircularDiagram';
+import { Toaster } from './components/ui/sonner';
 
 export default function App() {
   useEffect(() => {
@@ -9,6 +10,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background">
       <CircularDiagram />
+      <Toaster />
     </div>
   );
 }

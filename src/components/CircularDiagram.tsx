@@ -8,6 +8,7 @@ import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Pr
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LZString from 'lz-string';
+import { toast } from 'sonner';
 
 interface Selection {
   [sliceIndex: number]: number[];
@@ -659,59 +660,74 @@ function CircularDiagramContent() {
     window.print();
   };
 
-  const handleDownload = async () => {
+async function getInlinedStyles(doc: Document, base: URL): Promise<string[]> {
+    const styles: string[] = [];
+    const linkTags = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
+    for (const link of linkTags) {
+        const href = link.getAttribute('href');
+        if (href) {
+            const cssUrl = new URL(href, base).href;
+            const cssText = await (await fetch(cssUrl)).text();
+            styles.push(`<style>${cssText}</style>`);
+        }
+    }
+    return styles;
+}
+
+async function getInlinedScripts(doc: Document, base: URL): Promise<string[]> {
+    const scripts: string[] = [];
+    const scriptTags = Array.from(doc.querySelectorAll('script[src]'));
+    for (const script of scriptTags) {
+        const src = script.getAttribute('src');
+        if (src) {
+            const jsUrl = new URL(src, base).href;
+            let jsText = await (await fetch(jsUrl)).text();
+            jsText = jsText.replace(/<\/script>/g, '<\\/script>');
+            const typeAttr = script.getAttribute('type') ? ` type="${script.getAttribute('type')}"` : '';
+            const crossOriginAttr = script.hasAttribute('crossorigin') ? ' crossorigin' : '';
+            scripts.push(`<script${typeAttr}${crossOriginAttr}>${jsText}</script>`);
+        }
+    }
+    return scripts;
+}
+
+const handleDownload = async () => {
     try {
         const encodedState = encodeState();
         const docUrl = window.location.href;
         const base = new URL(docUrl);
 
-        // 1. Fetch the source HTML to parse it for asset URLs.
         const htmlText = await (await fetch(docUrl)).text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
 
-        // 2. Build the new <head> content by iterating through the parsed head.
+        const [inlinedStyles, inlinedScripts] = await Promise.all([
+            getInlinedStyles(doc, base),
+            getInlinedScripts(doc, base),
+        ]);
+
         let headHtml = '';
         for (const child of Array.from(doc.head.children)) {
-            if (child.tagName === 'LINK' && child.getAttribute('rel') === 'stylesheet') {
-                const href = child.getAttribute('href');
-                if (href) {
-                    const cssUrl = new URL(href, base).href;
-                    const cssText = await (await fetch(cssUrl)).text();
-                    headHtml += `<style>${cssText}</style>\n`;
-                }
-            } else if (child.tagName === 'SCRIPT' && child.getAttribute('src')) {
-                const src = child.getAttribute('src');
-                 if (src) {
-                    const jsUrl = new URL(src, base).href;
-                    let jsText = await (await fetch(jsUrl)).text();
-                    // Escape any closing script tags within the JS itself to prevent premature closing.
-                    jsText = jsText.replace(/<\/script>/g, '<\\/script>');
-                    const typeAttr = child.getAttribute('type') ? ` type="${child.getAttribute('type')}"` : '';
-                    const crossOriginAttr = child.hasAttribute('crossorigin') ? ' crossorigin' : '';
-                    headHtml += `<script${typeAttr}${crossOriginAttr}>${jsText}</script>\n`;
-                }
-            } else {
+            const isStylesheet = child.tagName === 'LINK' && child.getAttribute('rel') === 'stylesheet';
+            const isExternalScript = child.tagName === 'SCRIPT' && child.getAttribute('src');
+            if (!isStylesheet && !isExternalScript) {
                 headHtml += child.outerHTML + '\n';
             }
         }
 
-        // 3. Inject the preloaded state script at the end of the head.
-        const stateScript = `<script>window.__PRELOADED_STATE__ = "${encodedState}";</script>`;
-        headHtml += stateScript + '\n';
-
-        // 4. Construct the final, self-contained HTML string.
         const finalHtml = `<!DOCTYPE html>
-<html lang="en">
+<html lang="${doc.documentElement.lang || 'en'}">
 <head>
-${headHtml}
+    ${headHtml}
+    ${inlinedStyles.join('\n')}
+    ${inlinedScripts.join('\n')}
+    <script>window.__PRELOADED_STATE__ = "${encodedState}";</script>
 </head>
 <body>
-${doc.body.innerHTML}
+    ${doc.body.innerHTML}
 </body>
 </html>`;
 
-        // 5. Create a blob and trigger the download.
         const blob = new Blob([finalHtml], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -724,7 +740,7 @@ ${doc.body.innerHTML}
 
     } catch (error) {
         console.error("Failed to download diagram:", error);
-        alert("Could not download diagram. Please check the console for errors.");
+        toast.error("Could not download diagram. Please check the console for errors.");
     }
 };
 
