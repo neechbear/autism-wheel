@@ -4,7 +4,7 @@ import { Input } from './ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link } from 'lucide-react';
+import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link, Download } from 'lucide-react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LZString from 'lz-string';
@@ -659,6 +659,62 @@ function CircularDiagramContent() {
     window.print();
   };
 
+  const handleDownload = async () => {
+    try {
+        const encodedState = encodeState();
+        const htmlResponse = await fetch(window.location.origin);
+        let htmlText = await htmlResponse.text();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+
+        // Inline stylesheets
+        const linkTags = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
+        for (const link of linkTags) {
+            const href = link.getAttribute('href');
+            if (href) {
+                const cssResponse = await fetch(new URL(href, window.location.origin).href);
+                const cssText = await cssResponse.text();
+                const style = doc.createElement('style');
+                style.textContent = cssText;
+                link.parentNode?.replaceChild(style, link);
+            }
+        }
+
+        // Inline scripts
+        const scriptTags = Array.from(doc.querySelectorAll('script[src]'));
+        for (const script of scriptTags) {
+            const src = script.getAttribute('src');
+            if (src) {
+                const jsResponse = await fetch(new URL(src, window.location.origin).href);
+                const jsText = await jsResponse.text();
+                const newScript = doc.createElement('script');
+                if(script.type === 'module') newScript.type = 'module';
+                newScript.textContent = jsText;
+                script.parentNode?.replaceChild(newScript, script);
+            }
+        }
+
+        const stateScript = doc.createElement('script');
+        stateScript.textContent = `window.__PRELOADED_STATE__ = "${encodedState}";`;
+        doc.head.appendChild(stateScript);
+
+        const finalHtml = new XMLSerializer().serializeToString(doc);
+        const blob = new Blob([finalHtml], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'autismwheel.html';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error("Failed to download diagram:", error);
+        alert("Could not download diagram. Please check the console for errors.");
+    }
+};
+
   // Function to encode current state to URL parameters (with compression)
   const encodeState = () => {
     const state = {
@@ -779,13 +835,9 @@ function CircularDiagramContent() {
 
   // Load state from URL on component mount
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const encodedState = urlParams.get('state');
-    
-    if (encodedState) {
-      const decodedState = decodeState(encodedState);
+    // Function to apply decoded state
+    const applyState = (decodedState: any) => {
       if (decodedState) {
-        // Apply the decoded state
         if (decodedState.selections) setSelections(decodedState.selections);
         if (decodedState.sliceLabels) setSliceLabels(decodedState.sliceLabels);
         if (decodedState.sliceColors) setSliceColors(decodedState.sliceColors);
@@ -796,6 +848,21 @@ function CircularDiagramContent() {
         if (decodedState.showIcons !== undefined) setShowIcons(decodedState.showIcons);
         if (decodedState.sortColumn) setSortColumn(decodedState.sortColumn);
         if (decodedState.sortDirection) setSortDirection(decodedState.sortDirection);
+      }
+    };
+
+    // Prioritize preloaded state from downloaded file
+    const preloadedState = (window as any).__PRELOADED_STATE__;
+    if (preloadedState) {
+      const decodedState = decodeState(preloadedState);
+      applyState(decodedState);
+    } else {
+      // Fallback to URL parameters for shared links
+      const urlParams = new URLSearchParams(window.location.search);
+      const encodedState = urlParams.get('state');
+      if (encodedState) {
+        const decodedState = decodeState(encodedState);
+        applyState(decodedState);
       }
     }
   }, []);
@@ -1292,6 +1359,14 @@ function CircularDiagramContent() {
             >
               <Printer className="w-4 h-4" />
               Print
+            </Button>
+            <Button
+              onClick={handleDownload}
+              variant="outline"
+              className="h-10 gap-2"
+            >
+              <Download className="w-4 h-4" />
+              Download
             </Button>
           </>
         )}
