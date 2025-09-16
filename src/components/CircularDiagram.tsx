@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
+import Joyride, { Step } from 'react-joyride';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link, Download } from 'lucide-react';
+import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link, Download, HelpCircle } from 'lucide-react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LZString from 'lz-string';
@@ -273,7 +274,58 @@ function CircularDiagramContent() {
   const [showIcons, setShowIcons] = useState<boolean>(true);
   const [sortColumn, setSortColumn] = useState<'category' | 'typical' | 'stress' | null>('stress');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [runTour, setRunTour] = useState(false);
+  const [tourStepIndex, setTourStepIndex] = useState(0);
+  const [nextTourStep, setNextTourStep] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    if (nextTourStep !== null) {
+      setTourStepIndex(nextTourStep);
+      setNextTourStep(null);
+    }
+  }, [isEditingLabels, nextTourStep]);
+
+  const tourSteps: Step[] = [
+    {
+      target: '#diagram-container',
+      content: 'This is the main interactive diagram. You can click on the segments to select your impact levels.',
+      placement: 'center',
+    },
+    {
+      target: '#diagram-container',
+      content: 'Click on a segment to indicate the impact this category has on your life under typical day-to-day circumstances.',
+    },
+    {
+      target: '#diagram-container',
+      content: 'If you sometimes experience more severe impacts (e.g., during stress), click a second segment in the same slice to indicate this.',
+    },
+    {
+      target: '#diagram-container',
+      content: 'To change your selection, click on any of the highlighted segments to cancel the selection, then reselect.',
+    },
+    {
+      target: '#view-options',
+      content: 'These options allow you to customize the view, like hiding emojis, showing numbers, or changing boldness.',
+    },
+    {
+      target: '#action-buttons',
+      content: 'These buttons allow you to download, print, copy a shareable link, or save the diagram.',
+    },
+    {
+      target: '#edit-labels-button',
+      content: 'Click here to edit the names and categories of the slices.',
+    },
+    {
+      target: '#edit-labels-table',
+      content: 'Here you can customize the label categories. You can save your changes, revert them, or reset to the default labels.',
+      placement: 'top',
+    },
+    {
+      target: '#detail-table',
+      content: 'This table shows a detailed breakdown of your selections. You can also sort the columns.',
+    },
+  ];
 
   const handleSegmentClick = (sliceIndex: number, ringIndex: number) => {
     setSelections(prev => {
@@ -892,6 +944,12 @@ const handleDownload = async () => {
       if (encodedState) {
         const decodedState = decodeState(encodedState);
         applyState(decodedState);
+    } else {
+      // If no state in URL, check if we should run the tour
+      const hasSeenTour = localStorage.getItem('hasSeenTour');
+      if (!hasSeenTour && !preloadedState) {
+        setRunTour(true);
+      }
       }
     }
   }, []);
@@ -1019,8 +1077,55 @@ const handleDownload = async () => {
     return level;
   };
 
+  const handleJoyrideCallback = (data: any) => {
+    const { action, index, status, type } = data;
+
+    if (type === 'step:after') {
+      const newStepIndex = index + (action === 'next' ? 1 : -1);
+
+      if (index === 6 && action === 'next') {
+        setNextTourStep(newStepIndex);
+        setIsEditingLabels(true);
+        return;
+      } else if (index === 7 && action === 'next') {
+        setNextTourStep(newStepIndex);
+        setIsEditingLabels(false);
+        return;
+      } else if (index === 8 && action === 'prev') {
+        setNextTourStep(newStepIndex);
+        setIsEditingLabels(true);
+        return;
+      } else if (index === 7 && action === 'prev') {
+        setNextTourStep(newStepIndex);
+        setIsEditingLabels(false);
+        return;
+      }
+
+      setTourStepIndex(newStepIndex);
+    } else if (['finished', 'skipped'].includes(status)) {
+      setRunTour(false);
+      setIsEditingLabels(false);
+      localStorage.setItem('hasSeenTour', 'true');
+      setTourStepIndex(0);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center gap-8 p-8">
+      <Joyride
+        steps={tourSteps}
+        run={runTour}
+        stepIndex={tourStepIndex}
+        continuous
+        showProgress
+        showSkipButton
+        callback={handleJoyrideCallback}
+        styles={{
+          options: {
+            zIndex: 10000,
+          },
+        }}
+      />
       <div className="text-center">
         <h1 className="mb-2">Autism Wheel</h1>
         
@@ -1038,7 +1143,7 @@ const handleDownload = async () => {
         </p>
       </div>
       
-      <div className="relative">
+      <div className="relative" id="diagram-container">
         <svg ref={svgRef} width="750" height="750" viewBox="0 0 750 750">
           {/* Grid lines */}
           {Array.from({ length: TOTAL_RINGS + 1 }, (_, i) => {
@@ -1255,7 +1360,7 @@ const handleDownload = async () => {
       </div>
       
       {/* Display Options */}
-      <div className="flex flex-wrap gap-4 justify-center print:hidden">
+      <div className="flex flex-wrap gap-4 justify-center print:hidden" id="view-options">
         <DropdownMenu>
           <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
             <Settings className="w-4 h-4" />
@@ -1370,9 +1475,18 @@ const handleDownload = async () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-wrap gap-4 justify-center print:hidden">
+      <div className="flex flex-wrap gap-4 justify-center print:hidden" id="action-buttons">
         {!isEditingLabels && (
           <>
+            <Button
+              onClick={() => setRunTour(true)}
+              variant="outline"
+              className="h-10 gap-2"
+              id="help-button"
+            >
+              <HelpCircle className="w-4 h-4" />
+              Help
+            </Button>
             <Button 
               onClick={handleCopyLink}
               variant="outline"
@@ -1422,6 +1536,7 @@ const handleDownload = async () => {
           onClick={handleEditLabels}
           variant={isEditingLabels ? "default" : "outline"}
           className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700" : "border-blue-600 text-blue-600 hover:bg-blue-50"}`}
+          id="edit-labels-button"
         >
           {isEditingLabels ? "Save labels" : "Edit labels"}
         </Button>
@@ -1432,6 +1547,7 @@ const handleDownload = async () => {
               onClick={handleRevertChanges}
               variant="destructive"
               className="h-10"
+              id="revert-changes-button"
             >
               Revert changes
             </Button>
@@ -1439,6 +1555,7 @@ const handleDownload = async () => {
               onClick={handleDefaultLabels}
               variant="destructive"
               className="h-10"
+              id="default-labels-button"
             >
               Default labels
             </Button>
@@ -1447,7 +1564,7 @@ const handleDownload = async () => {
       </div>
 
       {isEditingLabels && (
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-4xl" id="edit-labels-table">
           <h3 className="mb-4">Edit Labels</h3>
           <Table>
             <TableHeader>
@@ -1508,7 +1625,7 @@ const handleDownload = async () => {
       )}
 
       {!isEditingLabels && (
-        <div className="w-full max-w-4xl print-break-avoid">
+        <div className="w-full max-w-4xl print-break-avoid" id="detail-table">
           <h3 className="mb-4 font-semibold">Detailed breakdown</h3>
           <Table>
             <TableHeader>
