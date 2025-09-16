@@ -699,7 +699,12 @@ function CircularDiagramContent() {
                 if (script.type === 'module') {
                     newScript.type = 'module';
                 }
-                newScript.textContent = jsText;
+                // Using CDATA to prevent XMLSerializer from escaping characters
+                newScript.appendChild(doc.createCDATASection(`
+//<![CDATA[
+${jsText}
+//]]>
+`));
                 script.parentNode?.replaceChild(newScript, script);
             }
         }
