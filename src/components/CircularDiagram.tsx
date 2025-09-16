@@ -668,11 +668,11 @@ function CircularDiagramContent() {
         // 1. Fetch the main HTML as text.
         let htmlText = await (await fetch(docUrl)).text();
 
-        // 2. Use DOMParser ONLY to FIND asset URLs.
+        // 2. Use DOMParser to FIND asset URLs, which is more robust than regex.
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
 
-        // 3. Fetch all CSS and replace links with <style> tags in the string.
+        // 3. Fetch all CSS and replace links with <style> tags using a robust regex.
         const linkTags = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
         for (const link of linkTags) {
             const href = link.getAttribute('href');
@@ -680,11 +680,14 @@ function CircularDiagramContent() {
                 const cssUrl = new URL(href, base).href;
                 const cssText = await (await fetch(cssUrl)).text();
                 const styleTag = `<style>${cssText}</style>`;
-                htmlText = htmlText.replace(link.outerHTML, styleTag);
+                // Escape special characters in href for regex and create a robust regex
+                const escapedHref = href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const linkRegex = new RegExp(`<link[^>]*href\\s*=\\s*["']${escapedHref}["'][^>]*>`);
+                htmlText = htmlText.replace(linkRegex, styleTag);
             }
         }
 
-        // 4. Fetch all JS and replace script tags with inline scripts in the string.
+        // 4. Fetch all JS and replace script tags with inline scripts using a robust regex.
         const scriptTags = Array.from(doc.querySelectorAll('script[src]'));
         for (const script of scriptTags) {
             const src = script.getAttribute('src');
@@ -693,7 +696,10 @@ function CircularDiagramContent() {
                 const jsText = await (await fetch(jsUrl)).text();
                 const typeAttr = script.type ? ` type="${script.type}"` : '';
                 const scriptTag = `<script${typeAttr}>${jsText}</script>`;
-                htmlText = htmlText.replace(script.outerHTML, scriptTag);
+                // Escape special characters in src for regex and create a robust regex
+                const escapedSrc = src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const scriptRegex = new RegExp(`<script[^>]*src\\s*=\\s*["']${escapedSrc}["'][^>]*>\\s*<\\/script>`);
+                htmlText = htmlText.replace(scriptRegex, scriptTag);
             }
         }
 
