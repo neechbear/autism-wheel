@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import CircularDiagram from './components/CircularDiagram';
 import { Toaster } from './components/ui/sonner';
+import Tour, { steps } from './components/Tour';
+import { TourProvider } from '@reactour/tour';
 
 export default function App() {
   useEffect(() => {
@@ -9,8 +11,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-background">
-      <CircularDiagram />
-      <Toaster />
+      <TourProvider steps={steps}>
+        <CircularDiagram />
+        <Toaster />
+        <Tour>
+          <></>
+        </Tour>
+      </TourProvider>
     </div>
   );
 }

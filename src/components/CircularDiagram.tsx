@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTour } from '@reactour/tour';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
@@ -259,6 +260,7 @@ function DraggableLabelRow({ labelData, index, editingLabels, setEditingLabels, 
 }
 
 function CircularDiagramContent() {
+  const { setIsOpen } = useTour();
   const [selections, setSelections] = useState<Selection>({});
   const [sliceLabels, setSliceLabels] = useState<string[]>(INITIAL_SLICE_LABELS);
   const [sliceColors, setSliceColors] = useState<string[]>(INITIAL_SLICE_COLORS);
@@ -1038,7 +1040,7 @@ const handleDownload = async () => {
         </p>
       </div>
       
-      <div className="relative">
+      <div className="relative" data-tour="main-diagram">
         <svg ref={svgRef} width="750" height="750" viewBox="0 0 750 750">
           {/* Grid lines */}
           {Array.from({ length: TOTAL_RINGS + 1 }, (_, i) => {
@@ -1255,7 +1257,7 @@ const handleDownload = async () => {
       </div>
       
       {/* Display Options */}
-      <div className="flex flex-wrap gap-4 justify-center print:hidden">
+      <div className="flex flex-wrap gap-4 justify-center print:hidden" data-tour="view-options">
         <DropdownMenu>
           <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
             <Settings className="w-4 h-4" />
@@ -1370,7 +1372,7 @@ const handleDownload = async () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-wrap gap-4 justify-center print:hidden">
+      <div className="flex flex-wrap gap-4 justify-center print:hidden" data-tour="action-buttons">
         {!isEditingLabels && (
           <>
             <Button 
@@ -1422,8 +1424,17 @@ const handleDownload = async () => {
           onClick={handleEditLabels}
           variant={isEditingLabels ? "default" : "outline"}
           className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700" : "border-blue-600 text-blue-600 hover:bg-blue-50"}`}
+          data-tour="edit-labels-button"
         >
           {isEditingLabels ? "Save labels" : "Edit labels"}
+        </Button>
+
+        <Button
+          onClick={() => setIsOpen(true)}
+          variant="outline"
+          className="h-10"
+        >
+          Help
         </Button>
         
         {isEditingLabels && (
@@ -1508,7 +1519,7 @@ const handleDownload = async () => {
       )}
 
       {!isEditingLabels && (
-        <div className="w-full max-w-4xl print-break-avoid">
+        <div className="w-full max-w-4xl print-break-avoid" data-tour="details-table">
           <h3 className="mb-4 font-semibold">Detailed breakdown</h3>
           <Table>
             <TableHeader>
