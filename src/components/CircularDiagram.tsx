@@ -662,20 +662,23 @@ function CircularDiagramContent() {
   const handleDownload = async () => {
     try {
         const encodedState = encodeState();
-        // Fetch the root HTML document of the current application.
-        const htmlResponse = await fetch('/');
+        const docUrl = window.location.href;
+
+        // 1. Fetch the current page's HTML.
+        const htmlResponse = await fetch(docUrl);
         let htmlText = await htmlResponse.text();
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
 
-        // Find all stylesheet links and inline them.
+        // 2. Find, fetch, and inline all stylesheets.
         const linkTags = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
         for (const link of linkTags) {
             const href = link.getAttribute('href');
-            // Fetch the CSS content using its relative or absolute path.
             if (href) {
-                const cssResponse = await fetch(href);
+                // Resolve the asset URL relative to the document's URL.
+                const cssUrl = new URL(href, docUrl).href;
+                const cssResponse = await fetch(cssUrl);
                 const cssText = await cssResponse.text();
                 const style = doc.createElement('style');
                 style.textContent = cssText;
@@ -683,16 +686,16 @@ function CircularDiagramContent() {
             }
         }
 
-        // Find all script tags with a 'src' attribute and inline them.
+        // 3. Find, fetch, and inline all scripts.
         const scriptTags = Array.from(doc.querySelectorAll('script[src]'));
         for (const script of scriptTags) {
             const src = script.getAttribute('src');
-            // Fetch the script content using its relative or absolute path.
             if (src) {
-                const jsResponse = await fetch(src);
+                // Resolve the asset URL relative to the document's URL.
+                const jsUrl = new URL(src, docUrl).href;
+                const jsResponse = await fetch(jsUrl);
                 const jsText = await jsResponse.text();
                 const newScript = doc.createElement('script');
-                // Preserve the 'module' type if it exists.
                 if (script.type === 'module') {
                     newScript.type = 'module';
                 }
@@ -701,12 +704,12 @@ function CircularDiagramContent() {
             }
         }
 
-        // Create and inject the preloaded state script.
+        // 4. Inject the preloaded state.
         const stateScript = doc.createElement('script');
         stateScript.textContent = `window.__PRELOADED_STATE__ = "${encodedState}";`;
         doc.head.appendChild(stateScript);
 
-        // Serialize the modified document and trigger the download.
+        // 5. Serialize and download.
         const finalHtml = new XMLSerializer().serializeToString(doc);
         const blob = new Blob([finalHtml], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
