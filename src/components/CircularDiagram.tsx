@@ -663,60 +663,46 @@ function CircularDiagramContent() {
     try {
         const encodedState = encodeState();
         const docUrl = window.location.href;
+        const base = new URL(docUrl);
 
-        // 1. Fetch the current page's HTML.
-        const htmlResponse = await fetch(docUrl);
-        let htmlText = await htmlResponse.text();
+        // 1. Fetch the main HTML as text.
+        let htmlText = await (await fetch(docUrl)).text();
 
+        // 2. Use DOMParser ONLY to FIND asset URLs.
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
 
-        // 2. Find, fetch, and inline all stylesheets.
+        // 3. Fetch all CSS and replace links with <style> tags in the string.
         const linkTags = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
         for (const link of linkTags) {
             const href = link.getAttribute('href');
             if (href) {
-                // Resolve the asset URL relative to the document's URL.
-                const cssUrl = new URL(href, docUrl).href;
-                const cssResponse = await fetch(cssUrl);
-                const cssText = await cssResponse.text();
-                const style = doc.createElement('style');
-                style.textContent = cssText;
-                link.parentNode?.replaceChild(style, link);
+                const cssUrl = new URL(href, base).href;
+                const cssText = await (await fetch(cssUrl)).text();
+                const styleTag = `<style>${cssText}</style>`;
+                htmlText = htmlText.replace(link.outerHTML, styleTag);
             }
         }
 
-        // 3. Find, fetch, and inline all scripts.
+        // 4. Fetch all JS and replace script tags with inline scripts in the string.
         const scriptTags = Array.from(doc.querySelectorAll('script[src]'));
         for (const script of scriptTags) {
             const src = script.getAttribute('src');
             if (src) {
-                // Resolve the asset URL relative to the document's URL.
-                const jsUrl = new URL(src, docUrl).href;
-                const jsResponse = await fetch(jsUrl);
-                const jsText = await jsResponse.text();
-                const newScript = doc.createElement('script');
-                if (script.type === 'module') {
-                    newScript.type = 'module';
-                }
-                // Using CDATA to prevent XMLSerializer from escaping characters
-                newScript.appendChild(doc.createCDATASection(`
-//<![CDATA[
-${jsText}
-//]]>
-`));
-                script.parentNode?.replaceChild(newScript, script);
+                const jsUrl = new URL(src, base).href;
+                const jsText = await (await fetch(jsUrl)).text();
+                const typeAttr = script.type ? ` type="${script.type}"` : '';
+                const scriptTag = `<script${typeAttr}>${jsText}</script>`;
+                htmlText = htmlText.replace(script.outerHTML, scriptTag);
             }
         }
 
-        // 4. Inject the preloaded state.
-        const stateScript = doc.createElement('script');
-        stateScript.textContent = `window.__PRELOADED_STATE__ = "${encodedState}";`;
-        doc.head.appendChild(stateScript);
+        // 5. Inject the preloaded state script via string replacement.
+        const stateScript = `<script>window.__PRELOADED_STATE__ = "${encodedState}";</script>`;
+        htmlText = htmlText.replace('</head>', `${stateScript}</head>`);
 
-        // 5. Serialize and download.
-        const finalHtml = new XMLSerializer().serializeToString(doc);
-        const blob = new Blob([finalHtml], { type: 'text/html' });
+        // 6. Create and download the blob from the modified string.
+        const blob = new Blob([htmlText], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
@@ -725,6 +711,7 @@ ${jsText}
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
+
     } catch (error) {
         console.error("Failed to download diagram:", error);
         alert("Could not download diagram. Please check the console for errors.");
