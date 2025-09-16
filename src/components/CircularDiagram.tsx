@@ -662,18 +662,20 @@ function CircularDiagramContent() {
   const handleDownload = async () => {
     try {
         const encodedState = encodeState();
-        const htmlResponse = await fetch(window.location.origin);
+        // Fetch the root HTML document of the current application.
+        const htmlResponse = await fetch('/');
         let htmlText = await htmlResponse.text();
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
 
-        // Inline stylesheets
+        // Find all stylesheet links and inline them.
         const linkTags = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
         for (const link of linkTags) {
             const href = link.getAttribute('href');
+            // Fetch the CSS content using its relative or absolute path.
             if (href) {
-                const cssResponse = await fetch(new URL(href, window.location.origin).href);
+                const cssResponse = await fetch(href);
                 const cssText = await cssResponse.text();
                 const style = doc.createElement('style');
                 style.textContent = cssText;
@@ -681,24 +683,30 @@ function CircularDiagramContent() {
             }
         }
 
-        // Inline scripts
+        // Find all script tags with a 'src' attribute and inline them.
         const scriptTags = Array.from(doc.querySelectorAll('script[src]'));
         for (const script of scriptTags) {
             const src = script.getAttribute('src');
+            // Fetch the script content using its relative or absolute path.
             if (src) {
-                const jsResponse = await fetch(new URL(src, window.location.origin).href);
+                const jsResponse = await fetch(src);
                 const jsText = await jsResponse.text();
                 const newScript = doc.createElement('script');
-                if(script.type === 'module') newScript.type = 'module';
+                // Preserve the 'module' type if it exists.
+                if (script.type === 'module') {
+                    newScript.type = 'module';
+                }
                 newScript.textContent = jsText;
                 script.parentNode?.replaceChild(newScript, script);
             }
         }
 
+        // Create and inject the preloaded state script.
         const stateScript = doc.createElement('script');
         stateScript.textContent = `window.__PRELOADED_STATE__ = "${encodedState}";`;
         doc.head.appendChild(stateScript);
 
+        // Serialize the modified document and trigger the download.
         const finalHtml = new XMLSerializer().serializeToString(doc);
         const blob = new Blob([finalHtml], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
