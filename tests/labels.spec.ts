@@ -35,6 +35,11 @@ const INITIAL_SLICE_COLORS = [
 
 test.describe('Default labels button', () => {
   test.beforeEach(async ({ page }) => {
+    // By setting this in localStorage before the page loads, we prevent the tour from starting automatically.
+    await page.addInitScript(() => {
+      window.localStorage.setItem('autismWheelTourCompleted', 'true');
+    });
+
     // The test server serves the app at the root, so we navigate to the root.
     await page.goto('http://localhost:3000/');
     // Wait for the main heading to be visible before running any test.

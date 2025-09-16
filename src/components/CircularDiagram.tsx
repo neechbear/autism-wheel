@@ -4,11 +4,12 @@ import { Input } from './ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link, Download } from 'lucide-react';
+import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link, Download, HelpCircle } from 'lucide-react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LZString from 'lz-string';
 import { toast } from 'sonner';
+import Tour from './Tour';
 
 interface Selection {
   [sliceIndex: number]: number[];
@@ -273,7 +274,17 @@ function CircularDiagramContent() {
   const [showIcons, setShowIcons] = useState<boolean>(true);
   const [sortColumn, setSortColumn] = useState<'category' | 'typical' | 'stress' | null>('stress');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [tourActive, setTourActive] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    const tourCompleted = localStorage.getItem('autismWheelTourCompleted');
+    const isDownloaded = (window as any).__PRELOADED_STATE__;
+
+    if (!tourCompleted && !isDownloaded) {
+      setTourActive(true);
+    }
+  }, []);
 
   const handleSegmentClick = (sliceIndex: number, ringIndex: number) => {
     setSelections(prev => {
@@ -1039,7 +1050,7 @@ const handleDownload = async () => {
       </div>
       
       <div className="relative">
-        <svg ref={svgRef} width="750" height="750" viewBox="0 0 750 750">
+        <svg ref={svgRef} id="circular-diagram" width="750" height="750" viewBox="0 0 750 750">
           {/* Grid lines */}
           {Array.from({ length: TOTAL_RINGS + 1 }, (_, i) => {
             const radius = MIN_RADIUS + i * RING_WIDTH;
@@ -1102,6 +1113,7 @@ const handleDownload = async () => {
               return (
                 <path
                   key={`segment-${sliceIndex}-${ringIndex}`}
+                  id={sliceIndex === 0 && ringIndex === 3 ? 'diagram-segment-to-click' : undefined}
                   d={path}
                   fill={fill}
                   stroke="white"
@@ -1255,7 +1267,7 @@ const handleDownload = async () => {
       </div>
       
       {/* Display Options */}
-      <div className="flex flex-wrap gap-4 justify-center print:hidden">
+      <div id="view-options" className="flex flex-wrap gap-4 justify-center print:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
             <Settings className="w-4 h-4" />
@@ -1370,9 +1382,17 @@ const handleDownload = async () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-wrap gap-4 justify-center print:hidden">
+      <div id="action-buttons" className="flex flex-wrap gap-4 justify-center print:hidden">
         {!isEditingLabels && (
           <>
+            <Button
+              onClick={() => setTourActive(true)}
+              variant="outline"
+              className="h-10 gap-2"
+            >
+              <HelpCircle className="w-4 h-4" />
+              Help
+            </Button>
             <Button 
               onClick={handleCopyLink}
               variant="outline"
@@ -1419,6 +1439,7 @@ const handleDownload = async () => {
         </DropdownMenu>
         
         <Button 
+          id="edit-labels-button"
           onClick={handleEditLabels}
           variant={isEditingLabels ? "default" : "outline"}
           className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700" : "border-blue-600 text-blue-600 hover:bg-blue-50"}`}
@@ -1508,7 +1529,7 @@ const handleDownload = async () => {
       )}
 
       {!isEditingLabels && (
-        <div className="w-full max-w-4xl print-break-avoid">
+        <div id="details-table" className="w-full max-w-4xl print-break-avoid">
           <h3 className="mb-4 font-semibold">Detailed breakdown</h3>
           <Table>
             <TableHeader>
@@ -1856,6 +1877,16 @@ const handleDownload = async () => {
           </div>
         </div>
       )}
+
+      <Tour
+        startTour={tourActive}
+        onTourComplete={() => {
+          setTourActive(false);
+          localStorage.setItem('autismWheelTourCompleted', 'true');
+        }}
+        isEditingLabels={isEditingLabels}
+        handleEditLabels={handleEditLabels}
+      />
     </div>
   );
 }
