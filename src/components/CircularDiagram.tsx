@@ -665,50 +665,54 @@ function CircularDiagramContent() {
         const docUrl = window.location.href;
         const base = new URL(docUrl);
 
-        // 1. Fetch the main HTML as text.
-        let htmlText = await (await fetch(docUrl)).text();
-
-        // 2. Use DOMParser to FIND asset URLs, which is more robust than regex.
+        // 1. Fetch the source HTML to parse it for asset URLs.
+        const htmlText = await (await fetch(docUrl)).text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
 
-        // 3. Fetch all CSS and replace links with <style> tags using a robust regex.
-        const linkTags = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
-        for (const link of linkTags) {
-            const href = link.getAttribute('href');
-            if (href) {
-                const cssUrl = new URL(href, base).href;
-                const cssText = await (await fetch(cssUrl)).text();
-                const styleTag = `<style>${cssText}</style>`;
-                // Escape special characters in href for regex and create a robust regex
-                const escapedHref = href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                const linkRegex = new RegExp(`<link[^>]*href\\s*=\\s*["']${escapedHref}["'][^>]*>`);
-                htmlText = htmlText.replace(linkRegex, styleTag);
+        // 2. Build the new <head> content by iterating through the parsed head.
+        let headHtml = '';
+        for (const child of Array.from(doc.head.children)) {
+            if (child.tagName === 'LINK' && child.getAttribute('rel') === 'stylesheet') {
+                const href = child.getAttribute('href');
+                if (href) {
+                    const cssUrl = new URL(href, base).href;
+                    const cssText = await (await fetch(cssUrl)).text();
+                    headHtml += `<style>${cssText}</style>\n`;
+                }
+            } else if (child.tagName === 'SCRIPT' && child.getAttribute('src')) {
+                const src = child.getAttribute('src');
+                 if (src) {
+                    const jsUrl = new URL(src, base).href;
+                    let jsText = await (await fetch(jsUrl)).text();
+                    // Escape any closing script tags within the JS itself to prevent premature closing.
+                    jsText = jsText.replace(/<\/script>/g, '<\\/script>');
+                    const typeAttr = child.getAttribute('type') ? ` type="${child.getAttribute('type')}"` : '';
+                    const crossOriginAttr = child.hasAttribute('crossorigin') ? ' crossorigin' : '';
+                    headHtml += `<script${typeAttr}${crossOriginAttr}>${jsText}</script>\n`;
+                }
+            } else {
+                headHtml += child.outerHTML + '\n';
             }
         }
 
-        // 4. Fetch all JS and replace script tags with inline scripts using a robust regex.
-        const scriptTags = Array.from(doc.querySelectorAll('script[src]'));
-        for (const script of scriptTags) {
-            const src = script.getAttribute('src');
-            if (src) {
-                const jsUrl = new URL(src, base).href;
-                const jsText = await (await fetch(jsUrl)).text();
-                const typeAttr = script.type ? ` type="${script.type}"` : '';
-                const scriptTag = `<script${typeAttr}>${jsText}</script>`;
-                // Escape special characters in src for regex and create a robust regex
-                const escapedSrc = src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                const scriptRegex = new RegExp(`<script[^>]*src\\s*=\\s*["']${escapedSrc}["'][^>]*>\\s*<\\/script>`);
-                htmlText = htmlText.replace(scriptRegex, scriptTag);
-            }
-        }
-
-        // 5. Inject the preloaded state script via string replacement.
+        // 3. Inject the preloaded state script at the end of the head.
         const stateScript = `<script>window.__PRELOADED_STATE__ = "${encodedState}";</script>`;
-        htmlText = htmlText.replace('</head>', `${stateScript}</head>`);
+        headHtml += stateScript + '\n';
 
-        // 6. Create and download the blob from the modified string.
-        const blob = new Blob([htmlText], { type: 'text/html' });
+        // 4. Construct the final, self-contained HTML string.
+        const finalHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+${headHtml}
+</head>
+<body>
+${doc.body.innerHTML}
+</body>
+</html>`;
+
+        // 5. Create a blob and trigger the download.
+        const blob = new Blob([finalHtml], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
