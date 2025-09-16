@@ -4,10 +4,11 @@ import { Input } from './ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link } from 'lucide-react';
+import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link, Download } from 'lucide-react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LZString from 'lz-string';
+import { toast } from 'sonner';
 
 interface Selection {
   [sliceIndex: number]: number[];
@@ -659,6 +660,90 @@ function CircularDiagramContent() {
     window.print();
   };
 
+async function getInlinedStyles(doc: Document, base: URL): Promise<string[]> {
+    const styles: string[] = [];
+    const linkTags = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
+    for (const link of linkTags) {
+        const href = link.getAttribute('href');
+        if (href) {
+            const cssUrl = new URL(href, base).href;
+            const cssText = await (await fetch(cssUrl)).text();
+            styles.push(`<style>${cssText}</style>`);
+        }
+    }
+    return styles;
+}
+
+async function getInlinedScripts(doc: Document, base: URL): Promise<string[]> {
+    const scripts: string[] = [];
+    const scriptTags = Array.from(doc.querySelectorAll('script[src]'));
+    for (const script of scriptTags) {
+        const src = script.getAttribute('src');
+        if (src) {
+            const jsUrl = new URL(src, base).href;
+            let jsText = await (await fetch(jsUrl)).text();
+            jsText = jsText.replace(/<\/script>/g, '<\\/script>');
+            const typeAttr = script.getAttribute('type') ? ` type="${script.getAttribute('type')}"` : '';
+            const crossOriginAttr = script.hasAttribute('crossorigin') ? ' crossorigin' : '';
+            scripts.push(`<script${typeAttr}${crossOriginAttr}>${jsText}</script>`);
+        }
+    }
+    return scripts;
+}
+
+const handleDownload = async () => {
+    try {
+        const encodedState = encodeState();
+        const docUrl = window.location.href;
+        const base = new URL(docUrl);
+
+        const htmlText = await (await fetch(docUrl)).text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+
+        const [inlinedStyles, inlinedScripts] = await Promise.all([
+            getInlinedStyles(doc, base),
+            getInlinedScripts(doc, base),
+        ]);
+
+        let headHtml = '';
+        for (const child of Array.from(doc.head.children)) {
+            const isStylesheet = child.tagName === 'LINK' && child.getAttribute('rel') === 'stylesheet';
+            const isExternalScript = child.tagName === 'SCRIPT' && child.getAttribute('src');
+            if (!isStylesheet && !isExternalScript) {
+                headHtml += child.outerHTML + '\n';
+            }
+        }
+
+        const finalHtml = `<!DOCTYPE html>
+<html lang="${doc.documentElement.lang || 'en'}">
+<head>
+    ${headHtml}
+    ${inlinedStyles.join('\n')}
+    ${inlinedScripts.join('\n')}
+    <script>window.__PRELOADED_STATE__ = "${encodedState}";</script>
+</head>
+<body>
+    ${doc.body.innerHTML}
+</body>
+</html>`;
+
+        const blob = new Blob([finalHtml], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'autismwheel.html';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error("Failed to download diagram:", error);
+        toast.error("Could not download diagram. Please check the console for errors.");
+    }
+};
+
   // Function to encode current state to URL parameters (with compression)
   const encodeState = () => {
     const state = {
@@ -779,13 +864,9 @@ function CircularDiagramContent() {
 
   // Load state from URL on component mount
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const encodedState = urlParams.get('state');
-    
-    if (encodedState) {
-      const decodedState = decodeState(encodedState);
+    // Function to apply decoded state
+    const applyState = (decodedState: any) => {
       if (decodedState) {
-        // Apply the decoded state
         if (decodedState.selections) setSelections(decodedState.selections);
         if (decodedState.sliceLabels) setSliceLabels(decodedState.sliceLabels);
         if (decodedState.sliceColors) setSliceColors(decodedState.sliceColors);
@@ -796,6 +877,21 @@ function CircularDiagramContent() {
         if (decodedState.showIcons !== undefined) setShowIcons(decodedState.showIcons);
         if (decodedState.sortColumn) setSortColumn(decodedState.sortColumn);
         if (decodedState.sortDirection) setSortDirection(decodedState.sortDirection);
+      }
+    };
+
+    // Prioritize preloaded state from downloaded file
+    const preloadedState = (window as any).__PRELOADED_STATE__;
+    if (preloadedState) {
+      const decodedState = decodeState(preloadedState);
+      applyState(decodedState);
+    } else {
+      // Fallback to URL parameters for shared links
+      const urlParams = new URLSearchParams(window.location.search);
+      const encodedState = urlParams.get('state');
+      if (encodedState) {
+        const decodedState = decodeState(encodedState);
+        applyState(decodedState);
       }
     }
   }, []);
@@ -1292,6 +1388,14 @@ function CircularDiagramContent() {
             >
               <Printer className="w-4 h-4" />
               Print
+            </Button>
+            <Button
+              onClick={handleDownload}
+              variant="outline"
+              className="h-10 gap-2"
+            >
+              <Download className="w-4 h-4" />
+              Download
             </Button>
           </>
         )}
