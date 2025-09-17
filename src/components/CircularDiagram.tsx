@@ -1031,11 +1031,10 @@ const handleDownload = async () => {
           <p className="text-left">
             Please remember, I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice. It is simply a resource for personal reflection. Always seek the guidance of a doctor or other qualified health professional with any questions you may have regarding a medical condition.
           </p>
+          <p className="text-blue-600 print:hidden">
+            Click on segments to select them. You can select up to 2 segments per slice, to indicate typical and under stress impact. Click https://www.youtube.com/watch?v=NUcN7ZhDm98 to view a brief tutorial video.
+          </p>
         </div>
-        
-        <p className="text-muted-foreground print:hidden">
-          Click on segments to select them. You can select up to 2 segments per slice, to indicate typical and under stress impact.
-        </p>
       </div>
       
       <div className="relative">
