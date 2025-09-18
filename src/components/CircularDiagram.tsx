@@ -1038,13 +1038,13 @@ const handleDownload = async () => {
               style={{ display: 'inline', height: '1em', verticalAlign: '-0.125em' }}
             />{' '}
             <a
-              href="https://www.youtube.com/watch?v=NUcN7ZhDm98"
+              href="https://youtu.be/z_VcEjngmMI"
               target="_blank"
               rel="noopener noreferrer"
               className="underline"
               style={{ color: 'inherit' }}
             >
-              https://www.youtube.com/watch?v=NUcN7ZhDm98
+              https://youtu.be/z_VcEjngmMI
             </a>{' '}
             to view a brief tutorial video.
           </p>
