@@ -1022,7 +1022,7 @@ const handleDownload = async () => {
   return (
     <div className="flex flex-col items-center gap-8 p-8">
       <div className="text-center">
-        <h1 className="text-4xl mb-2 font-bold">Autism Wheel</h1>
+        <h1 className="text-5xl mb-2 font-bold">Autism Wheel</h1>
         <div className="mb-6 max-w-3xl mx-auto space-y-4">
           <p className="text-left">
             Hello! Thank you for using my Autism Wheel. I developed this tool as a personal project to help individuals visualize and better understand their own unique autistic profiles.
@@ -1033,7 +1033,7 @@ const handleDownload = async () => {
           <p className="text-blue-600 print:hidden text-left">
             Click on segments to select them. You can select up to 2 segments per slice, to indicate typical and under stress impact. Click{' '}
             <img
-              src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmikteW91dHViZSIgdmlld0JveD0iMCAwIDE2IDE2Ij4gPHBhdGggZD0iTTguMDUxIDEuOTk5aC4wODljLjgyMi4wMDMgNC45ODcuMDMzIDYuMTEuMzM1YTIuMDEgMi4wMSAwIDAgMSAxLjQxNSAxLjQyYy4xMDEuMzguMTcyLjg4My4yMiAxLjQwMmwuMDEuMTA0LjAyMi4yNi4wMDguMTA0Yy4wNjUuOTE0LjA3MyAxLjc3LjA3NCAxLjk1N3YuMDc1Yy0uMDAxLjE5NC0uMDEgMS4xMDgtLjA4MiAyLjA2bC0uMDA4LjEwNS0uMDA5LjEwNGMtLjA1LjU3Mi0uMTI0IDEuMTQtLjIzNSAxLjU1OGEyLjAxIDIuMDEgMCAwIDEtMS40MTUgMS40MmMtMS4xNi4zMTItNS41NjkuMzM0LTYuMTguMzM1aC0uMTQyYy0uMzA5IDAtMS41ODctLjAwNi0yLjkyNy0uMDUybC0uMTctLjAwNi0uMDg3LS4wMDQtLjE3MS0uMDA3LS4xNzEtLjAwN2MtMS4xMS0uMDQ5LTIuMTY3LS4xMjgtMi42NTQtLjI2YTIuMDEgMi4wMSAwIDAgMS0xLjQxNS0xLjQxOWMtLjExMS0uNDE3LS4xODUtLjk4Ni0uMjM1LTEuNTU4TC4wOSA5LjgybC0uMDA4LS4xMDRBMzEgMzEgMCAwIDEgMCA3LjY4di0uMTIzYy4wMDItLjIxNS4wMS0uOTU4LjA2NC0xLjc3OGwuMDA3LS4xMDMuMDAzLS4wNTIuMDA4LS4xMDQuMDIyLS4yNi4wMS0uMTA0Yy4wNDgtLjUxOS4xMTktMS4wMjMuMjItMS40MDJhMi4wMSAyLjAxIDAgMCAxIDEuNDE1LTEuNDJjLjQ4Ny0uMTMgMS41NDQtLjIxIDIuNjU0LS4yNmwuMTctLjAwNy4xNzItLjAwNi4wODYtLjAwMy4xNzEtLjAwN0ExMDAgMTAwIDAgMCAxIDcuODU4IDJ6TTYuNCA1LjIwOXY0LjgxOGw0LjE1Ny0yLjQwOHoiLz48L3N2Zz4K"
+              src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmkteW91dHViZSIgdmlld0JveD0iMCAwIDE2IDE2Ij4KICA8cGF0aCBkPSJNOC4wNTEgMS45OTloLjA4OWM4LjIyLjAwMyA0Ljk4Ny4wMzMgNi4xMS4zMzVhMi4wMSAyLjAxIDAgMCAxIDEuNDE1IDEuNDJjLjEwMS4zOC4xNzIuODgzLjIyIDEuNDAyTC4wMS4xMDRsLjAyMi4yNi4wMDguMTA0Yy4wNjUuOTE0LjA3MyAxLjc3LjA3NCAxLjk1N3YuMDc1Yy0uMDAxLjE5NC0uMDEgMS4xMDgtLjA4MiAyLjA2bC0uMDA4LjEwNS0uMDA5LjEwNGMtLjA1LjU3Mi0uMTI0IDEuMTQtLjIzNSAxLjU1OGEyLjAxIDIuMDEgMCAwIDEtMS40MTUgMS40MmMtMS4xNi4zMTItNS41NjkuMzM0LTYuMTguMzM1aC0uMTQyYy0uMzA5IDAtMS41ODctLjAwNi0yLjkyNy0uMDUybC0uMTctLjAwNi0uMDg3LS4wMDQtLjE3MS0uMDA3LS4xNzEtLjAwN2MtMS4xMS0uMDQ5LTIuMTY3LS4xMjgtMi42NTQtLjI2YTIuMDEgMi4wMSAwIDAgMS0xLjQxNS0xLjQxOWMtLjExMS0uNDE3LS4xODUtLjk4Ni0uMjM1LTEuNTU4TC4wOSA5LjgybC0uMDA4LS4xMDRBMzEgMzEgMCAwIDEgMCA3LjY4di0uMTIzYy4wMDItLjIxNS4wMS0uOTU4LjA2NC0xLjc3OGwuMDA3LS4xMDMuMDAzLS4wNTIuMDA4LS4xMDQuMDIyLS4yNi4wMS0uMTA0Yy4wNDgtLjUxOS4xMTktMS4wMjMuMjItMS40MDJhMi4wMSAyLjAxIDAgMCAxIDEuNDE1LTEuNDJjLjQ4Ny0uMTMgMS41NDQtLjIxIDIuNjU0LS4yNmwuMTctLjAwNy4xNzItLjAwNi4wODYtLjAwMy4xNzEtLjAwN0ExMDAgMTAwIDAgMCAxIDcuODU4IDJ6TTYuNCA1LjIwOXY0LjgxOGw0LjE1Ny0yLjQwOHoiLz4KPC9zdmc+Cg=="
               alt="YouTube icon"
               style={{ display: 'inline', height: '1em', verticalAlign: '-0.125em' }}
             />{' '}
