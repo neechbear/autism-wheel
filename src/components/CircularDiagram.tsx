@@ -1022,7 +1022,7 @@ const handleDownload = async () => {
   return (
     <div className="flex flex-col items-center gap-8 p-8">
       <div className="text-center">
-        <h1 className="mb-2">Autism Wheel</h1>
+        <h1 className="text-4xl font-bold mb-2">Autism Wheel</h1>
         
         <div className="mb-6 max-w-3xl mx-auto space-y-4">
           <p className="text-left">
