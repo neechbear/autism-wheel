@@ -82,18 +82,18 @@ interface LabelData {
 const darkenColor = (hexColor: string, amount: number = 0.3): string => {
   // Remove the # if present
   const color = hexColor.replace('#', '');
-  
+
   // Parse the RGB values
   const num = parseInt(color, 16);
   const r = (num >> 16) & 255;
   const g = (num >> 8) & 255;
   const b = num & 255;
-  
+
   // Darken each component
   const darkenedR = Math.floor(r * (1 - amount));
   const darkenedG = Math.floor(g * (1 - amount));
   const darkenedB = Math.floor(b * (1 - amount));
-  
+
   // Convert back to hex
   return `#${((darkenedR << 16) | (darkenedG << 8) | darkenedB).toString(16).padStart(6, '0')}`;
 };
@@ -208,7 +208,7 @@ function DraggableLabelRow({ labelData, index, editingLabels, setEditingLabels, 
     <tr
       ref={dropRef}
       className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
-      style={{ 
+      style={{
         opacity: isDragging ? 0.5 : 1,
         backgroundColor: isOver ? 'rgba(59, 130, 246, 0.1)' : 'transparent'
       }}
@@ -240,8 +240,8 @@ function DraggableLabelRow({ labelData, index, editingLabels, setEditingLabels, 
           size="sm"
           onClick={() => onDelete(labelData.id)}
           disabled={!canDelete}
-          className={canDelete 
-            ? "text-destructive hover:text-destructive hover:bg-destructive/10" 
+          className={canDelete
+            ? "text-destructive hover:text-destructive hover:bg-destructive/10"
             : "text-muted-foreground cursor-not-allowed"
           }
           title={!canDelete ? "Cannot delete - minimum of 2 labels required" : "Delete label"}
@@ -279,7 +279,7 @@ function CircularDiagramContent() {
     setSelections(prev => {
       const currentSelections = prev[sliceIndex] || [];
       const segmentNumber = ringIndex + 1; // Convert to 1-based numbering
-      
+
       if (currentSelections.length === 0) {
         // No current selections, add this one
         return {
@@ -288,7 +288,7 @@ function CircularDiagramContent() {
         };
       } else if (currentSelections.length === 1) {
         const [firstSelection] = currentSelections;
-        
+
         if (segmentNumber <= firstSelection) {
           // Clicked on a dark-colored segment, clear all selections
           return {
@@ -304,7 +304,7 @@ function CircularDiagramContent() {
         }
       } else if (currentSelections.length === 2) {
         const [firstSelection, secondSelection] = currentSelections;
-        
+
         if (segmentNumber <= firstSelection) {
           // Clicked on a dark-colored segment, clear all selections
           return {
@@ -322,7 +322,7 @@ function CircularDiagramContent() {
           return prev;
         }
       }
-      
+
       return prev;
     });
   };
@@ -331,11 +331,11 @@ function CircularDiagramContent() {
     const currentSelections = selections[sliceIndex] || [];
     const segmentNumber = ringIndex + 1;
     const baseColor = sliceColors[sliceIndex];
-    
+
     if (currentSelections.length === 0) {
       return 'rgba(0, 0, 0, 0.05)';
     }
-    
+
     if (currentSelections.length === 1) {
       const selectedSegment = currentSelections[0];
       if (segmentNumber <= selectedSegment) {
@@ -350,7 +350,7 @@ function CircularDiagramContent() {
         return baseColor + '80'; // 50% opacity
       }
     }
-    
+
     return 'rgba(0, 0, 0, 0.05)';
   };
 
@@ -358,22 +358,22 @@ function CircularDiagramContent() {
     const angleStep = (2 * Math.PI) / sliceLabels.length;
     const startAngle = sliceIndex * angleStep - Math.PI / 2; // Start from top
     const endAngle = startAngle + angleStep;
-    
+
     const innerRadius = MIN_RADIUS + ringIndex * RING_WIDTH;
     const outerRadius = MIN_RADIUS + (ringIndex + 1) * RING_WIDTH;
-    
+
     const x1 = CENTER_X + innerRadius * Math.cos(startAngle);
     const y1 = CENTER_Y + innerRadius * Math.sin(startAngle);
     const x2 = CENTER_X + outerRadius * Math.cos(startAngle);
     const y2 = CENTER_Y + outerRadius * Math.sin(startAngle);
-    
+
     const x3 = CENTER_X + outerRadius * Math.cos(endAngle);
     const y3 = CENTER_Y + outerRadius * Math.sin(endAngle);
     const x4 = CENTER_X + innerRadius * Math.cos(endAngle);
     const y4 = CENTER_Y + innerRadius * Math.sin(endAngle);
-    
+
     const largeArcFlag = angleStep > Math.PI ? 1 : 0;
-    
+
     return `
       M ${x1} ${y1}
       L ${x2} ${y2}
@@ -388,10 +388,10 @@ function CircularDiagramContent() {
     const angleStep = (2 * Math.PI) / sliceLabels.length;
     const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep / 2; // Center of slice
     const labelRadius = MAX_RADIUS + 30;
-    
+
     const x = CENTER_X + labelRadius * Math.cos(angle);
     const y = CENTER_Y + labelRadius * Math.sin(angle);
-    
+
     return { x, y, angle };
   };
 
@@ -405,7 +405,7 @@ function CircularDiagramContent() {
       svgClone.setAttribute('width', '750');
       svgClone.setAttribute('height', '750');
       svgClone.setAttribute('viewBox', '0 0 750 750');
-      
+
       // Create white background rectangle
       const backgroundRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       backgroundRect.setAttribute('x', '0');
@@ -414,13 +414,13 @@ function CircularDiagramContent() {
       backgroundRect.setAttribute('height', '750');
       backgroundRect.setAttribute('fill', '#ffffff');
       svgClone.appendChild(backgroundRect);
-      
+
       // Copy all elements from the original SVG
       const originalSvg = svgRef.current;
       for (let i = 0; i < originalSvg.children.length; i++) {
         const child = originalSvg.children[i];
         const clonedChild = child.cloneNode(true) as Element;
-        
+
         // Ensure text elements have proper font styling
         if (clonedChild.tagName === 'text') {
           clonedChild.setAttribute('font-family', 'Arial, Helvetica, sans-serif');
@@ -429,7 +429,7 @@ function CircularDiagramContent() {
             clonedChild.setAttribute('fill', '#374151');
           }
         }
-        
+
         // Recursively fix text elements in groups
         const textElements = clonedChild.querySelectorAll('text');
         textElements.forEach(textEl => {
@@ -441,10 +441,10 @@ function CircularDiagramContent() {
             textEl.setAttribute('fill', '#374151');
           }
         });
-        
+
         svgClone.appendChild(clonedChild);
       }
-      
+
       // Serialize the new SVG
       const svgData = new XMLSerializer().serializeToString(svgClone);
       const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
@@ -484,18 +484,18 @@ function CircularDiagramContent() {
     // Get SVG data
     const svgData = new XMLSerializer().serializeToString(svgRef.current);
     const img = new Image();
-    
+
     img.onload = () => {
       // Draw the SVG onto the canvas
       ctx.drawImage(img, 0, 0);
-      
+
       // Create download link
       const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
       const quality = format === 'jpeg' ? 0.9 : undefined; // High quality for JPEG
-      
+
       canvas.toBlob((blob) => {
         if (!blob) return;
-        
+
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.download = `circular-diagram.${format}`;
@@ -530,20 +530,20 @@ function CircularDiagramContent() {
       const newLabels = editingLabels.map(item => item.label);
       const newColors = editingLabels.map(item => item.color);
       const newIcons = editingLabels.map(item => item.icon);
-      
+
       // Create mapping from original indices to new indices
       const indexMapping: { [oldIndex: number]: number } = {};
       editingLabels.forEach((item, newIndex) => {
         indexMapping[item.originalIndex] = newIndex;
       });
-      
+
       // Remap selections based on the new order
       setSelections(prev => {
         const newSelections: Selection = {};
         Object.keys(prev).forEach(key => {
           const oldSliceIndex = parseInt(key);
           const newSliceIndex = indexMapping[oldSliceIndex];
-          
+
           // Only keep selections for labels that still exist and map them to new indices
           if (newSliceIndex !== undefined && newSliceIndex < newLabels.length) {
             newSelections[newSliceIndex] = prev[oldSliceIndex];
@@ -551,7 +551,7 @@ function CircularDiagramContent() {
         });
         return newSelections;
       });
-      
+
       setSliceLabels(newLabels);
       setSliceColors(newColors);
       setSliceIcons(newIcons);
@@ -618,7 +618,7 @@ function CircularDiagramContent() {
       const [firstSelection, secondSelection] = currentSelections.sort((a, b) => a - b);
       const baseColor = sliceColors[sliceIndex];
       const icon = sliceIcons[sliceIndex];
-      
+
       return {
         sliceIndex,
         label,
@@ -633,7 +633,7 @@ function CircularDiagramContent() {
 
     return tableData.sort((a, b) => {
       let comparison = 0;
-      
+
       switch (sortColumn) {
         case 'category':
           comparison = a.label.localeCompare(b.label);
@@ -651,7 +651,7 @@ function CircularDiagramContent() {
           comparison = aStress - bStress;
           break;
       }
-      
+
       return sortDirection === 'asc' ? comparison : -comparison;
     });
   };
@@ -758,7 +758,7 @@ const handleDownload = async () => {
       sortColumn,
       sortDirection
     };
-    
+
     // Convert to JSON, compress, and encode for URL
     const jsonString = JSON.stringify(state);
     const compressedString = LZString.compressToEncodedURIComponent(jsonString);
@@ -774,7 +774,7 @@ const handleDownload = async () => {
         const state = JSON.parse(decompressedString);
         return state;
       }
-      
+
       // Fallback to old base64 format for backward compatibility
       const jsonString = decodeURIComponent(escape(atob(encodedState)));
       const state = JSON.parse(jsonString);
@@ -791,7 +791,7 @@ const handleDownload = async () => {
     const currentUrl = new URL(window.location.href);
     currentUrl.searchParams.set('state', encodedState);
     const urlString = currentUrl.toString();
-    
+
     // Check if clipboard API is available and we're in a secure context
     if (navigator.clipboard && window.isSecureContext) {
       try {
@@ -803,7 +803,7 @@ const handleDownload = async () => {
         // Fall through to fallback methods
       }
     }
-    
+
     // Fallback method using deprecated execCommand
     try {
       const tempInput = document.createElement('input');
@@ -814,9 +814,9 @@ const handleDownload = async () => {
       tempInput.style.opacity = '0';
       tempInput.style.pointerEvents = 'none';
       tempInput.setAttribute('readonly', '');
-      
+
       document.body.appendChild(tempInput);
-      
+
       // For mobile devices - improved mobile support
       if (navigator.userAgent.match(/ipad|iphone/i)) {
         tempInput.contentEditable = 'true';
@@ -831,10 +831,10 @@ const handleDownload = async () => {
         tempInput.select();
         tempInput.setSelectionRange(0, tempInput.value.length);
       }
-      
+
       const successful = document.execCommand('copy');
       document.body.removeChild(tempInput);
-      
+
       if (successful) {
         alert('Link copied to clipboard!');
         return;
@@ -843,10 +843,10 @@ const handleDownload = async () => {
       }
     } catch (fallbackError) {
       console.warn('Fallback copy method failed:', fallbackError);
-      
+
       // Final fallback: Show URL in a way user can easily copy
       const fallbackMessage = `Copy this link manually:\n\n${urlString}`;
-      
+
       // Try using a prompt first (allows easy selection on many browsers)
       try {
         const userInput = prompt('Copy this link:', urlString);
@@ -912,7 +912,7 @@ const handleDownload = async () => {
     // Available anchor categories for each level
     const availableAnchors = [
       'social-interaction',
-      'communication', 
+      'communication',
       'sensory-processing',
       'repetitive-behaviours',
       'executive-functioning',
@@ -925,7 +925,7 @@ const handleDownload = async () => {
     const originalCategories = [
       'Social Interaction',
       'Communication',
-      'Sensory Processing', 
+      'Sensory Processing',
       'Repetitive Behaviours and Special Interests',
       'Executive Functioning',
       'Emotional Regulation',
@@ -935,7 +935,7 @@ const handleDownload = async () => {
 
     // Normalize the input label
     const normalizedLabel = normalizeString(label);
-    
+
     // Step 1: Try exact match with normalized original categories
     for (let i = 0; i < originalCategories.length; i++) {
       const normalizedOriginal = normalizeString(originalCategories[i]);
@@ -1014,7 +1014,7 @@ const handleDownload = async () => {
         return `${level}-${anchor}`;
       }
     }
-    
+
     // Fall back to general level if no category match found
     return level;
   };
@@ -1023,7 +1023,7 @@ const handleDownload = async () => {
     <div className="flex flex-col items-center gap-8 p-8">
       <div className="text-center">
         <h1 className="text-4xl mb-2">Autism Wheel</h1>
-        
+
         <div className="mb-6 max-w-3xl mx-auto space-y-4">
           <p className="text-left">
             Hello! Thank you for using the Autism Wheel. I developed this tool as a personal project to help individuals visualize and better understand their own unique autistic profiles.
@@ -1031,12 +1031,12 @@ const handleDownload = async () => {
           <p className="text-left">
             Please remember, I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice. It is simply a resource for personal reflection. Always seek the guidance of a doctor or other qualified health professional with any questions you may have regarding a medical condition.
           </p>
-          <p className="text-blue-600 print:hidden">
-            Click on segments to select them. You can select up to 2 segments per slice, to indicate typical and under stress impact. Click https://www.youtube.com/watch?v=NUcN7ZhDm98 to view a brief tutorial video.
+          <p className="text-blue-600 print:hidden text-left">
+            Click on segments to select them. You can select up to 2 segments per slice, to indicate typical and under stress impact. Click <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmkteW91dHViZSIgdmlld0JveD0iMCAwIDE2IDE2Ij4gPHBhdGggZD0iTTguMDUxIDEuOTk5aC4wODljLjgyMi4wMDMgNC45ODcuMDMzIDYuMTEuMzM1YTIuMDEgMi4wMSAwIDAgMSAxLjQxNSAxLjQyYy4xMDEuMzguMTcyLjg4My4yMiAxLjQwMmwuMDEuMTA0LjAyMi4yNi4wMDguMTA0Yy4wNjUuOTE0LjA3MyAxLjc3LjA3NCAxLjk1N3YuMDc1Yy0uMDAxLjE5NC0uMDEgMS4xMDgtLjA4MiAyLjA2bC0uMDA4LjEwNS0uMDA5LjEwNGMtLjA1LjU3Mi0uMTI0IDEuMTQtLjIzNSAxLjU1OGEyLjAxIDIuMDEgMCAwIDEtMS40MTUgMS40MmMtMS4xNi4zMTItNS41NjkuMzM0LTYuMTguMzM1aC0uMTQyYy0uMzA5IDAtMS41ODctLjAwNi0yLjkyNy0uMDUybC0uMTctLjAwNi0uMDg3LS4wMDQtLjE3MS0uMDA3LS4xNzEtLjAwN2MtMS4xMS0uMDQ5LTIuMTY3LS4xMjgtMi42NTQtLjI2YTIuMDEgMi4wMSAwIDAgMS0xLjQxNS0xLjQxOWMtLjExMS0uNDE3LS4xODUtLjk4Ni0uMjM1LTEuNTU4TC4wOSA5LjgybC0uMDA4LS4xMDRBMzEgMzEgMCAwIDEgMCA3LjY4di0uMTIzYy4wMDItLjIxNS4wMS0uOTU4LjA2NC0xLjc3OGwuMDA3LS4xMDMuMDAzLS4wNTIuMDA4LS4xMDQuMDIyLS4yNi4wMS0uMTA0Yy4wNDgtLjUxOS4xMTktMS4wMjMuMjItMS40MDJhMi4wMSAyLjAxIDAgMCAxIDEuNDE1LTEuNDJjLjQ4Ny0uMTMgMS41NDQtLjIxIDIuNjU0LS4yNmwuMTctLjAwNy4xNzItLjAwNi4wODYtLjAwMy4xNzEtLjAwN0ExMDAgMTAwIDAgMCAxIDcuODU4IDJ6TTYuNCA1LjIwOXY0LjgxOGw0LjE1Ny0yLjQwOHoiLz48L3N2Zz4K" style="display: inline; height: 1em; vertical-align: -0.125em;" alt="YouTube icon" /> <a href="https://www.youtube.com/watch?v=NUcN7ZhDm98" target="_blank" rel="noopener noreferrer" className="underline" style="color: inherit;">https://www.youtube.com/watch?v=NUcN7ZhDm98</a> to view a brief tutorial video.
           </p>
         </div>
       </div>
-      
+
       <div className="relative">
         <svg ref={svgRef} width="750" height="750" viewBox="0 0 750 750">
           {/* Grid lines */}
@@ -1044,10 +1044,10 @@ const handleDownload = async () => {
             const radius = MIN_RADIUS + i * RING_WIDTH;
             // Highlight boundaries between groups: 4-5 (index 4) and 7-8 (index 7)
             const isGroupBoundary = i === 4 || i === 7;
-            
+
             let strokeColor = "#e5e7eb"; // default light grey
             let strokeWidth = "1";
-            
+
             if (isGroupBoundary) {
               if (boundaryWeight === 'hidden') {
                 strokeColor = "#e5e7eb"; // same as normal lines
@@ -1060,7 +1060,7 @@ const handleDownload = async () => {
                 strokeWidth = "1";
               }
             }
-            
+
             return (
               <circle
                 key={`ring-${i}`}
@@ -1073,7 +1073,7 @@ const handleDownload = async () => {
               />
             );
           })}
-          
+
           {/* Slice dividers */}
           {Array.from({ length: sliceLabels.length }, (_, i) => {
             const angle = (i * 2 * Math.PI) / sliceLabels.length - Math.PI / 2;
@@ -1091,13 +1091,13 @@ const handleDownload = async () => {
               />
             );
           })}
-          
+
           {/* Segments */}
           {Array.from({ length: sliceLabels.length }, (_, sliceIndex) =>
             Array.from({ length: TOTAL_RINGS }, (_, ringIndex) => {
               const path = createSegmentPath(sliceIndex, ringIndex);
               const fill = getSegmentFill(sliceIndex, ringIndex);
-              
+
               return (
                 <path
                   key={`segment-${sliceIndex}-${ringIndex}`}
@@ -1111,16 +1111,16 @@ const handleDownload = async () => {
               );
             })
           )}
-          
+
           {/* Selection numbers */}
           {numberPosition !== 'hidden' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
             const currentSelections = selections[sliceIndex] || [];
             if (currentSelections.length === 0) return null;
-            
+
             return currentSelections.map((selectionNumber) => {
               const ringIndex = selectionNumber - 1; // Convert back to 0-based
               const angleStep = (2 * Math.PI) / sliceLabels.length;
-              
+
               // Position numbers based on user preference
               let angleMultiplier;
               switch (numberPosition) {
@@ -1135,17 +1135,17 @@ const handleDownload = async () => {
                   angleMultiplier = 0.75; // 75% towards the end angle
                   break;
               }
-              
+
               const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep * angleMultiplier;
               const radius = MIN_RADIUS + (ringIndex + 0.5) * RING_WIDTH; // Center of ring
-              
+
               const x = CENTER_X + radius * Math.cos(angle);
               const y = CENTER_Y + radius * Math.sin(angle);
-              
+
               // Determine the text color based on segment color
               const baseColor = sliceColors[sliceIndex];
               let textColor;
-              
+
               if (currentSelections.length === 1) {
                 // Only one selection, so this number is in the dark color range
                 textColor = darkenColor(baseColor);
@@ -1160,7 +1160,7 @@ const handleDownload = async () => {
                   textColor = darkenColor(baseColor, 0.15);
                 }
               }
-              
+
               return (
                 <text
                   key={`selection-number-${sliceIndex}-${selectionNumber}`}
@@ -1169,7 +1169,7 @@ const handleDownload = async () => {
                   textAnchor="middle"
                   dominantBaseline="middle"
                   className="text-sm pointer-events-none"
-                  style={{ 
+                  style={{
                     fontWeight: 'bold',
                     fill: textColor
                   }}
@@ -1186,16 +1186,16 @@ const handleDownload = async () => {
             const rotation = angle * (180 / Math.PI);
             const shouldFlip = rotation > 90 && rotation < 270;
             const finalRotation = shouldFlip ? rotation + 180 : rotation;
-            
+
             // Split long labels into multiple lines
             const words = label.split(' ');
             const maxWordsPerLine = words.length > 3 ? 2 : words.length;
             const lines = [];
-            
+
             for (let i = 0; i < words.length; i += maxWordsPerLine) {
               lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
             }
-            
+
             return (
               <g key={`label-${sliceIndex}`}>
                 {lines.map((line, lineIndex) => (
@@ -1224,14 +1224,14 @@ const handleDownload = async () => {
           {/* Center icons */}
           {showIcons && sliceIcons.map((icon, sliceIndex) => {
             if (!icon) return null;
-            
+
             const angleStep = (2 * Math.PI) / sliceLabels.length;
             const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep / 2; // Center of slice
             const iconRadius = MIN_RADIUS * 0.7; // Position icons inside the center circle
-            
+
             const x = CENTER_X + iconRadius * Math.cos(angle);
             const y = CENTER_Y + iconRadius * Math.sin(angle);
-            
+
             return (
               <text
                 key={`center-icon-${sliceIndex}`}
@@ -1252,7 +1252,7 @@ const handleDownload = async () => {
         </svg>
 
       </div>
-      
+
       {/* Display Options */}
       <div className="flex flex-wrap gap-4 justify-center print:hidden">
         <DropdownMenu>
@@ -1262,19 +1262,19 @@ const handleDownload = async () => {
             <ChevronDown className="w-4 h-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setBoundaryWeight('normal')}
               className={boundaryWeight === 'normal' ? 'bg-accent' : ''}
             >
               Normal weight
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setBoundaryWeight('bold')}
               className={boundaryWeight === 'bold' ? 'bg-accent' : ''}
             >
               Bold weight
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setBoundaryWeight('hidden')}
               className={boundaryWeight === 'hidden' ? 'bg-accent' : ''}
             >
@@ -1290,25 +1290,25 @@ const handleDownload = async () => {
             <ChevronDown className="w-4 h-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setNumberPosition('left')}
               className={numberPosition === 'left' ? 'bg-accent' : ''}
             >
               Left aligned
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setNumberPosition('center')}
               className={numberPosition === 'center' ? 'bg-accent' : ''}
             >
               Center aligned
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setNumberPosition('right')}
               className={numberPosition === 'right' ? 'bg-accent' : ''}
             >
               Right aligned
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setNumberPosition('hidden')}
               className={numberPosition === 'hidden' ? 'bg-accent' : ''}
             >
@@ -1324,19 +1324,19 @@ const handleDownload = async () => {
             <ChevronDown className="w-4 h-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setLabelStyle('normal')}
               className={labelStyle === 'normal' ? 'bg-accent' : ''}
             >
               Normal weight
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setLabelStyle('bold')}
               className={labelStyle === 'bold' ? 'bg-accent' : ''}
             >
               Bold weight
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setLabelStyle('hidden')}
               className={labelStyle === 'hidden' ? 'bg-accent' : ''}
             >
@@ -1352,13 +1352,13 @@ const handleDownload = async () => {
             <ChevronDown className="w-4 h-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setShowIcons(true)}
               className={showIcons ? 'bg-accent' : ''}
             >
               Show icons
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setShowIcons(false)}
               className={!showIcons ? 'bg-accent' : ''}
             >
@@ -1372,7 +1372,7 @@ const handleDownload = async () => {
       <div className="flex flex-wrap gap-4 justify-center print:hidden">
         {!isEditingLabels && (
           <>
-            <Button 
+            <Button
               onClick={handleCopyLink}
               variant="outline"
               className="h-10 gap-2"
@@ -1380,7 +1380,7 @@ const handleDownload = async () => {
               <Link className="w-4 h-4" />
               Copy link
             </Button>
-            <Button 
+            <Button
               onClick={handlePrint}
               variant="outline"
               className="h-10 gap-2"
@@ -1398,7 +1398,7 @@ const handleDownload = async () => {
             </Button>
           </>
         )}
-        
+
         <DropdownMenu>
           <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2">
             Save diagram
@@ -1416,25 +1416,25 @@ const handleDownload = async () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        
-        <Button 
+
+        <Button
           onClick={handleEditLabels}
           variant={isEditingLabels ? "default" : "outline"}
           className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700" : "border-blue-600 text-blue-600 hover:bg-blue-50"}`}
         >
           {isEditingLabels ? "Save labels" : "Edit labels"}
         </Button>
-        
+
         {isEditingLabels && (
           <>
-            <Button 
+            <Button
               onClick={handleRevertChanges}
               variant="destructive"
               className="h-10"
             >
               Revert changes
             </Button>
-            <Button 
+            <Button
               onClick={handleDefaultLabels}
               variant="destructive"
               className="h-10"
@@ -1512,50 +1512,50 @@ const handleDownload = async () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead 
+                <TableHead
                   className="cursor-pointer hover:bg-muted/50 select-none"
                   onClick={() => handleSort('category')}
                 >
                   <div className="flex items-center gap-1">
                     Category
                     <div className="flex flex-col">
-                      <ChevronUp 
-                        className={`w-3 h-3 ${sortColumn === 'category' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                      <ChevronUp
+                        className={`w-3 h-3 ${sortColumn === 'category' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
                       />
-                      <ChevronDown 
-                        className={`w-3 h-3 -mt-1 ${sortColumn === 'category' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                      <ChevronDown
+                        className={`w-3 h-3 -mt-1 ${sortColumn === 'category' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
                       />
                     </div>
                   </div>
                 </TableHead>
-                <TableHead 
+                <TableHead
                   className="cursor-pointer hover:bg-muted/50 select-none"
                   onClick={() => handleSort('typical')}
                 >
                   <div className="flex items-center gap-1">
                     Typical impact
                     <div className="flex flex-col">
-                      <ChevronUp 
-                        className={`w-3 h-3 ${sortColumn === 'typical' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                      <ChevronUp
+                        className={`w-3 h-3 ${sortColumn === 'typical' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
                       />
-                      <ChevronDown 
-                        className={`w-3 h-3 -mt-1 ${sortColumn === 'typical' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                      <ChevronDown
+                        className={`w-3 h-3 -mt-1 ${sortColumn === 'typical' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
                       />
                     </div>
                   </div>
                 </TableHead>
-                <TableHead 
+                <TableHead
                   className="cursor-pointer hover:bg-muted/50 select-none"
                   onClick={() => handleSort('stress')}
                 >
                   <div className="flex items-center gap-1">
                     Under stress impact
                     <div className="flex flex-col">
-                      <ChevronUp 
-                        className={`w-3 h-3 ${sortColumn === 'stress' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                      <ChevronUp
+                        className={`w-3 h-3 ${sortColumn === 'stress' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
                       />
-                      <ChevronDown 
-                        className={`w-3 h-3 -mt-1 ${sortColumn === 'stress' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                      <ChevronDown
+                        className={`w-3 h-3 -mt-1 ${sortColumn === 'stress' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
                       />
                     </div>
                   </div>
@@ -1567,7 +1567,7 @@ const handleDownload = async () => {
                 const { sliceIndex, label, icon, baseColor, firstSelection, secondSelection } = rowData;
                 const currentSelections = selections[sliceIndex] || [];
                 const [originalFirst, originalSecond] = currentSelections.sort((a, b) => a - b);
-                
+
                 // Helper function to get ASD level text
                 const getASDLevel = (number: number) => {
                   if (number >= 1 && number <= 4) return "ASD level 1";
@@ -1575,7 +1575,7 @@ const handleDownload = async () => {
                   if (number >= 8 && number <= 10) return "ASD level 3";
                   return "";
                 };
-                
+
                 return (
                   <TableRow key={`detail-${sliceIndex}`}>
                     <TableCell>
@@ -1589,16 +1589,16 @@ const handleDownload = async () => {
                     <TableCell>
                       {firstSelection && (
                         <div className="flex items-center gap-2">
-                          <div 
+                          <div
                             className="inline-block px-3 py-1 rounded min-w-8 text-center"
-                            style={{ 
+                            style={{
                               backgroundColor: baseColor,
                               color: darkenColor(baseColor)
                             }}
                           >
                             {firstSelection}
                           </div>
-                          <a 
+                          <a
                             href={`#${getAnchorLink(firstSelection, label)}`}
                             className="text-muted-foreground hover:text-foreground transition-colors no-underline"
                             onClick={(e) => {
@@ -1617,16 +1617,16 @@ const handleDownload = async () => {
                     <TableCell>
                       {(originalSecond || firstSelection) && (
                         <div className="flex items-center gap-2">
-                          <div 
+                          <div
                             className="inline-block px-3 py-1 rounded min-w-8 text-center"
-                            style={{ 
+                            style={{
                               backgroundColor: originalSecond ? baseColor + '80' : baseColor, // 50% opacity for second selection, full for first
                               color: originalSecond ? darkenColor(baseColor, 0.15) : darkenColor(baseColor)
                             }}
                           >
                             {originalSecond || firstSelection}
                           </div>
-                          <a 
+                          <a
                             href={`#${getAnchorLink(originalSecond || firstSelection, label)}`}
                             className="text-muted-foreground hover:text-foreground transition-colors no-underline"
                             onClick={(e) => {
@@ -1663,7 +1663,7 @@ const handleDownload = async () => {
 
             <div>
               <h1 id="level1" className="mb-4 underline">Level 1: Requiring Support</h1>
-              
+
               <p className="mb-4">
                 An individual at this level requires some support. Their challenges may not be immediately obvious in all situations, but they can affect social, occupational, and other important areas of functioning.
               </p>
@@ -1727,7 +1727,7 @@ const handleDownload = async () => {
 
             <div>
               <h1 id="level2" className="mb-4 underline">Level 2: Requiring Substantial Support</h1>
-              
+
               <p className="mb-4">
                 An individual at this level requires substantial support. Their challenges are more noticeable and significantly impact their daily life and functioning.
               </p>
@@ -1791,7 +1791,7 @@ const handleDownload = async () => {
 
             <div>
               <h1 id="level3" className="mb-4 underline">Level 3: Requiring Very Substantial Support</h1>
-              
+
               <p className="mb-4">
                 An individual at this level requires very substantial support. Their challenges are severe and pervasive, significantly limiting their independence and requiring intensive, ongoing support.
               </p>
