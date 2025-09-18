@@ -3,6 +3,14 @@ name: Build, Test, and Deploy to GitHub Pages
 on:
   # Runs on pushes to any branch
   push:
+    paths:
+      - 'src/**'
+      - '.github/**'
+      - '*.ts'
+      - '*.tsx'
+      - '*.css'
+      - '*.html'
+      - '*.json'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
