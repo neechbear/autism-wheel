@@ -450,7 +450,7 @@ function CircularDiagramContent() {
       const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
       const url = URL.createObjectURL(svgBlob);
       const link = document.createElement('a');
-      link.download = 'circular-diagram.svg';
+      link.download = 'autismwheel.svg';
       link.href = url;
       document.body.appendChild(link);
       link.click();
@@ -498,7 +498,7 @@ function CircularDiagramContent() {
 
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
-        link.download = `circular-diagram.${format}`;
+        link.download = `autismwheel.${format}`;
         link.href = url;
         document.body.appendChild(link);
         link.click();
@@ -1038,13 +1038,13 @@ const handleDownload = async () => {
               style={{ display: 'inline', height: '1em', verticalAlign: '-0.125em' }}
             />{' '}
             <a
-              href="https://www.youtube.com/watch?v=NUcN7ZhDm98"
+              href="https://youtu.be/z_VcEjngmMI"
               target="_blank"
               rel="noopener noreferrer"
               className="underline"
               style={{ color: 'inherit' }}
             >
-              https://www.youtube.com/watch?v=NUcN7ZhDm98
+              https://youtu.be/z_VcEjngmMI
             </a>{' '}
             to view a brief tutorial video.
           </p>
