@@ -1026,7 +1026,7 @@ const handleDownload = async () => {
 
         <div className="mb-6 max-w-3xl mx-auto space-y-4">
           <p className="text-left">
-            Hello! Thank you for using the Autism Wheel. I developed this tool as a personal project to help individuals visualize and better understand their own unique autistic profiles.
+            Hello! Thank you for using my Autism Wheel. I developed this tool as a personal project to help individuals visualize and better understand their own unique autistic profiles.
           </p>
           <p className="text-left">
             Please remember, I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice. It is simply a resource for personal reflection. Always seek the guidance of a doctor or other qualified health professional with any questions you may have regarding a medical condition.
