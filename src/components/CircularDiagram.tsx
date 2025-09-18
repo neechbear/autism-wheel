@@ -1032,7 +1032,22 @@ const handleDownload = async () => {
             Please remember, I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice. It is simply a resource for personal reflection. Always seek the guidance of a doctor or other qualified health professional with any questions you may have regarding a medical condition.
           </p>
           <p className="text-blue-600 print:hidden text-left">
-            Click on segments to select them. You can select up to 2 segments per slice, to indicate typical and under stress impact. Click <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmkteW91dHViZSIgdmlld0JveD0iMCAwIDE2IDE2Ij4gPHBhdGggZD0iTTguMDUxIDEuOTk5aC4wODljLjgyMi4wMDMgNC45ODcuMDMzIDYuMTEuMzM1YTIuMDEgMi4wMSAwIDAgMSAxLjQxNSAxLjQyYy4xMDEuMzguMTcyLjg4My4yMiAxLjQwMmwuMDEuMTA0LjAyMi4yNi4wMDguMTA0Yy4wNjUuOTE0LjA3MyAxLjc3LjA3NCAxLjk1N3YuMDc1Yy0uMDAxLjE5NC0uMDEgMS4xMDgtLjA4MiAyLjA2bC0uMDA4LjEwNS0uMDA5LjEwNGMtLjA1LjU3Mi0uMTI0IDEuMTQtLjIzNSAxLjU1OGEyLjAxIDIuMDEgMCAwIDEtMS40MTUgMS40MmMtMS4xNi4zMTItNS41NjkuMzM0LTYuMTguMzM1aC0uMTQyYy0uMzA5IDAtMS41ODctLjAwNi0yLjkyNy0uMDUybC0uMTctLjAwNi0uMDg3LS4wMDQtLjE3MS0uMDA3LS4xNzEtLjAwN2MtMS4xMS0uMDQ5LTIuMTY3LS4xMjgtMi42NTQtLjI2YTIuMDEgMi4wMSAwIDAgMS0xLjQxNS0xLjQxOWMtLjExMS0uNDE3LS4xODUtLjk4Ni0uMjM1LTEuNTU4TC4wOSA5LjgybC0uMDA4LS4xMDRBMzEgMzEgMCAwIDEgMCA3LjY4di0uMTIzYy4wMDItLjIxNS4wMS0uOTU4LjA2NC0xLjc3OGwuMDA3LS4xMDMuMDAzLS4wNTIuMDA4LS4xMDQuMDIyLS4yNi4wMS0uMTA0Yy4wNDgtLjUxOS4xMTktMS4wMjMuMjItMS40MDJhMi4wMSAyLjAxIDAgMCAxIDEuNDE1LTEuNDJjLjQ4Ny0uMTMgMS41NDQtLjIxIDIuNjU0LS4yNmwuMTctLjAwNy4xNzItLjAwNi4wODYtLjAwMy4xNzEtLjAwN0ExMDAgMTAwIDAgMCAxIDcuODU4IDJ6TTYuNCA1LjIwOXY0LjgxOGw0LjE1Ny0yLjQwOHoiLz48L3N2Zz4K" style="display: inline; height: 1em; vertical-align: -0.125em;" alt="YouTube icon" /> <a href="https://www.youtube.com/watch?v=NUcN7ZhDm98" target="_blank" rel="noopener noreferrer" className="underline" style="color: inherit;">https://www.youtube.com/watch?v=NUcN7ZhDm98</a> to view a brief tutorial video.
+            Click on segments to select them. You can select up to 2 segments per slice, to indicate typical and under stress impact. Click{' '}
+            <img
+              src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmikteW91dHViZSIgdmlld0JveD0iMCAwIDE2IDE2Ij4gPHBhdGggZD0iTTguMDUxIDEuOTk5aC4wODljLjgyMi4wMDMgNC45ODcuMDMzIDYuMTEuMzM1YTIuMDEgMi4wMSAwIDAgMSAxLjQxNSAxLjQyYy4xMDEuMzguMTcyLjg4My4yMiAxLjQwMmwuMDEuMTA0LjAyMi4yNi4wMDguMTA0Yy4wNjUuOTE0LjA3MyAxLjc3LjA3NCAxLjk1N3YuMDc1Yy0uMDAxLjE5NC0uMDEgMS4xMDgtLjA4MiAyLjA2bC0uMDA4LjEwNS0uMDA5LjEwNGMtLjA1LjU3Mi0uMTI0IDEuMTQtLjIzNSAxLjU1OGEyLjAxIDIuMDEgMCAwIDEtMS40MTUgMS40MmMtMS4xNi4zMTItNS41NjkuMzM0LTYuMTguMzM1aC0uMTQyYy0uMzA5IDAtMS41ODctLjAwNi0yLjkyNy0uMDUybC0uMTctLjAwNi0uMDg3LS4wMDQtLjE3MS0uMDA3LS4xNzEtLjAwN2MtMS4xMS0uMDQ5LTIuMTY3LS4xMjgtMi42NTQtLjI2YTIuMDEgMi4wMSAwIDAgMS0xLjQxNS0xLjQxOWMtLjExMS0uNDE3LS4xODUtLjk4Ni0uMjM1LTEuNTU4TC4wOSA5LjgybC0uMDA4LS4xMDRBMzEgMzEgMCAwIDEgMCA3LjY4di0uMTIzYy4wMDItLjIxNS4wMS0uOTU4LjA2NC0xLjc3OGwuMDA3LS4xMDMuMDAzLS4wNTIuMDA4LS4xMDQuMDIyLS4yNi4wMS0uMTA0Yy4wNDgtLjUxOS4xMTktMS4wMjMuMjItMS40MDJhMi4wMSAyLjAxIDAgMCAxIDEuNDE1LTEuNDJjLjQ4Ny0uMTMgMS41NDQtLjIxIDIuNjU0LS4yNmwuMTctLjAwNy4xNzItLjAwNi4wODYtLjAwMy4xNzEtLjAwN0ExMDAgMTAwIDAgMCAxIDcuODU4IDJ6TTYuNCA1LjIwOXY0LjgxOGw0LjE1Ny0yLjQwOHoiLz48L3N2Zz4K"
+              alt="YouTube icon"
+              style={{ display: 'inline', height: '1em', verticalAlign: '-0.125em' }}
+            />{' '}
+            <a
+              href="https://www.youtube.com/watch?v=NUcN7ZhDm98"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+              style={{ color: 'inherit' }}
+            >
+              https://www.youtube.com/watch?v=NUcN7ZhDm98
+            </a>{' '}
+            to view a brief tutorial video.
           </p>
         </div>
       </div>
