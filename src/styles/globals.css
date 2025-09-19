@@ -42,7 +42,7 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: #1f1f1f;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -211,6 +211,14 @@ html {
 
 .emoji-picker-scroll::-webkit-scrollbar-thumb:hover {
   background: var(--foreground);
+}
+
+/* Force text wrapping in table cells */
+.break-words {
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  hyphens: auto;
 }
 
 /* Print styles */

@@ -1,21 +1,39 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link, Download } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link } from 'lucide-react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LZString from 'lz-string';
-import { toast } from 'sonner';
+
+// YouTube icon component
+function YouTubeIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="currentColor"
+    >
+      <path
+        fill="#FF0000"
+        d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"
+      />
+      <path fill="#FFF" d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    </svg>
+  );
+}
 
 interface Selection {
   [sliceIndex: number]: number[];
 }
 
 const TOTAL_RINGS = 10;
-const TOTAL_SLICES = 8;
+const TOTAL_SLICES = 10;
 const CENTER_X = 375;
 const CENTER_Y = 375;
 const MIN_RADIUS = 55;
@@ -23,40 +41,57 @@ const MAX_RADIUS = 265;
 const RING_WIDTH = (MAX_RADIUS - MIN_RADIUS) / TOTAL_RINGS;
 
 const INITIAL_SLICE_LABELS = [
-  'Social Interaction',
-  'Communication',
-  'Sensory Processing',
-  'Repetitive Behaviours and Special Interests',
+  'Social Interaction & Relationships',
+  'Communication Differences',
+  'Sensory Experiences',
+  'Stimming & Self-Regulation',
+  'Passionate Interests',
   'Executive Functioning',
-  'Emotional Regulation',
-  'Cognitive and Learning Skills',
-  'Motor Skills and Physical Development'
+  'Emotional Experiences & Regulation',
+  'Need for Predictability & Routine',
+  'Cognitive Profile & Learning Style',
+  'Motor Skills & Coordination'
+];
+
+const INITIAL_SLICE_DESCRIPTIONS = [
+  'Describes an individual\'s unique way of interacting with others. This includes preferences for group sizes, ways of showing interest, and understanding of non-verbal cues. Autistic communication styles are different from non-autistic styles, not inherently deficient.',
+  'Covers the diverse ways an individual expresses themselves and processes information. This includes verbal speech, non-speaking communication (e.g., AAC), literal interpretation of language, processing time needed, and use of echolalia (repeating words/phrases).',
+  'Relates to how an individual experiences the world through their senses. This can include being hypersensitive (overwhelmed by sounds, lights, textures) or hyposensitive (seeking out strong sensory input) across sight, hearing, touch, taste, smell, balance, and body awareness.',
+  'Describes self-regulatory body movements (e.g., hand-flapping, rocking, vocalizing, comforters) used to manage sensory input, express emotions, and maintain focus and calm.',
+  'Describes a deep, focused engagement in specific topics that provides joy, expertise, and a sense of purpose. This is a natural and positive aspect of autistic identity.',
+  'Refers to the mental processes that help with planning, organizing, starting tasks (overcoming inertia), managing time, and shifting focus. Differences in executive functioning are a common aspect of neurodivergence and are not a reflection of character or effort.',
+  'Describes an individual\'s emotional landscape and the strategies they use to manage it. Autistic people may experience emotions very intensely. Dysregulation is often a response to sensory or emotional overload, and regulation is achieved through strategies like stimming or reducing demands.',
+  'Highlights the importance of structure and predictability in daily life. Routines help reduce anxiety, manage sensory input, and conserve cognitive energy in a world that can feel chaotic and overwhelming. This is a key coping strategy, not a sign of inflexibility.',
+  'Describes an individual\'s unique way of thinking, processing information, and learning. Autistic people often have distinct learning styles (e.g., visual, kinesthetic, logical) and cognitive strengths, such as strong rote memory, pattern recognition, or deep focus. This is about a different way of thinking, not a deficient one.',
+  'Covers differences in both fine motor skills (e.g., handwriting, buttoning clothes) and gross motor skills (e.g., balance, coordination in sports). Many autistic people experience differences in motor planning and execution (sometimes called dyspraxia), which is a natural variation in physical development.'
 ];
 
 const INITIAL_SLICE_ICONS = [
   '💏',
   '🗨️',
   '👂',
-  '♻️',
+  '👋',
+  '🔍',
   '🏠',
   '😰',
+  '🔄',
   '📚',
   '🤸‍♀️'
 ];
 
 // Common emoji categories for the picker
 const EMOJI_CATEGORIES = {
-  'People': ['😀', '😊', '🥰', '😎', '🤔', '😰', '😭', '🥱', '😴', '🤗', '🤓', '😇', '🙂', '😉', '😍', '🤩', '😘', '😗', '☺️', '😚', '😙', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤭', '🤫', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😔', '😪', '🤤', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '🧐'],
-  'Body Parts': ['👁️', '👀', '👂', '👃', '👄', '👅', '🦷', '🧠', '🫀', '🫁', '👶', '🧒', '👦', '👧', '🧑', '👨', '👩', '🧓', '👴', '👵', '👤', '👥', '🗣️', '👣', '🦴', '🦵', '🦶', '💪', '🤳', '👈', '👉', '👆', '👇', '☝️', '✋', '🤚', '🖐️', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👍', '👎', '👊', '✊', '🤛', '🤜', '🫳', '🫴', '👐', '🙌', '👏', '🤝', '🙏'],
-  'Animals': ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🪲', '🐛', '🦋', '🐌', '🐞', '🐜', '🪰', '🪱', '🦗', '🕷️', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🦬', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🦙', '🐐', '🦌', '🐕', '🐩', '🦮', '🐕‍🦺', '🐈', '🐈‍⬛'],
-  'Food': ['🍎', '🍏', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🫑', '🌽', '🥕', '🫒', '🧄', '🧅', '🥔', '🍠', '🥐', '🥖', '🍞', '🥨', '🥯', '🥞', '🧇', '🧀', '🍖', '🍗', '🥩', '🥓', '🍔', '🍟', '🍕', '🌭', '🥪', '🌮', '🌯', '🫔', '🥙', '🧆', '🥚', '🍳', '🥘', '🍲', '🫕', '🥗', '🍿', '🧈', '🧂', '🥫', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🍝', '🍠', '🍢', '🍣', '🍤', '🍥', '🥮', '🍡', '🥟', '🥠', '🥡', '🦪', '🍦', '🍧', '🍨', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯', '🍼', '🥛', '☕', '🫖', '🍵', '🍶', '🍾', '🍷', '🍸', '🍹', '🍺', '🍻', '🥂', '🥃', '🫗', '🥤', '🧋', '🧃', '🧉', '🧊'],
-  'Medical & Therapy': ['🏥', '⚕️', '🩺', '💊', '💉', '🩹', '🩼', '🦽', '🦼', '🧑‍⚕️', '👨‍⚕️', '👩‍⚕️', '🧬', '🦠', '🧪', '🔬', '🌡️', '🩸', '🫁', '🧠', '🫀', '🦴', '👁️‍🗨️', '🗨️', '💬', '🗣️', '👂', '👁️', '🔍', '🔎', '📋', '📝', '📊', '📈', '📉', '🎯', '🧩', '🎲', '🃏', '🎴', '🀄'],
-  'Gestures': ['👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '👊', '✊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏'],
-  'Activities': ['🤸‍♀️', '🤸‍♂️', '🏃‍♀️', '🏃‍♂️', '🚶‍♀️', '🚶‍♂️', '🧘‍♀️', '🧘‍♂️', '🏋️‍♀️', '🏋️‍♂️', '🤾‍♀️', '🤾‍♂️', '🏌️‍♀️', '🏌️‍♂️', '🏄‍♀️', '🏄‍♂️', '🚣‍♀️', '🚣‍♂️', '🏊‍♀️', '🏊‍♂️', '⛹️‍♀️', '⛹️‍♂️', '🏇', '🧗‍♀️', '🧗‍♂️', '🚴‍♀️', '🚴‍♂️', '🤹‍♀️', '🤹‍♂️', '🎭', '🎨', '🎪', '🎬', '🎤', '🎧', '🎼', '🎵', '🎶', '🥁', '🎹', '🎸', '🎺', '🎷', '🎻', '🪕'],
-  'Objects': ['📱', '💻', '⌚', '📷', '🎥', '📺', '🎮', '🕹️', '🎧', '🎤', '🎵', '🎶', '🎼', '🎹', '🥁', '🎷', '🎺', '🎸', '🪕', '🎻', '📚', '📖', '📝', '✏️', '🖍️', '🖊️', '🖋️', '✒️', '🖌️', '📐', '📏', '🧮', '📌', '📍', '✂️', '🗃️', '🗂️', '📂', '📁', '🗄️', '🔧', '🔨', '⚒️', '🛠️', '⛏️', '🪓', '🔩', '⚙️', '🧰', '🪜', '🪣', '🧽', '🧼', '🪥', '🪒', '🧴', '🪞', '🪟', '🛏️', '🪑', '🚪', '🪜', '🧸', '🎈', '🎁', '🎀', '🪩', '🎊', '🎉'],
-  'Symbols': ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚡', '💫', '⭐', '🌟', '✨', '☄️', '💥', '🔥', '🌈', '☀️', '🌞', '🌙', '🌛', '🌜', '🌚', '🌕', '🌖', '🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '☁️', '⛅', '⛈️', '🌤️', '🌦️', '🌧️', '🌩️', '🌨️', '❄️', '☃️', '⛄', '🌬️', '💨', '🌪️', '🌫️', '☂️', '☔', '💧', '💦', '🌊', '✅', '❌', '⭕', '🛑', '⛔', '📵', '🚫', '💯', '💢', '♨️', '💤', '💨', '🕳️', '💣', '💬', '👁️‍🗨️', '🗨️', '🗯️', '💭', '💤'],
-  'Buildings': ['🏠', '🏡', '🏘️', '🏚️', '🏗️', '🏭', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '🏩', '💒', '🏛️', '⛪', '🕌', '🛕', '🕍', '⛩️', '🕋', '⛲', '⛺', '🌁', '🌃', '🏙️', '🌄', '🌅', '🌆', '🌇', '🌉', '♨️', '🎠', '🎡', '🎢', '💈', '🎪'],
-  'Misc': ['♻️', '🔄', '🔁', '🔂', '⏩', '⏪', '⏫', '⏬', '◀️', '▶️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️', '⤴️', '⤵️', '🔀', '🔃', '➕', '➖', '➗', '✖️', '♾️', '💲', '💱', '™️', '©️', '®️', '〰️', '➰', '➿', '🔚', '🔙', '🔛', '🔝', '🔜', '🔒', '🔓', '🔏', '🔐', '🔑', '🗝️', '🔨', '🪓', '⛏️', '⚒️', '🛠️', '🗡️', '⚔️', '💣', '🪃', '🏹', '🛡️', '🪚', '🔧', '🪛', '🔩', '⚙️', '🗜️', '⚖️', '🦯', '🔗', '⛓️', '🪝', '🧰', '🧲', '🪜', '⚗️', '🧪', '🧫', '🧬', '🔬', '🔭', '📡', '💉', '🩸', '💊', '🩹', '🩼', '🩺', '🪶']
+  'People': ['😀', '😊', '🥰', '😎', '🤔', '😰', '😭', '🥱', '😴', '🤗', '🤓', '😇', '🙂', '😉', '😍', '🤩', '😘', '😗', '☺️', '😚', 'ksz', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤭', '🤫', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😔', '😪', '🤤', '😷', 'tery', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '🧐'],
+  'Body Parts': ['👁️', '👀', '👂', '👃', '👄', '👅', '🦷', '🧠', '🫀', '🫁', '👶', '🧒', '👦', '👧', '🧑', '👨', '👩', '🧓', '👴', '👵', '👤', '👥', '🗣️', '👣', '🦴', '🦵', '🦶', '💪', '🤳', '👈', '👉', '👆', '👇', '☝️', '✋', '🤚', '🖐️', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤝', '👍', '👎', '👊', '✊', ' Lars', '🤜', '👏', '🙌', 'ONES', '🙏'],
+  'Animals': ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', 'wolf', '🐗', '🐴', '🦄', '🐝', '🪲', '🐛', '🦋', '🐌', '🐞', '蚂蚁', '🪱', '🦗', '🕷️', '🦂', 'turtle', 'snake', ' lizard', '🦖', '🦕', 'octopus', 'squid', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', 'camel', '🐫', '🦒', '🦘', '🦬', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🦙', '🐐', 'deer', '🐕', '🐩', '🦮', '🐕‍🦺', '🐈', '🐈‍⬛'],
+  'Food': ['🍎', '🍏', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑', '🥭', 'pineapple', ' coconut', 'kiwi', 'tomato', 'eggplant', 'avocado', '🥦', '🥬', '🥒', '🌶️', '🫑', 'corn', 'carrot', '🫒', '🧄', '🧅', 'potato', 'sweet potato', '🥐', '🥖', 'bread', '🥨', '🥯', '🥞', '🧇', 'cheese', 'meat', 'poultry', 'veal', 'bacon', 'burger', 'fries', 'taco', 'burrito', '🫔', '🥙', '🧆', 'egg', 'cook', 'soup', '🫕', 'salad', 'popcorn', '🧈', '🧂', '🥫', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🍝', 'sweet potato', 'oden', '🍣', '🍤', '🍥', 'mooncake', '🥟', 'fortune', '🥡', '🦪', 'ice cream', 'cream', 'cake', 'cupcake', 'pie', '🥧', 'chocolate', 'candy', 'lollipop', 'caramel', 'honey', '🍼', 'milk', '☕', '🫖', 'tea', '🍶', '🍾', 'wine', 'cocktail', '🍹', 'beer', '🍻', '🥂', '🥃', '🫗', 'drink', '🧋', '🧃', '🧉', 'ice'],
+  'Medical & Therapy': ['🏥', '⚕️', '🩺', 'pill', 'needle', '🩹', '🩼', '🦽', '🦼', '🧑‍⚕️', '👨‍⚕️', '👩‍⚕️', '🧬', 'microbe', '🧪', '🔬', '🌡️', '🩸', '🫁', 'brain', '🫀', '🦴', '👁️‍🗨️', '🗨️', '💬', '🗣️', '👂', '👁️', '🔍', '🔎', '📋', '📝', '📊', '📈', '📉', '🎯', '🧩', 'dice', '🃏', '🎴', '🀄'],
+  'Gestures': ['👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '👊', '✊', ' Lars', '🤜', '👏', '🙌', '.openg', 'parer', '🤝', '🙏'],
+  'Activities': ['🤸‍♂️', '🤸‍♀', '🏃‍♀️', '🏃‍♂️', '🚶‍♀️', '🚶‍♂️', '🧘‍♀️', '🧘‍♂️', '🏋️‍♀️', '🏋️‍♂️', '🤾‍♀️', '🤾‍♂️', '🏌️‍♀️', '🏌️‍♂️', '🏄‍♀️', '🏄‍♂️', '🚣‍♀️', '🚣‍♂️', '🏊‍♀️', '🏊‍♂️', '⛹️‍♀️', '⛹️‍♂️', 'horse', '🧗‍♀️', '🧗‍♂️', '🚴‍♀️', '🚴‍♂️', '🤹‍♀️', '🤹‍♂️', '🎭', '🎨', '🎪', '🎬', '🎤', '🎧', '🎼', '🎵', '🎶', '🥁', '🎹', ' guitar', ' trumpet', ' saxophone', ' violin', '🪕'],
+  'Objects': ['📱', '💻', '⌚', '📷', '🎥', '📺', '🎮', '🕹️', '🎧', '🎤', '🎵', '🎶', '🎼', '🎹', '🥁', 'saxophone', ' trumpet', ' guitar', ' violin', '🪕', '📚', '📖', '📝', '✏️', '🖍️', '🖊️', '🖋️', '✒️', '🖌️', '📐', '📏', '🧮', '📌', '📍', '✂️', '🗃️', '🗂️', '📂', '📁', '🗄️', '🔧', '🔨', '⚒️', '🛠️', '⛏️', '🪓', 'nuts', '⚙️', '🧰', '🪜', '🪣', '🧽', '🧼', '🪥', '🪒', '🔍', '🪞', '🪟', '🛏️', '🪑', '🚪', 'toy', 'gift', 'ribbon', '🪩', '🎊', '🎉'],
+  'Symbols': ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '-ms', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚡', '💫', '⭐', '🌟', '✨', '☄️', '💥', '🔥', '🌈', '☀️', '🌞', '🌙', '🌛', '🌜', '🌚', '🌕', '🌖', '🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '☁️', '⛅', '⛈️', '🌤️', '🌦️', '🌧️', '🌩️', '🌨️', '❄️', '☃️', '⛄', '🌬️', '💨', '🌪️', '🌫️', '☂️', '☔', '💧', '💦', '🌊', '✅', '❌', '⭕', '🛑', '⛔', '📵', '🚫', '💯', '💢', '♨️', '💤', '🕳️', 'bomb', '💬', '👁️‍🗨️', '💭', '🗯️'],
+  'Buildings': ['🏠', '🏡', '🏘️', '🏚️', '🏗️', '🏭', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '.Logf', '💒', '🏛️', '⛪', '🕌', '🛕', '🕍', '⛩️', '🕋', '⛲', '⛺', '🌁', '🌃', '🏙️', '🌄', '🌅', '🌆', '🌇', '🌉', '♨️', 'carousel', 'dance', 'roller', 'blade', 'celebration'],
+  'Misc': ['♻️', '🔄', '🔁', '🔂', '⏩', '⏪', '⏫', '⏬', '◀️', '▶️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️', '⤴️', '⤵️', '🔀', 'uffs', '➕', '➖', '➗', '✖️', '♾️', '💲', '💱', '™️', '©️', '®️', '〰️', '➰', '➿', '🔚', '🔙', '🔛', '🔝', '🔜', '🔒', '🔓', '🔏', '🔐', '🔑', '🗝️', '🔨', '🪓', '⛏️', '⚒️', '🛠️', '🗡️', '⚔️', 'bomb', '🪃', 'arrow', 'shield', '🪚', '🔧', '🪛', 'nuts', '⚙️', '🗜️', '⚖️', '🦯', '🔗', 'chains', '🪝', '🧰', 'magnet', '🪜', 'alchemy', '🧪', '🧫', '🧬', '🔬', '🔭', '📡', 'pill', '🩸', '🩹', '🩼', '🩺', '🪶']
 };
 
 const INITIAL_SLICE_COLORS = [
@@ -68,6 +103,8 @@ const INITIAL_SLICE_COLORS = [
   '#06B6D4', // cyan
   '#84CC16', // lime
   '#F97316', // orange
+  '#EC4899', // pink
+  '#14B8A6', // teal
 ];
 
 interface LabelData {
@@ -75,6 +112,7 @@ interface LabelData {
   label: string;
   color: string;
   icon: string;
+  description: string;
   originalIndex: number;
 }
 
@@ -82,18 +120,18 @@ interface LabelData {
 const darkenColor = (hexColor: string, amount: number = 0.3): string => {
   // Remove the # if present
   const color = hexColor.replace('#', '');
-
+  
   // Parse the RGB values
   const num = parseInt(color, 16);
   const r = (num >> 16) & 255;
   const g = (num >> 8) & 255;
   const b = num & 255;
-
+  
   // Darken each component
   const darkenedR = Math.floor(r * (1 - amount));
   const darkenedG = Math.floor(g * (1 - amount));
   const darkenedB = Math.floor(b * (1 - amount));
-
+  
   // Convert back to hex
   return `#${((darkenedR << 16) | (darkenedG << 8) | darkenedB).toString(16).padStart(6, '0')}`;
 };
@@ -204,11 +242,17 @@ function DraggableLabelRow({ labelData, index, editingLabels, setEditingLabels, 
     setEditingLabels(newLabels);
   };
 
+  const handleDescriptionChange = (newDescription: string) => {
+    const newLabels = [...editingLabels];
+    newLabels[index] = { ...newLabels[index], description: newDescription };
+    setEditingLabels(newLabels);
+  };
+
   return (
     <tr
       ref={dropRef}
       className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
-      style={{
+      style={{ 
         opacity: isDragging ? 0.5 : 1,
         backgroundColor: isOver ? 'rgba(59, 130, 246, 0.1)' : 'transparent'
       }}
@@ -220,11 +264,21 @@ function DraggableLabelRow({ labelData, index, editingLabels, setEditingLabels, 
         />
       </TableCell>
       <TableCell>
-        <Input
-          value={labelData.label}
-          onChange={(e) => handleLabelChange(e.target.value)}
-          className="border-none p-0 focus-visible:ring-0"
-        />
+        <div className="space-y-2">
+          <Input
+            value={labelData.label}
+            onChange={(e) => handleLabelChange(e.target.value)}
+            className="border-none p-0 focus-visible:ring-0"
+            placeholder="Label name..."
+          />
+          <Textarea
+            value={labelData.description}
+            onChange={(e) => handleDescriptionChange(e.target.value)}
+            className="border-none p-0 focus-visible:ring-0 text-sm resize-none"
+            placeholder="Enter description..."
+            rows={3}
+          />
+        </div>
       </TableCell>
       <TableCell>
         <input
@@ -240,8 +294,8 @@ function DraggableLabelRow({ labelData, index, editingLabels, setEditingLabels, 
           size="sm"
           onClick={() => onDelete(labelData.id)}
           disabled={!canDelete}
-          className={canDelete
-            ? "text-destructive hover:text-destructive hover:bg-destructive/10"
+          className={canDelete 
+            ? "text-destructive hover:text-destructive hover:bg-destructive/10" 
             : "text-muted-foreground cursor-not-allowed"
           }
           title={!canDelete ? "Cannot delete - minimum of 2 labels required" : "Delete label"}
@@ -263,8 +317,10 @@ function CircularDiagramContent() {
   const [sliceLabels, setSliceLabels] = useState<string[]>(INITIAL_SLICE_LABELS);
   const [sliceColors, setSliceColors] = useState<string[]>(INITIAL_SLICE_COLORS);
   const [sliceIcons, setSliceIcons] = useState<string[]>(INITIAL_SLICE_ICONS);
+  const [sliceDescriptions, setSliceDescriptions] = useState<string[]>(INITIAL_SLICE_DESCRIPTIONS);
   const [isEditingLabels, setIsEditingLabels] = useState(false);
   const [editingLabels, setEditingLabels] = useState<LabelData[]>([]);
+  const [originalEditingLabels, setOriginalEditingLabels] = useState<LabelData[]>([]);
   const [newLabelText, setNewLabelText] = useState('');
   const [newLabelIcon, setNewLabelIcon] = useState('😀');
   const [numberPosition, setNumberPosition] = useState<'left' | 'center' | 'right' | 'hidden'>('center');
@@ -273,13 +329,71 @@ function CircularDiagramContent() {
   const [showIcons, setShowIcons] = useState<boolean>(true);
   const [sortColumn, setSortColumn] = useState<'category' | 'typical' | 'stress' | null>('stress');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // Helper function to determine if dark mode is active
+  const checkDarkMode = () => {
+    if (theme === 'dark') {
+      return true;
+    } else if (theme === 'light') {
+      return false;
+    } else { // system
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+  };
+
+  // Update isDarkMode state whenever theme changes
+  useEffect(() => {
+    setIsDarkMode(checkDarkMode());
+  }, [theme]);
+
+  // Listen for system theme changes
+  useEffect(() => {
+    if (theme === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = () => setIsDarkMode(checkDarkMode());
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+  }, [theme]);
+
+  // Apply theme changes to document
+  useEffect(() => {
+    const applyTheme = () => {
+      const root = document.documentElement;
+      
+      if (theme === 'dark') {
+        root.classList.add('dark');
+      } else if (theme === 'light') {
+        root.classList.remove('dark');
+      } else { // system
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+          root.classList.add('dark');
+        } else {
+          root.classList.remove('dark');
+        }
+      }
+    };
+
+    applyTheme();
+
+    // Listen for system theme changes when using system theme
+    if (theme === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = () => applyTheme();
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+  }, [theme]);
 
   const handleSegmentClick = (sliceIndex: number, ringIndex: number) => {
     setSelections(prev => {
       const currentSelections = prev[sliceIndex] || [];
       const segmentNumber = ringIndex + 1; // Convert to 1-based numbering
-
+      
       if (currentSelections.length === 0) {
         // No current selections, add this one
         return {
@@ -288,7 +402,7 @@ function CircularDiagramContent() {
         };
       } else if (currentSelections.length === 1) {
         const [firstSelection] = currentSelections;
-
+        
         if (segmentNumber <= firstSelection) {
           // Clicked on a dark-colored segment, clear all selections
           return {
@@ -303,26 +417,26 @@ function CircularDiagramContent() {
           };
         }
       } else if (currentSelections.length === 2) {
-        const [firstSelection, secondSelection] = currentSelections;
-
-        if (segmentNumber <= firstSelection) {
+        const [first, second] = currentSelections;
+        
+        if (segmentNumber <= first) {
           // Clicked on a dark-colored segment, clear all selections
           return {
             ...prev,
             [sliceIndex]: []
           };
-        } else if (segmentNumber <= secondSelection) {
+        } else if (segmentNumber <= second) {
           // Clicked on a light-colored segment, remove second selection
           return {
             ...prev,
-            [sliceIndex]: [firstSelection]
+            [sliceIndex]: [first]
           };
         } else {
           // Clicked on an uncolored segment, do nothing (already have 2 selections)
           return prev;
         }
       }
-
+      
       return prev;
     });
   };
@@ -331,11 +445,11 @@ function CircularDiagramContent() {
     const currentSelections = selections[sliceIndex] || [];
     const segmentNumber = ringIndex + 1;
     const baseColor = sliceColors[sliceIndex];
-
+    
     if (currentSelections.length === 0) {
       return 'rgba(0, 0, 0, 0.05)';
     }
-
+    
     if (currentSelections.length === 1) {
       const selectedSegment = currentSelections[0];
       if (segmentNumber <= selectedSegment) {
@@ -350,7 +464,7 @@ function CircularDiagramContent() {
         return baseColor + '80'; // 50% opacity
       }
     }
-
+    
     return 'rgba(0, 0, 0, 0.05)';
   };
 
@@ -358,22 +472,22 @@ function CircularDiagramContent() {
     const angleStep = (2 * Math.PI) / sliceLabels.length;
     const startAngle = sliceIndex * angleStep - Math.PI / 2; // Start from top
     const endAngle = startAngle + angleStep;
-
+    
     const innerRadius = MIN_RADIUS + ringIndex * RING_WIDTH;
     const outerRadius = MIN_RADIUS + (ringIndex + 1) * RING_WIDTH;
-
+    
     const x1 = CENTER_X + innerRadius * Math.cos(startAngle);
     const y1 = CENTER_Y + innerRadius * Math.sin(startAngle);
     const x2 = CENTER_X + outerRadius * Math.cos(startAngle);
     const y2 = CENTER_Y + outerRadius * Math.sin(startAngle);
-
+    
     const x3 = CENTER_X + outerRadius * Math.cos(endAngle);
     const y3 = CENTER_Y + outerRadius * Math.sin(endAngle);
     const x4 = CENTER_X + innerRadius * Math.cos(endAngle);
     const y4 = CENTER_Y + innerRadius * Math.sin(endAngle);
-
+    
     const largeArcFlag = angleStep > Math.PI ? 1 : 0;
-
+    
     return `
       M ${x1} ${y1}
       L ${x2} ${y2}
@@ -388,10 +502,10 @@ function CircularDiagramContent() {
     const angleStep = (2 * Math.PI) / sliceLabels.length;
     const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep / 2; // Center of slice
     const labelRadius = MAX_RADIUS + 30;
-
+    
     const x = CENTER_X + labelRadius * Math.cos(angle);
     const y = CENTER_Y + labelRadius * Math.sin(angle);
-
+    
     return { x, y, angle };
   };
 
@@ -405,22 +519,22 @@ function CircularDiagramContent() {
       svgClone.setAttribute('width', '750');
       svgClone.setAttribute('height', '750');
       svgClone.setAttribute('viewBox', '0 0 750 750');
-
-      // Create white background rectangle
+      
+      // Create background rectangle with theme-appropriate color
       const backgroundRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       backgroundRect.setAttribute('x', '0');
       backgroundRect.setAttribute('y', '0');
       backgroundRect.setAttribute('width', '750');
       backgroundRect.setAttribute('height', '750');
-      backgroundRect.setAttribute('fill', '#ffffff');
+      backgroundRect.setAttribute('fill', isDarkMode ? '#1f1f1f' : '#ffffff');
       svgClone.appendChild(backgroundRect);
-
+      
       // Copy all elements from the original SVG
       const originalSvg = svgRef.current;
       for (let i = 0; i < originalSvg.children.length; i++) {
         const child = originalSvg.children[i];
         const clonedChild = child.cloneNode(true) as Element;
-
+        
         // Ensure text elements have proper font styling
         if (clonedChild.tagName === 'text') {
           clonedChild.setAttribute('font-family', 'Arial, Helvetica, sans-serif');
@@ -429,7 +543,7 @@ function CircularDiagramContent() {
             clonedChild.setAttribute('fill', '#374151');
           }
         }
-
+        
         // Recursively fix text elements in groups
         const textElements = clonedChild.querySelectorAll('text');
         textElements.forEach(textEl => {
@@ -441,10 +555,10 @@ function CircularDiagramContent() {
             textEl.setAttribute('fill', '#374151');
           }
         });
-
+        
         svgClone.appendChild(clonedChild);
       }
-
+      
       // Serialize the new SVG
       const svgData = new XMLSerializer().serializeToString(svgClone);
       const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
@@ -470,32 +584,33 @@ function CircularDiagramContent() {
     canvas.width = containerWidth;
     canvas.height = containerHeight;
 
-    // Set background color
+    // Set background color based on theme
+    const backgroundColor = isDarkMode ? '#1f1f1f' : '#ffffff';
     if (format === 'jpeg') {
-      // JPEG doesn't support transparency, so use white background
-      ctx.fillStyle = '#ffffff';
+      // JPEG doesn't support transparency, so use theme-appropriate background
+      ctx.fillStyle = backgroundColor;
       ctx.fillRect(0, 0, containerWidth, containerHeight);
     } else {
-      // PNG supports transparency, but we'll use white for consistency
-      ctx.fillStyle = '#ffffff';
+      // PNG supports transparency, but we'll use theme-appropriate background for consistency
+      ctx.fillStyle = backgroundColor;
       ctx.fillRect(0, 0, containerWidth, containerHeight);
     }
 
     // Get SVG data
     const svgData = new XMLSerializer().serializeToString(svgRef.current);
     const img = new Image();
-
+    
     img.onload = () => {
       // Draw the SVG onto the canvas
       ctx.drawImage(img, 0, 0);
-
+      
       // Create download link
       const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
       const quality = format === 'jpeg' ? 0.9 : undefined; // High quality for JPEG
-
+      
       canvas.toBlob((blob) => {
         if (!blob) return;
-
+        
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.download = `autismwheel.${format}`;
@@ -521,29 +636,32 @@ function CircularDiagramContent() {
         label,
         color: sliceColors[index],
         icon: sliceIcons[index] || '😀',
+        description: sliceDescriptions[index],
         originalIndex: index // Store original index
       }));
       setEditingLabels(labelData);
+      setOriginalEditingLabels(labelData);
       setIsEditingLabels(true);
     } else {
       // Save changes - need to remap selections based on new order
       const newLabels = editingLabels.map(item => item.label);
       const newColors = editingLabels.map(item => item.color);
       const newIcons = editingLabels.map(item => item.icon);
-
+      const newDescriptions = editingLabels.map(item => item.description);
+      
       // Create mapping from original indices to new indices
       const indexMapping: { [oldIndex: number]: number } = {};
       editingLabels.forEach((item, newIndex) => {
         indexMapping[item.originalIndex] = newIndex;
       });
-
+      
       // Remap selections based on the new order
       setSelections(prev => {
         const newSelections: Selection = {};
         Object.keys(prev).forEach(key => {
           const oldSliceIndex = parseInt(key);
           const newSliceIndex = indexMapping[oldSliceIndex];
-
+          
           // Only keep selections for labels that still exist and map them to new indices
           if (newSliceIndex !== undefined && newSliceIndex < newLabels.length) {
             newSelections[newSliceIndex] = prev[oldSliceIndex];
@@ -551,10 +669,11 @@ function CircularDiagramContent() {
         });
         return newSelections;
       });
-
+      
       setSliceLabels(newLabels);
       setSliceColors(newColors);
       setSliceIcons(newIcons);
+      setSliceDescriptions(newDescriptions);
       setIsEditingLabels(false);
     }
   };
@@ -562,6 +681,7 @@ function CircularDiagramContent() {
   const handleRevertChanges = () => {
     setIsEditingLabels(false);
     setEditingLabels([]);
+    setOriginalEditingLabels([]);
     setNewLabelText('');
     setNewLabelIcon('😀');
   };
@@ -573,9 +693,36 @@ function CircularDiagramContent() {
       label,
       color: INITIAL_SLICE_COLORS[index],
       icon: INITIAL_SLICE_ICONS[index],
+      description: INITIAL_SLICE_DESCRIPTIONS[index],
       originalIndex: index
     }));
     setEditingLabels(defaultLabelData);
+  };
+
+  // Check if editing labels have changed from original
+  const hasChanges = () => {
+    if (originalEditingLabels.length !== editingLabels.length) return true;
+    
+    return editingLabels.some((label, index) => {
+      const original = originalEditingLabels[index];
+      return !original || 
+        label.label !== original.label ||
+        label.color !== original.color ||
+        label.icon !== original.icon ||
+        label.description !== original.description;
+    });
+  };
+
+  // Check if current labels match defaults
+  const isAtDefaults = () => {
+    if (editingLabels.length !== INITIAL_SLICE_LABELS.length) return false;
+    
+    return editingLabels.every((label, index) => 
+      label.label === INITIAL_SLICE_LABELS[index] &&
+      label.color === INITIAL_SLICE_COLORS[index] &&
+      label.icon === INITIAL_SLICE_ICONS[index] &&
+      label.description === INITIAL_SLICE_DESCRIPTIONS[index]
+    );
   };
 
   const handleDeleteLabel = (id: string) => {
@@ -593,6 +740,7 @@ function CircularDiagramContent() {
         label: newLabelText.trim(),
         color: '#3B82F6', // Default blue color
         icon: newLabelIcon,
+        description: '',
         originalIndex: editingLabels.length // Maintain order of addition
       };
       setEditingLabels(prev => [...prev, newLabel]);
@@ -618,7 +766,7 @@ function CircularDiagramContent() {
       const [firstSelection, secondSelection] = currentSelections.sort((a, b) => a - b);
       const baseColor = sliceColors[sliceIndex];
       const icon = sliceIcons[sliceIndex];
-
+      
       return {
         sliceIndex,
         label,
@@ -633,7 +781,7 @@ function CircularDiagramContent() {
 
     return tableData.sort((a, b) => {
       let comparison = 0;
-
+      
       switch (sortColumn) {
         case 'category':
           comparison = a.label.localeCompare(b.label);
@@ -651,7 +799,7 @@ function CircularDiagramContent() {
           comparison = aStress - bStress;
           break;
       }
-
+      
       return sortDirection === 'asc' ? comparison : -comparison;
     });
   };
@@ -660,89 +808,13 @@ function CircularDiagramContent() {
     window.print();
   };
 
-async function getInlinedStyles(doc: Document, base: URL): Promise<string[]> {
-    const styles: string[] = [];
-    const linkTags = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
-    for (const link of linkTags) {
-        const href = link.getAttribute('href');
-        if (href) {
-            const cssUrl = new URL(href, base).href;
-            const cssText = await (await fetch(cssUrl)).text();
-            styles.push(`<style>${cssText}</style>`);
-        }
-    }
-    return styles;
-}
-
-async function getInlinedScripts(doc: Document, base: URL): Promise<string[]> {
-    const scripts: string[] = [];
-    const scriptTags = Array.from(doc.querySelectorAll('script[src]'));
-    for (const script of scriptTags) {
-        const src = script.getAttribute('src');
-        if (src) {
-            const jsUrl = new URL(src, base).href;
-            let jsText = await (await fetch(jsUrl)).text();
-            jsText = jsText.replace(/<\/script>/g, '<\\/script>');
-            const typeAttr = script.getAttribute('type') ? ` type="${script.getAttribute('type')}"` : '';
-            const crossOriginAttr = script.hasAttribute('crossorigin') ? ' crossorigin' : '';
-            scripts.push(`<script${typeAttr}${crossOriginAttr}>${jsText}</script>`);
-        }
-    }
-    return scripts;
-}
-
-const handleDownload = async () => {
-    try {
-        const encodedState = encodeState();
-        const docUrl = window.location.href;
-        const base = new URL(docUrl);
-
-        const htmlText = await (await fetch(docUrl)).text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlText, 'text/html');
-
-        const [inlinedStyles, inlinedScripts] = await Promise.all([
-            getInlinedStyles(doc, base),
-            getInlinedScripts(doc, base),
-        ]);
-
-        let headHtml = '';
-        for (const child of Array.from(doc.head.children)) {
-            const isStylesheet = child.tagName === 'LINK' && child.getAttribute('rel') === 'stylesheet';
-            const isExternalScript = child.tagName === 'SCRIPT' && child.getAttribute('src');
-            if (!isStylesheet && !isExternalScript) {
-                headHtml += child.outerHTML + '\n';
-            }
-        }
-
-        const finalHtml = `<!DOCTYPE html>
-<html lang="${doc.documentElement.lang || 'en'}">
-<head>
-    ${headHtml}
-    ${inlinedStyles.join('\n')}
-    ${inlinedScripts.join('\n')}
-    <script>window.__PRELOADED_STATE__ = "${encodedState}";</script>
-</head>
-<body>
-    ${doc.body.innerHTML}
-</body>
-</html>`;
-
-        const blob = new Blob([finalHtml], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'autismwheel.html';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-
-    } catch (error) {
-        console.error("Failed to download diagram:", error);
-        toast.error("Could not download diagram. Please check the console for errors.");
-    }
-};
+  // Helper function to get support needs text based on number
+  const getSupportNeedsText = (number: number) => {
+    if (number >= 1 && number <= 4) return "Occasional Support Needs";
+    if (number >= 5 && number <= 7) return "Frequent Support Needs";
+    if (number >= 8 && number <= 10) return "Consistent Support Needs";
+    return "";
+  };
 
   // Function to encode current state to URL parameters (with compression)
   const encodeState = () => {
@@ -751,14 +823,16 @@ const handleDownload = async () => {
       sliceLabels,
       sliceColors,
       sliceIcons,
+      sliceDescriptions,
       numberPosition,
       labelStyle,
       boundaryWeight,
       showIcons,
       sortColumn,
-      sortDirection
+      sortDirection,
+      theme
     };
-
+    
     // Convert to JSON, compress, and encode for URL
     const jsonString = JSON.stringify(state);
     const compressedString = LZString.compressToEncodedURIComponent(jsonString);
@@ -774,7 +848,7 @@ const handleDownload = async () => {
         const state = JSON.parse(decompressedString);
         return state;
       }
-
+      
       // Fallback to old base64 format for backward compatibility
       const jsonString = decodeURIComponent(escape(atob(encodedState)));
       const state = JSON.parse(jsonString);
@@ -791,512 +865,485 @@ const handleDownload = async () => {
     const currentUrl = new URL(window.location.href);
     currentUrl.searchParams.set('state', encodedState);
     const urlString = currentUrl.toString();
-
-    // Check if clipboard API is available and we're in a secure context
+    
+    // Try multiple methods in order of preference
+    let success = false;
+    
+    // Method 1: Modern Clipboard API (only if available and secure context)
     if (navigator.clipboard && window.isSecureContext) {
       try {
         await navigator.clipboard.writeText(urlString);
         alert('Link copied to clipboard!');
         return;
       } catch (error) {
-        console.warn('Modern clipboard API failed, trying fallback:', error);
-        // Fall through to fallback methods
+        console.warn('Clipboard API failed:', error);
+        // Continue to fallback methods
       }
     }
-
-    // Fallback method using deprecated execCommand
+    
+    // Method 2: execCommand fallback
     try {
-      const tempInput = document.createElement('input');
-      tempInput.value = urlString;
-      tempInput.style.position = 'fixed';
-      tempInput.style.left = '-999999px';
-      tempInput.style.top = '-999999px';
-      tempInput.style.opacity = '0';
-      tempInput.style.pointerEvents = 'none';
-      tempInput.setAttribute('readonly', '');
-
-      document.body.appendChild(tempInput);
-
-      // For mobile devices - improved mobile support
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.value = urlString;
+      tempTextArea.style.position = 'fixed';
+      tempTextArea.style.left = '-9999px';
+      tempTextArea.style.top = '-9999px';
+      tempTextArea.style.opacity = '0';
+      tempTextArea.style.pointerEvents = 'none';
+      tempTextArea.setAttribute('readonly', '');
+      tempTextArea.setAttribute('tabindex', '-1');
+      
+      document.body.appendChild(tempTextArea);
+      
+      // Focus and select the text
+      tempTextArea.focus();
+      tempTextArea.select();
+      tempTextArea.setSelectionRange(0, tempTextArea.value.length);
+      
+      // For iOS devices
       if (navigator.userAgent.match(/ipad|iphone/i)) {
-        tempInput.contentEditable = 'true';
-        tempInput.readOnly = false;
+        tempTextArea.contentEditable = 'true';
+        tempTextArea.readOnly = false;
         const range = document.createRange();
-        range.selectNodeContents(tempInput);
+        range.selectNodeContents(tempTextArea);
         const selection = window.getSelection();
-        selection?.removeAllRanges();
-        selection?.addRange(range);
-        tempInput.setSelectionRange(0, 999999);
-      } else {
-        tempInput.select();
-        tempInput.setSelectionRange(0, tempInput.value.length);
+        if (selection) {
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+        tempTextArea.setSelectionRange(0, 999999);
       }
-
+      
       const successful = document.execCommand('copy');
-      document.body.removeChild(tempInput);
-
+      document.body.removeChild(tempTextArea);
+      
       if (successful) {
         alert('Link copied to clipboard!');
         return;
-      } else {
-        throw new Error('execCommand copy failed');
       }
-    } catch (fallbackError) {
-      console.warn('Fallback copy method failed:', fallbackError);
-
-      // Final fallback: Show URL in a way user can easily copy
-      const fallbackMessage = `Copy this link manually:\n\n${urlString}`;
-
-      // Try using a prompt first (allows easy selection on many browsers)
-      try {
-        const userInput = prompt('Copy this link:', urlString);
-        // If user didn't cancel, assume they copied it
-        if (userInput !== null) {
-          alert('Please use the link that was displayed in the previous dialog.');
-        }
-      } catch (promptError) {
-        console.warn('Prompt failed, using alert:', promptError);
-        // Last resort: just show the URL in an alert
-        alert(fallbackMessage);
-      }
+    } catch (error) {
+      console.warn('execCommand fallback failed:', error);
     }
+    
+    // Method 3: Show in prompt for manual copying
+    try {
+      const message = 'Copy this link:';
+      if (window.prompt) {
+        const userAction = prompt(message, urlString);
+        if (userAction !== null) {
+          alert('Please copy the link from the dialog above.');
+        }
+        return;
+      }
+    } catch (error) {
+      console.warn('Prompt method failed:', error);
+    }
+    
+    // Method 4: Last resort - show in alert
+    const alertMessage = `Please copy this link manually:\n\n${urlString}`;
+    alert(alertMessage);
   };
 
   // Load state from URL on component mount
   useEffect(() => {
-    // Function to apply decoded state
-    const applyState = (decodedState: any) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedState = urlParams.get('state');
+    
+    if (encodedState) {
+      const decodedState = decodeState(encodedState);
       if (decodedState) {
+        // Apply the decoded state
         if (decodedState.selections) setSelections(decodedState.selections);
         if (decodedState.sliceLabels) setSliceLabels(decodedState.sliceLabels);
         if (decodedState.sliceColors) setSliceColors(decodedState.sliceColors);
         if (decodedState.sliceIcons) setSliceIcons(decodedState.sliceIcons);
+        if (decodedState.sliceDescriptions) setSliceDescriptions(decodedState.sliceDescriptions);
         if (decodedState.numberPosition) setNumberPosition(decodedState.numberPosition);
         if (decodedState.labelStyle) setLabelStyle(decodedState.labelStyle);
         if (decodedState.boundaryWeight) setBoundaryWeight(decodedState.boundaryWeight);
         if (decodedState.showIcons !== undefined) setShowIcons(decodedState.showIcons);
         if (decodedState.sortColumn) setSortColumn(decodedState.sortColumn);
         if (decodedState.sortDirection) setSortDirection(decodedState.sortDirection);
-      }
-    };
-
-    // Prioritize preloaded state from downloaded file
-    const preloadedState = (window as any).__PRELOADED_STATE__;
-    if (preloadedState) {
-      const decodedState = decodeState(preloadedState);
-      applyState(decodedState);
-    } else {
-      // Fallback to URL parameters for shared links
-      const urlParams = new URLSearchParams(window.location.search);
-      const encodedState = urlParams.get('state');
-      if (encodedState) {
-        const decodedState = decodeState(encodedState);
-        applyState(decodedState);
+        if (decodedState.theme) setTheme(decodedState.theme);
       }
     }
   }, []);
 
-  // Helper function to normalize strings for matching
-  const normalizeString = (str: string): string => {
-    return str.toLowerCase().replace(/[^a-z0-9]/g, '');
-  };
-
-  // Helper function to create anchor links for ASD levels with robust matching
-  const getAnchorLink = (number: number, label: string) => {
-    let level = "";
-    if (number >= 1 && number <= 4) level = "level1";
-    else if (number >= 5 && number <= 7) level = "level2";
-    else if (number >= 8 && number <= 10) level = "level3";
-    else return level;
-
-    // Available anchor categories for each level
-    const availableAnchors = [
-      'social-interaction',
-      'communication',
-      'sensory-processing',
-      'repetitive-behaviours',
-      'executive-functioning',
-      'emotional-regulation',
-      'cognitive-learning',
-      'motor-skills'
-    ];
-
-    // Original category mapping for reference
-    const originalCategories = [
-      'Social Interaction',
-      'Communication',
-      'Sensory Processing',
-      'Repetitive Behaviours and Special Interests',
-      'Executive Functioning',
-      'Emotional Regulation',
-      'Cognitive and Learning Skills',
-      'Motor Skills and Physical Development'
-    ];
-
-    // Normalize the input label
-    const normalizedLabel = normalizeString(label);
-
-    // Step 1: Try exact match with normalized original categories
-    for (let i = 0; i < originalCategories.length; i++) {
-      const normalizedOriginal = normalizeString(originalCategories[i]);
-      if (normalizedLabel === normalizedOriginal) {
-        return `${level}-${availableAnchors[i]}`;
-      }
-    }
-
-    // Step 2: Try partial match - check if whole normalized label exists in any normalized original category
-    for (let i = 0; i < originalCategories.length; i++) {
-      const normalizedOriginal = normalizeString(originalCategories[i]);
-      if (normalizedOriginal.includes(normalizedLabel)) {
-        return `${level}-${availableAnchors[i]}`;
-      }
-    }
-
-    // Step 3: Try reverse partial match - check if any normalized original category exists in the normalized label
-    for (let i = 0; i < originalCategories.length; i++) {
-      const normalizedOriginal = normalizeString(originalCategories[i]);
-      if (normalizedLabel.includes(normalizedOriginal)) {
-        return `${level}-${availableAnchors[i]}`;
-      }
-    }
-
-    // Step 4: Try keyword-based matching for common terms
-    const keywordMap: { [key: string]: string } = {
-      'social': 'social-interaction',
-      'interaction': 'social-interaction',
-      'communication': 'communication',
-      'communicate': 'communication',
-      'speech': 'communication',
-      'language': 'communication',
-      'sensory': 'sensory-processing',
-      'processing': 'sensory-processing',
-      'sound': 'sensory-processing',
-      'noise': 'sensory-processing',
-      'touch': 'sensory-processing',
-      'texture': 'sensory-processing',
-      'light': 'sensory-processing',
-      'repetitive': 'repetitive-behaviours',
-      'behaviour': 'repetitive-behaviours',
-      'behavior': 'repetitive-behaviours',
-      'routine': 'repetitive-behaviours',
-      'interest': 'repetitive-behaviours',
-      'obsession': 'repetitive-behaviours',
-      'executive': 'executive-functioning',
-      'functioning': 'executive-functioning',
-      'planning': 'executive-functioning',
-      'organization': 'executive-functioning',
-      'organisation': 'executive-functioning',
-      'memory': 'executive-functioning',
-      'emotional': 'emotional-regulation',
-      'emotion': 'emotional-regulation',
-      'regulation': 'emotional-regulation',
-      'feeling': 'emotional-regulation',
-      'mood': 'emotional-regulation',
-      'meltdown': 'emotional-regulation',
-      'shutdown': 'emotional-regulation',
-      'cognitive': 'cognitive-learning',
-      'learning': 'cognitive-learning',
-      'academic': 'cognitive-learning',
-      'education': 'cognitive-learning',
-      'school': 'cognitive-learning',
-      'study': 'cognitive-learning',
-      'motor': 'motor-skills',
-      'movement': 'motor-skills',
-      'coordination': 'motor-skills',
-      'physical': 'motor-skills',
-      'balance': 'motor-skills',
-      'dexterity': 'motor-skills'
-    };
-
-    // Check for keyword matches
-    for (const [keyword, anchor] of Object.entries(keywordMap)) {
-      if (normalizedLabel.includes(keyword)) {
-        return `${level}-${anchor}`;
-      }
-    }
-
-    // Fall back to general level if no category match found
-    return level;
-  };
-
   return (
     <div className="flex flex-col items-center gap-8 p-8">
       <div className="text-center">
-        <h1 className="mb-2 font-bold" style={{ fontSize: '3.75rem' }}>Autism Wheel</h1>
+        <h1 className="mb-2 text-4xl font-bold">Autism Wheel</h1>
+        
         <div className="mb-6 max-w-3xl mx-auto space-y-4">
           <p className="text-left">
-            Hello! Thank you for using my Autism Wheel. I developed this tool as a personal project to help individuals visualize and better understand their own unique autistic profiles.
-          </p>
-          <p className="text-left">
-            Please remember, I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice. It is simply a resource for personal reflection. Always seek the guidance of a doctor or other qualified health professional with any questions you may have regarding a medical condition.
-          </p>
-          <p className="text-blue-600 print:hidden text-left">
-            Click on segments to select them. You can select up to 2 segments per slice, to indicate typical and under stress impact. Click{' '}
-            <img
-              src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBVcGxvYWRlZCB0bzogU1ZHIFJlcG8sIHd3dy5zdmdyZXBvLmNvbSwgR2VuZXJhdG9yOiBTVkcgUmVwbyBNaXhlciBUb29scyAtLT4KPHN2ZyBmaWxsPSIjRkYwMDAwIiB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAzMiAzMiIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8dGl0bGU+eW91dHViZTwvdGl0bGU+CjxwYXRoIGQ9Ik0xMi45MzIgMjAuNDU5di04LjkxN2w3LjgzOSA0LjQ1OXpNMzAuMzY4IDguNzM1Yy0wLjM1NC0xLjMwMS0xLjM1NC0yLjMwNy0yLjYyNS0yLjY2M2wtMC4wMjctMC4wMDZjLTMuMTkzLTAuNDA2LTYuODg2LTAuNjM4LTEwLjYzNC0wLjYzOC0wLjM4MSAwLTAuNzYxIDAuMDAyLTEuMTQgMC4wMDdsMC4wNTgtMC4wMDFjLTAuMzIyLTAuMDA0LTAuNzAxLTAuMDA3LTEuMDgyLTAuMDA3LTMuNzQ4IDAtNy40NDMgMC4yMzItMTEuMDcwIDAuNjgxbDAuNDM0LTAuMDQ0Yy0xLjI5NyAwLjM2My0yLjI5NyAxLjM2OC0yLjY0NCAyLjY0M2wtMC4wMDYgMC4wMjZjLTAuNCAyLjEwOS0wLjYyOCA0LjUzNi0wLjYyOCA3LjAxNiAwIDAuMDg4IDAgMC4xNzYgMC4wMDEgMC4yNjNsLTAtMC4wMTRjLTAgMC4wNzQtMC4wMDEgMC4xNjItMC4wMDEgMC4yNSAwIDIuNDggMC4yMjkgNC45MDYgMC42NjYgNy4yNTlsLTAuMDM4LTAuMjQ0YzAuMzU0IDEuMzAxIDEuMzU0IDIuMzA3IDIuNjI1IDIuNjYzbDAuMDI3IDAuMDA2YzMuMTkzIDAuNDA2IDYuODg2IDAuNjM4IDEwLjYzNCAwLjYzOCAwLjM4IDAgMC43Ni0wLjAwMiAxLjE0LTAuMDA3bC0wLjA1OCAwLjAwMWMwLjMyMiAwLjAwNCAwLjcwMiAwLjAwNyAxLjA4MiAwLjAwNyAzLjc0OSAwIDcuNDQzLTAuMjMyIDExLjA3MC0wLjY4MWwtMC40MzQgMC4wNDRjMS4yOTgtMC4zNjIgMi4yOTgtMS4zNjggMi42NDYtMi42NDNsMC4wMDYtMC4wMjZjMC4zOTktMi4xMDkgMC42MjctNC41MzYgMC42MjctNy4wMTUgMC0wLjA4OC0wLTAuMTc2LTAuMDAxLTAuMjYzbDAgMC4wMTNjMC0wLjA3NCAwLjAwMS0wLjE2MiAwLjAwMS0wLjI1IDAtMi40OC0wLjIyOS00LjkwNi0wLjY2Ni03LjI1OWwwLjAzOCAwLjI0NHoiPjwvcGF0aD4KPC9zdmc+Cg=="
-              alt="YouTube icon"
-              style={{ display: 'inline', height: '1em', verticalAlign: '-0.125em' }}
-            />{' '}
-            <a
-              href="https://youtu.be/z_VcEjngmMI"
-              target="_blank"
+            Hello! Thank you for using{' '}
+            <a 
+              href="https://neechbear.github.io/autism-wheel/" 
+              target="_blank" 
               rel="noopener noreferrer"
-              className="underline"
-              style={{ color: 'inherit' }}
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
             >
+              my Autism Wheel
+            </a>
+            . I developed this tool as a personal project to help individuals visualize and better understand their own unique autistic profiles. I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice. It is simply a resource for personal reflection. Always seek the guidance of a doctor or other qualified health professional with any questions you may have regarding a medical condition.
+          </p>
+        </div>
+        
+        <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
+          <p className="text-left text-blue-600 dark:text-blue-400">
+            Click on segments to select them. You can select up to 2 segments per slice, to indicate typical and under stress impact. Click{' '}
+            <a 
+              href="https://youtu.be/z_VcEjngmMI" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+            >
+              <YouTubeIcon className="w-3 h-3" />
               https://youtu.be/z_VcEjngmMI
-            </a>{' '}
-            to view a brief tutorial video.
+            </a>
+            {' '}to view a brief tutorial video.
           </p>
         </div>
       </div>
-
+      
       <div className="relative">
-        <svg ref={svgRef} width="750" height="750" viewBox="0 0 750 750">
-          {/* Grid lines */}
-          {Array.from({ length: TOTAL_RINGS + 1 }, (_, i) => {
-            const radius = MIN_RADIUS + i * RING_WIDTH;
-            // Highlight boundaries between groups: 4-5 (index 4) and 7-8 (index 7)
-            const isGroupBoundary = i === 4 || i === 7;
+        <TooltipProvider>
+          <svg ref={svgRef} width="750" height="750" viewBox="0 0 750 750">
+            {/* Light segments (second selection) - drawn first, behind all grid lines */}
+            {Array.from({ length: sliceLabels.length }, (_, sliceIndex) =>
+              Array.from({ length: TOTAL_RINGS }, (_, ringIndex) => {
+                const currentSelections = selections[sliceIndex] || [];
+                if (currentSelections.length !== 2) return null; // Only render for dual selections
+                
+                const segmentNumber = ringIndex + 1;
+                const [first, second] = currentSelections.sort((a, b) => a - b);
+                
+                // Only render light segments (between first and second selection)
+                if (segmentNumber <= first || segmentNumber > second) return null;
+                
+                const path = createSegmentPath(sliceIndex, ringIndex);
+                const baseColor = sliceColors[sliceIndex];
+                const fill = baseColor + '80'; // 50% opacity for light segments
+                
+                return (
+                  <Tooltip key={`light-segment-${sliceIndex}-${ringIndex}`} delayDuration={600}>
+                    <TooltipTrigger asChild>
+                      <path
+                        d={path}
+                        fill={fill}
+                        stroke={isDarkMode ? "#808080" : "white"}
+                        strokeWidth="1"
+                        className="cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-xs">
+                      <div className="space-y-1">
+                        <div className="font-medium">{sliceLabels[sliceIndex]}</div>
+                        <div className="text-sm text-muted-foreground">
+                          Impact {ringIndex + 1}/10 - {getSupportNeedsText(ringIndex + 1)}
+                        </div>
+                        {sliceDescriptions[sliceIndex] && (
+                          <div className="text-sm text-muted-foreground">
+                            {sliceDescriptions[sliceIndex]}
+                          </div>
+                        )}
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              })
+            )}
 
-            let strokeColor = "#e5e7eb"; // default light grey
-            let strokeWidth = "1";
+            {/* Dark segments and unselected segments - drawn second, still behind all grid lines */}
+            {Array.from({ length: sliceLabels.length }, (_, sliceIndex) =>
+              Array.from({ length: TOTAL_RINGS }, (_, ringIndex) => {
+                const currentSelections = selections[sliceIndex] || [];
+                const segmentNumber = ringIndex + 1;
+                const baseColor = sliceColors[sliceIndex];
+                
+                let fill = 'rgba(0, 0, 0, 0.05)'; // default unselected
+                let shouldRender = true;
+                
+                if (currentSelections.length === 0) {
+                  fill = 'rgba(0, 0, 0, 0.05)';
+                } else if (currentSelections.length === 1) {
+                  const selectedSegment = currentSelections[0];
+                  if (segmentNumber <= selectedSegment) {
+                    fill = baseColor; // Dark segment
+                  } else {
+                    fill = 'rgba(0, 0, 0, 0.05)'; // Unselected
+                  }
+                } else if (currentSelections.length === 2) {
+                  const [first, second] = currentSelections.sort((a, b) => a - b);
+                  if (segmentNumber <= first) {
+                    fill = baseColor; // Dark segment
+                  } else if (segmentNumber <= second) {
+                    // Light segment - don't render here as it's already rendered above
+                    shouldRender = false;
+                  } else {
+                    fill = 'rgba(0, 0, 0, 0.05)'; // Unselected
+                  }
+                }
+                
+                if (!shouldRender) return null;
+                
+                const path = createSegmentPath(sliceIndex, ringIndex);
+                
+                return (
+                  <Tooltip key={`segment-${sliceIndex}-${ringIndex}`} delayDuration={600}>
+                    <TooltipTrigger asChild>
+                      <path
+                        d={path}
+                        fill={fill}
+                        stroke={isDarkMode ? "#808080" : "white"}
+                        strokeWidth="1"
+                        className="cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-xs">
+                      <div className="space-y-1">
+                        <div className="font-medium">{sliceLabels[sliceIndex]}</div>
+                        <div className="text-sm text-muted-foreground">
+                          Impact {ringIndex + 1}/10 - {getSupportNeedsText(ringIndex + 1)}
+                        </div>
+                        {sliceDescriptions[sliceIndex] && (
+                          <div className="text-sm text-muted-foreground">
+                            {sliceDescriptions[sliceIndex]}
+                          </div>
+                        )}
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              })
+            )}
 
-            if (isGroupBoundary) {
-              if (boundaryWeight === 'hidden') {
-                strokeColor = "#e5e7eb"; // same as normal lines
-                strokeWidth = "1";
-              } else if (boundaryWeight === 'bold') {
-                strokeColor = "#374151"; // darker grey
-                strokeWidth = "2";
-              } else { // normal
-                strokeColor = "#374151"; // darker grey
+            {/* Grid lines - drawn on top of all segments */}
+            {Array.from({ length: TOTAL_RINGS + 1 }, (_, i) => {
+              const radius = MIN_RADIUS + i * RING_WIDTH;
+              // Highlight boundaries between groups: 4-5 (index 4) and 7-8 (index 7)
+              const isGroupBoundary = i === 4 || i === 7;
+              
+              let strokeColor = "#e5e7eb"; // default light grey
+              let strokeWidth = "1";
+              
+              if (isGroupBoundary) {
+                if (boundaryWeight === 'hidden') {
+                  strokeColor = isDarkMode ? "#111827" : "#e5e7eb"; // much darker in dark mode
+                  strokeWidth = "1";
+                } else if (boundaryWeight === 'bold') {
+                  strokeColor = isDarkMode ? "#4b5563" : "#9ca3af"; // darker in dark mode, lighter in light mode
+                  strokeWidth = isDarkMode ? "4" : "3"; // even thicker in dark mode
+                } else { // normal
+                  strokeColor = isDarkMode ? "#4b5563" : "#9ca3af"; // darker in dark mode, lighter in light mode
+                  strokeWidth = isDarkMode ? "4" : "3"; // even thicker in dark mode
+                }
+              } else {
+                // Regular grid lines - much darker in dark mode
+                strokeColor = isDarkMode ? "#111827" : "#e5e7eb";
                 strokeWidth = "1";
               }
-            }
-
-            return (
-              <circle
-                key={`ring-${i}`}
-                cx={CENTER_X}
-                cy={CENTER_Y}
-                r={radius}
-                fill="none"
-                stroke={strokeColor}
-                strokeWidth={strokeWidth}
-              />
-            );
-          })}
-
-          {/* Slice dividers */}
-          {Array.from({ length: sliceLabels.length }, (_, i) => {
-            const angle = (i * 2 * Math.PI) / sliceLabels.length - Math.PI / 2;
-            const x = CENTER_X + MAX_RADIUS * Math.cos(angle);
-            const y = CENTER_Y + MAX_RADIUS * Math.sin(angle);
-            return (
-              <line
-                key={`divider-${i}`}
-                x1={CENTER_X}
-                y1={CENTER_Y}
-                x2={x}
-                y2={y}
-                stroke="#e5e7eb"
-                strokeWidth="1"
-              />
-            );
-          })}
-
-          {/* Segments */}
-          {Array.from({ length: sliceLabels.length }, (_, sliceIndex) =>
-            Array.from({ length: TOTAL_RINGS }, (_, ringIndex) => {
-              const path = createSegmentPath(sliceIndex, ringIndex);
-              const fill = getSegmentFill(sliceIndex, ringIndex);
-
+              
               return (
-                <path
-                  key={`segment-${sliceIndex}-${ringIndex}`}
-                  d={path}
-                  fill={fill}
-                  stroke="white"
-                  strokeWidth="1"
-                  className="cursor-pointer hover:opacity-80 transition-opacity"
-                  onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
+                <circle
+                  key={`ring-${i}`}
+                  cx={CENTER_X}
+                  cy={CENTER_Y}
+                  r={radius}
+                  fill="none"
+                  stroke={strokeColor}
+                  strokeWidth={strokeWidth}
                 />
               );
-            })
-          )}
+            })}
+            
+            {/* Slice dividers - drawn on top of segments */}
+            {Array.from({ length: sliceLabels.length }, (_, i) => {
+              // Add a small offset to prevent perfectly vertical/horizontal lines which can render differently
+              const angleOffset = 0.001; // Very small offset in radians
+              const angle = (i * 2 * Math.PI) / sliceLabels.length - Math.PI / 2 + angleOffset;
+              const x = CENTER_X + MAX_RADIUS * Math.cos(angle);
+              const y = CENTER_Y + MAX_RADIUS * Math.sin(angle);
+              
+              return (
+                <line
+                  key={`divider-${i}`}
+                  x1={CENTER_X}
+                  y1={CENTER_Y}
+                  x2={x}
+                  y2={y}
+                  stroke={isDarkMode ? "#111827" : "#e5e7eb"}
+                  strokeWidth="1"
+                />
+              );
+            })}
 
-          {/* Selection numbers */}
-          {numberPosition !== 'hidden' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
-            const currentSelections = selections[sliceIndex] || [];
-            if (currentSelections.length === 0) return null;
-
-            return currentSelections.map((selectionNumber) => {
-              const ringIndex = selectionNumber - 1; // Convert back to 0-based
-              const angleStep = (2 * Math.PI) / sliceLabels.length;
-
-              // Position numbers based on user preference
-              let angleMultiplier;
-              switch (numberPosition) {
-                case 'left':
-                  angleMultiplier = 0.25; // 25% towards the end angle
-                  break;
-                case 'center':
-                  angleMultiplier = 0.5; // Center of segment
-                  break;
-                case 'right':
-                default:
-                  angleMultiplier = 0.75; // 75% towards the end angle
-                  break;
-              }
-
-              const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep * angleMultiplier;
-              const radius = MIN_RADIUS + (ringIndex + 0.5) * RING_WIDTH; // Center of ring
-
-              const x = CENTER_X + radius * Math.cos(angle);
-              const y = CENTER_Y + radius * Math.sin(angle);
-
-              // Determine the text color based on segment color
-              const baseColor = sliceColors[sliceIndex];
-              let textColor;
-
-              if (currentSelections.length === 1) {
-                // Only one selection, so this number is in the dark color range
-                textColor = darkenColor(baseColor);
-              } else if (currentSelections.length === 2) {
-                const [firstSelection, secondSelection] = currentSelections;
-                if (selectionNumber === firstSelection) {
-                  // This is the first selection, in the dark color range
-                  textColor = darkenColor(baseColor);
-                } else {
-                  // This is the second selection, in the light color range
-                  // Since the light color is baseColor + '80' (50% opacity), we darken the base color less
-                  textColor = darkenColor(baseColor, 0.15);
+            {/* Inner circle radial dividers - 30% dark grey - drawn on top of segments */}
+            {Array.from({ length: sliceLabels.length }, (_, i) => {
+              // Add a small offset to prevent perfectly vertical/horizontal lines which can render differently
+              const angleOffset = 0.001; // Very small offset in radians
+              const angle = (i * 2 * Math.PI) / sliceLabels.length - Math.PI / 2 + angleOffset;
+              const innerX = CENTER_X + MIN_RADIUS * Math.cos(angle);
+              const innerY = CENTER_Y + MIN_RADIUS * Math.sin(angle);
+              
+              return (
+                <line
+                  key={`inner-divider-${i}`}
+                  x1={CENTER_X}
+                  y1={CENTER_Y}
+                  x2={innerX}
+                  y2={innerY}
+                  stroke={isDarkMode ? "#4b5563" : "#B3B3B3"}
+                  strokeWidth="1"
+                />
+              );
+            })}            
+            {/* Selection numbers */}
+            {numberPosition !== 'hidden' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
+              const currentSelections = selections[sliceIndex] || [];
+              if (currentSelections.length === 0) return null;
+              
+              return currentSelections.map((selectionNumber) => {
+                const ringIndex = selectionNumber - 1; // Convert back to 0-based
+                const angleStep = (2 * Math.PI) / sliceLabels.length;
+                
+                // Position numbers based on user preference
+                let angleMultiplier;
+                switch (numberPosition) {
+                  case 'left':
+                    angleMultiplier = 0.25; // 25% towards the end angle
+                    break;
+                  case 'center':
+                    angleMultiplier = 0.5; // Center of segment
+                    break;
+                  case 'right':
+                  default:
+                    angleMultiplier = 0.75; // 75% towards the end angle
+                    break;
                 }
-              }
+                
+                const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep * angleMultiplier;
+                const radius = MIN_RADIUS + (ringIndex + 0.5) * RING_WIDTH; // Center of ring
+                
+                const x = CENTER_X + radius * Math.cos(angle);
+                const y = CENTER_Y + radius * Math.sin(angle);
+                
+                // Determine the text color based on segment color
+                const baseColor = sliceColors[sliceIndex];
+                let textColor;
+                
+                if (currentSelections.length === 1) {
+                  // Only one selection, so this number is in the dark color range
+                  textColor = darkenColor(baseColor);
+                } else if (currentSelections.length === 2) {
+                  const [firstSelection, secondSelection] = currentSelections;
+                  if (selectionNumber === firstSelection) {
+                    // This is the first selection, in the dark color range
+                    textColor = darkenColor(baseColor);
+                  } else {
+                    // This is the second selection, in the light color range
+                    // Since the light color is baseColor + '80' (50% opacity), we darken the base color less
+                    textColor = darkenColor(baseColor, 0.15);
+                  }
+                }
+                
+                return (
+                  <text
+                    key={`selection-number-${sliceIndex}-${selectionNumber}`}
+                    x={x}
+                    y={y}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    className="text-sm pointer-events-none"
+                    style={{ 
+                      fontWeight: 'bold',
+                      fill: textColor
+                    }}
+                  >
+                    {selectionNumber}
+                  </text>
+                );
+              });
+            })}
 
+            {/* Labels as SVG text */}
+            {labelStyle !== 'hidden' && sliceLabels.map((label, sliceIndex) => {
+              const { x, y, angle } = getLabelPosition(sliceIndex);
+              const rotation = angle * (180 / Math.PI);
+              const shouldFlip = rotation > 90 && rotation < 270;
+              const finalRotation = shouldFlip ? rotation + 180 : rotation;
+              
+              // Split long labels into multiple lines
+              const words = label.split(' ');
+              const maxWordsPerLine = words.length > 3 ? 2 : words.length;
+              const lines = [];
+              
+              for (let i = 0; i < words.length; i += maxWordsPerLine) {
+                lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
+              }
+              
+              return (
+                <g key={`label-${sliceIndex}`}>
+                  {lines.map((line, lineIndex) => (
+                    <text
+                      key={`label-line-${sliceIndex}-${lineIndex}`}
+                      x={x}
+                      y={y + (lineIndex - (lines.length - 1) / 2) * 12}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fontSize="14"
+                      fill={isDarkMode ? "#9ca3af" : "#374151"}
+                      style={{
+                        fontFamily: 'system-ui, sans-serif',
+                        fontWeight: labelStyle === 'bold' ? 'bold' : 'normal',
+                        pointerEvents: 'none'
+                      }}
+                      transform={`rotate(${finalRotation} ${x} ${y})`}
+                    >
+                      {line}
+                    </text>
+                  ))}
+                </g>
+              );
+            })}
+
+            {/* Center icons */}
+            {showIcons && sliceIcons.map((icon, sliceIndex) => {
+              if (!icon) return null;
+              
+              const angleStep = (2 * Math.PI) / sliceLabels.length;
+              const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep / 2; // Center of slice
+              const iconRadius = MIN_RADIUS * 0.7; // Position icons inside the center circle
+              
+              const x = CENTER_X + iconRadius * Math.cos(angle);
+              const y = CENTER_Y + iconRadius * Math.sin(angle);
+              
               return (
                 <text
-                  key={`selection-number-${sliceIndex}-${selectionNumber}`}
+                  key={`center-icon-${sliceIndex}`}
                   x={x}
                   y={y}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  className="text-sm pointer-events-none"
+                  fontSize="20"
                   style={{
-                    fontWeight: 'bold',
-                    fill: textColor
+                    fontFamily: 'system-ui, sans-serif',
+                    pointerEvents: 'none'
                   }}
                 >
-                  {selectionNumber}
+                  {icon}
                 </text>
               );
-            });
-          })}
-
-          {/* Labels as SVG text */}
-          {labelStyle !== 'hidden' && sliceLabels.map((label, sliceIndex) => {
-            const { x, y, angle } = getLabelPosition(sliceIndex);
-            const rotation = angle * (180 / Math.PI);
-            const shouldFlip = rotation > 90 && rotation < 270;
-            const finalRotation = shouldFlip ? rotation + 180 : rotation;
-
-            // Split long labels into multiple lines
-            const words = label.split(' ');
-            const maxWordsPerLine = words.length > 3 ? 2 : words.length;
-            const lines = [];
-
-            for (let i = 0; i < words.length; i += maxWordsPerLine) {
-              lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
-            }
-
-            return (
-              <g key={`label-${sliceIndex}`}>
-                {lines.map((line, lineIndex) => (
-                  <text
-                    key={`label-line-${sliceIndex}-${lineIndex}`}
-                    x={x}
-                    y={y + (lineIndex - (lines.length - 1) / 2) * 12}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fontSize="14"
-                    fill="#374151"
-                    style={{
-                      fontFamily: 'system-ui, sans-serif',
-                      fontWeight: labelStyle === 'bold' ? 'bold' : 'normal',
-                      pointerEvents: 'none'
-                    }}
-                    transform={`rotate(${finalRotation} ${x} ${y})`}
-                  >
-                    {line}
-                  </text>
-                ))}
-              </g>
-            );
-          })}
-
-          {/* Center icons */}
-          {showIcons && sliceIcons.map((icon, sliceIndex) => {
-            if (!icon) return null;
-
-            const angleStep = (2 * Math.PI) / sliceLabels.length;
-            const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep / 2; // Center of slice
-            const iconRadius = MIN_RADIUS * 0.7; // Position icons inside the center circle
-
-            const x = CENTER_X + iconRadius * Math.cos(angle);
-            const y = CENTER_Y + iconRadius * Math.sin(angle);
-
-            return (
-              <text
-                key={`center-icon-${sliceIndex}`}
-                x={x}
-                y={y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="20"
-                style={{
-                  fontFamily: 'system-ui, sans-serif',
-                  pointerEvents: 'none'
-                }}
-              >
-                {icon}
-              </text>
-            );
-          })}
-        </svg>
+            })}
+          </svg>
+        </TooltipProvider>
 
       </div>
-
+      
       {/* Display Options */}
       <div className="flex flex-wrap gap-4 justify-center print:hidden">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-            <Settings className="w-4 h-4" />
-            Boundaries
-            <ChevronDown className="w-4 h-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem
-              onClick={() => setBoundaryWeight('normal')}
-              className={boundaryWeight === 'normal' ? 'bg-accent' : ''}
-            >
-              Normal weight
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setBoundaryWeight('bold')}
-              className={boundaryWeight === 'bold' ? 'bg-accent' : ''}
-            >
-              Bold weight
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setBoundaryWeight('hidden')}
-              className={boundaryWeight === 'hidden' ? 'bg-accent' : ''}
-            >
-              Hidden
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
         <DropdownMenu>
           <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
             <Settings className="w-4 h-4" />
@@ -1304,25 +1351,25 @@ const handleDownload = async () => {
             <ChevronDown className="w-4 h-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem
+            <DropdownMenuItem 
               onClick={() => setNumberPosition('left')}
               className={numberPosition === 'left' ? 'bg-accent' : ''}
             >
               Left aligned
             </DropdownMenuItem>
-            <DropdownMenuItem
+            <DropdownMenuItem 
               onClick={() => setNumberPosition('center')}
               className={numberPosition === 'center' ? 'bg-accent' : ''}
             >
               Center aligned
             </DropdownMenuItem>
-            <DropdownMenuItem
+            <DropdownMenuItem 
               onClick={() => setNumberPosition('right')}
               className={numberPosition === 'right' ? 'bg-accent' : ''}
             >
               Right aligned
             </DropdownMenuItem>
-            <DropdownMenuItem
+            <DropdownMenuItem 
               onClick={() => setNumberPosition('hidden')}
               className={numberPosition === 'hidden' ? 'bg-accent' : ''}
             >
@@ -1338,19 +1385,19 @@ const handleDownload = async () => {
             <ChevronDown className="w-4 h-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem
+            <DropdownMenuItem 
               onClick={() => setLabelStyle('normal')}
               className={labelStyle === 'normal' ? 'bg-accent' : ''}
             >
               Normal weight
             </DropdownMenuItem>
-            <DropdownMenuItem
+            <DropdownMenuItem 
               onClick={() => setLabelStyle('bold')}
               className={labelStyle === 'bold' ? 'bg-accent' : ''}
             >
               Bold weight
             </DropdownMenuItem>
-            <DropdownMenuItem
+            <DropdownMenuItem 
               onClick={() => setLabelStyle('hidden')}
               className={labelStyle === 'hidden' ? 'bg-accent' : ''}
             >
@@ -1366,17 +1413,45 @@ const handleDownload = async () => {
             <ChevronDown className="w-4 h-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem
+            <DropdownMenuItem 
               onClick={() => setShowIcons(true)}
               className={showIcons ? 'bg-accent' : ''}
             >
               Show icons
             </DropdownMenuItem>
-            <DropdownMenuItem
+            <DropdownMenuItem 
               onClick={() => setShowIcons(false)}
               className={!showIcons ? 'bg-accent' : ''}
             >
               Hide icons
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
+            <Settings className="w-4 h-4" />
+            Theme
+            <ChevronDown className="w-4 h-4" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem 
+              onClick={() => setTheme('system')}
+              className={theme === 'system' ? 'bg-accent' : ''}
+            >
+              Use system
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setTheme('light')}
+              className={theme === 'light' ? 'bg-accent' : ''}
+            >
+              Light
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setTheme('dark')}
+              className={theme === 'dark' ? 'bg-accent' : ''}
+            >
+              Dark
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -1386,33 +1461,23 @@ const handleDownload = async () => {
       <div className="flex flex-wrap gap-4 justify-center print:hidden">
         {!isEditingLabels && (
           <>
-            <Button
+            <Button 
               onClick={handleCopyLink}
-              variant="outline"
-              className="h-10 gap-2"
+              className="h-10 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Link className="w-4 h-4" />
               Copy link
             </Button>
-            <Button
+            <Button 
               onClick={handlePrint}
-              variant="outline"
-              className="h-10 gap-2"
+              className="h-10 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Printer className="w-4 h-4" />
               Print
             </Button>
-            <Button
-              onClick={handleDownload}
-              variant="outline"
-              className="h-10 gap-2"
-            >
-              <Download className="w-4 h-4" />
-              Download
-            </Button>
           </>
         )}
-
+        
         <DropdownMenu>
           <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2">
             Save diagram
@@ -1420,7 +1485,7 @@ const handleDownload = async () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuItem onClick={() => saveDiagramAs('png')}>
-              Save as PNG (default)
+              Save as PNG
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => saveDiagramAs('svg')}>
               Save as SVG
@@ -1430,28 +1495,31 @@ const handleDownload = async () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-
-        <Button
+        
+        <Button 
           onClick={handleEditLabels}
-          variant={isEditingLabels ? "default" : "outline"}
-          className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700" : "border-blue-600 text-blue-600 hover:bg-blue-50"}`}
+          className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
         >
           {isEditingLabels ? "Save labels" : "Edit labels"}
         </Button>
-
+        
         {isEditingLabels && (
           <>
-            <Button
+            <Button 
               onClick={handleRevertChanges}
               variant="destructive"
               className="h-10"
+              disabled={!hasChanges()}
+              style={!hasChanges() ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
             >
               Revert changes
             </Button>
-            <Button
+            <Button 
               onClick={handleDefaultLabels}
               variant="destructive"
               className="h-10"
+              disabled={isAtDefaults()}
+              style={isAtDefaults() ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
             >
               Default labels
             </Button>
@@ -1461,12 +1529,12 @@ const handleDownload = async () => {
 
       {isEditingLabels && (
         <div className="w-full max-w-4xl">
-          <h3 className="mb-4">Edit Labels</h3>
+          <h3 className="mb-4 font-semibold">Edit Labels</h3>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Icon</TableHead>
-                <TableHead>Label Name</TableHead>
+                <TableHead>Label Name & Description</TableHead>
                 <TableHead>Color</TableHead>
                 <TableHead>Delete</TableHead>
                 <TableHead>Reorder</TableHead>
@@ -1492,12 +1560,19 @@ const handleDownload = async () => {
                   />
                 </TableCell>
                 <TableCell>
-                  <Input
-                    placeholder="Enter new label name..."
-                    value={newLabelText}
-                    onChange={(e) => setNewLabelText(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleAddLabel()}
-                  />
+                  <div className="space-y-2">
+                    <Input
+                      placeholder="Enter new label name..."
+                      value={newLabelText}
+                      onChange={(e) => setNewLabelText(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleAddLabel()}
+                    />
+                    <Textarea
+                      placeholder="Enter description..."
+                      className="text-sm resize-none"
+                      rows={3}
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
                   <div className="w-6 h-6 rounded border bg-blue-500" />
@@ -1521,351 +1596,131 @@ const handleDownload = async () => {
       )}
 
       {!isEditingLabels && (
-        <div className="w-full max-w-4xl print-break-avoid">
-          <h3 className="mb-4 font-semibold">Detailed breakdown</h3>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead
-                  className="cursor-pointer hover:bg-muted/50 select-none"
-                  onClick={() => handleSort('category')}
-                >
-                  <div className="flex items-center gap-1">
-                    Category
-                    <div className="flex flex-col">
-                      <ChevronUp
-                        className={`w-3 h-3 ${sortColumn === 'category' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
-                      />
-                      <ChevronDown
-                        className={`w-3 h-3 -mt-1 ${sortColumn === 'category' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
-                      />
-                    </div>
-                  </div>
-                </TableHead>
-                <TableHead
-                  className="cursor-pointer hover:bg-muted/50 select-none"
-                  onClick={() => handleSort('typical')}
-                >
-                  <div className="flex items-center gap-1">
-                    Typical impact
-                    <div className="flex flex-col">
-                      <ChevronUp
-                        className={`w-3 h-3 ${sortColumn === 'typical' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
-                      />
-                      <ChevronDown
-                        className={`w-3 h-3 -mt-1 ${sortColumn === 'typical' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
-                      />
-                    </div>
-                  </div>
-                </TableHead>
-                <TableHead
-                  className="cursor-pointer hover:bg-muted/50 select-none"
-                  onClick={() => handleSort('stress')}
-                >
-                  <div className="flex items-center gap-1">
-                    Under stress impact
-                    <div className="flex flex-col">
-                      <ChevronUp
-                        className={`w-3 h-3 ${sortColumn === 'stress' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
-                      />
-                      <ChevronDown
-                        className={`w-3 h-3 -mt-1 ${sortColumn === 'stress' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
-                      />
-                    </div>
-                  </div>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {getSortedTableData().map((rowData) => {
-                const { sliceIndex, label, icon, baseColor, firstSelection, secondSelection } = rowData;
-                const currentSelections = selections[sliceIndex] || [];
-                const [originalFirst, originalSecond] = currentSelections.sort((a, b) => a - b);
-
-                // Helper function to get ASD level text
-                const getASDLevel = (number: number) => {
-                  if (number >= 1 && number <= 4) return "ASD level 1";
-                  if (number >= 5 && number <= 7) return "ASD level 2";
-                  if (number >= 8 && number <= 10) return "ASD level 3";
-                  return "";
-                };
-
-                return (
-                  <TableRow key={`detail-${sliceIndex}`}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        {showIcons && icon && (
-                          <span className="text-lg">{icon}</span>
-                        )}
-                        <span>{label}</span>
+        <div className="w-full max-w-3xl print-break-avoid">
+          <h3 className="mb-4 font-semibold">Detailed Breakdown</h3>
+          <div className="overflow-hidden">
+            <Table className="table-fixed w-full">
+              <TableHeader>
+                <TableRow>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-muted/50 select-none align-top w-1/2"
+                    onClick={() => handleSort('category')}
+                  >
+                    <div className="flex items-center gap-1">
+                      Category
+                      <div className="flex flex-col">
+                        <ChevronUp 
+                          className={`w-3 h-3 ${sortColumn === 'category' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        />
+                        <ChevronDown 
+                          className={`w-3 h-3 -mt-1 ${sortColumn === 'category' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        />
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      {firstSelection && (
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="inline-block px-3 py-1 rounded min-w-8 text-center"
-                            style={{
-                              backgroundColor: baseColor,
-                              color: darkenColor(baseColor)
-                            }}
-                          >
-                            {firstSelection}
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-muted/50 select-none align-top text-center w-1/4"
+                    onClick={() => handleSort('typical')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      Typical impact
+                      <div className="flex flex-col">
+                        <ChevronUp 
+                          className={`w-3 h-3 ${sortColumn === 'typical' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        />
+                        <ChevronDown 
+                          className={`w-3 h-3 -mt-1 ${sortColumn === 'typical' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        />
+                      </div>
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-muted/50 select-none align-top text-center w-1/4"
+                    onClick={() => handleSort('stress')}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      Under stress impact
+                      <div className="flex flex-col">
+                        <ChevronUp 
+                          className={`w-3 h-3 ${sortColumn === 'stress' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        />
+                        <ChevronDown 
+                          className={`w-3 h-3 -mt-1 ${sortColumn === 'stress' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        />
+                      </div>
+                    </div>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {getSortedTableData().map((rowData) => {
+                  const { sliceIndex, label, icon, baseColor, firstSelection, secondSelection } = rowData;
+                  const currentSelections = selections[sliceIndex] || [];
+                  const [originalFirst, originalSecond] = currentSelections.sort((a, b) => a - b);
+                  const description = sliceDescriptions[sliceIndex];
+                  
+                  return (
+                    <TableRow key={`detail-${sliceIndex}`}>
+                      <TableCell className="align-top break-words">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            {showIcons && icon && (
+                              <span className="text-lg flex-shrink-0">{icon}</span>
+                            )}
+                            <span className="font-medium break-words">{label}</span>
                           </div>
-                          <a
-                            href={`#${getAnchorLink(firstSelection, label)}`}
-                            className="text-muted-foreground hover:text-foreground transition-colors no-underline"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              const element = document.getElementById(getAnchorLink(firstSelection, label));
-                              if (element) {
-                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                              }
-                            }}
-                          >
-                            {getASDLevel(firstSelection)}
-                          </a>
+                          {description && (
+                            <div className="text-sm text-muted-foreground break-words whitespace-normal">
+                              {description}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {(originalSecond || firstSelection) && (
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="inline-block px-3 py-1 rounded min-w-8 text-center"
-                            style={{
-                              backgroundColor: originalSecond ? baseColor + '80' : baseColor, // 50% opacity for second selection, full for first
-                              color: originalSecond ? darkenColor(baseColor, 0.15) : darkenColor(baseColor)
-                            }}
-                          >
-                            {originalSecond || firstSelection}
+                      </TableCell>
+                      <TableCell className="align-top text-center">
+                        {firstSelection && (
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-center gap-2">
+                              <div 
+                                className="inline-block px-3 py-1 rounded min-w-8 text-center"
+                                style={{ 
+                                  backgroundColor: baseColor,
+                                  color: darkenColor(baseColor)
+                                }}
+                              >
+                                {firstSelection}
+                              </div>
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              {getSupportNeedsText(firstSelection)}
+                            </div>
                           </div>
-                          <a
-                            href={`#${getAnchorLink(originalSecond || firstSelection, label)}`}
-                            className="text-muted-foreground hover:text-foreground transition-colors no-underline"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              const element = document.getElementById(getAnchorLink(originalSecond || firstSelection, label));
-                              if (element) {
-                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                              }
-                            }}
-                          >
-                            {getASDLevel(originalSecond || firstSelection)}
-                          </a>
-                        </div>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
-      )}
-
-      {!isEditingLabels && (
-        <div className="w-full max-w-4xl print-page-break">
-          <h3 className="mb-4 font-semibold">Explanation</h3>
-          <div className="space-y-6 prose prose-slate max-w-none">
-            <p>
-              While there is no single, universally mandated mapping of ASD levels to a numerical scale, we can establish a helpful framework. This framework is based on the descriptions of support needs found in the world's leading diagnostic manuals: the DSM-5 (Diagnostic and Statistical Manual of Mental Disorders), widely used in the US, and the ICD-11 (International Classification of Diseases), used throughout Europe and many other countries.
-            </p>
-            <p>
-              It's important to note that a self-assessment on an autism wheel is for personal understanding and not a substitute for a clinical diagnosis.
-            </p>
-
-            <div>
-              <h1 id="level1" className="mb-4 underline">Level 1: Requiring Support</h1>
-
-              <p className="mb-4">
-                An individual at this level requires some support. Their challenges may not be immediately obvious in all situations, but they can affect social, occupational, and other important areas of functioning.
-              </p>
-
-              <div className="mb-4">
-                <h2 id="level1-social-interaction" className="mb-1">{showIcons ? '💏 ' : ''}Social Interaction</h2>
-                <div className="pl-6">
-                  May have difficulty initiating or maintaining social interactions and may struggle with the natural back-and-forth of conversation. Attempts to make friends can be "odd" or unsuccessful, leading to feelings of isolation.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level1-communication" className="mb-1">{showIcons ? '🗨️ ' : ''}Communication</h2>
-                <div className="pl-6">
-                  Can typically speak in full sentences but may have trouble with non-literal language (sarcasm, idioms) or reading non-verbal cues like body language and facial expressions.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level1-sensory-processing" className="mb-1">{showIcons ? '👂 ' : ''}Sensory Processing</h2>
-                <div className="pl-6">
-                  May be sensitive to certain textures, sounds, or lighting, but can often manage with minor accommodations or by developing coping strategies.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level1-repetitive-behaviours" className="mb-1">{showIcons ? '♻️ ' : ''}Repetitive Behaviours and Special Interests</h2>
-                <div className="pl-6">
-                  May have special interests that are more intense than typical, or might engage in repetitive behaviours that provide comfort or help manage anxiety.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level1-executive-functioning" className="mb-1">{showIcons ? '🏠 ' : ''}Executive Functioning</h2>
-                <div className="pl-6">
-                  May have difficulty with planning, organization, or switching between tasks. Can usually handle routine tasks but may struggle with unexpected changes.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level1-emotional-regulation" className="mb-1">{showIcons ? '😰 ' : ''}Emotional Regulation</h2>
-                <div className="pl-6">
-                  May experience anxiety or emotional overwhelm in certain situations, but can usually manage with the right strategies and support.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level1-cognitive-learning" className="mb-1">{showIcons ? '📚 ' : ''}Cognitive and Learning Skills</h2>
-                <div className="pl-6">
-                  Often has average or above-average intelligence but may have specific learning differences or need alternative approaches to traditional teaching methods.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level1-motor-skills" className="mb-1">{showIcons ? '🤸‍♀️ ' : ''}Motor Skills and Physical Development</h2>
-                <div className="pl-6">
-                  May have subtle differences in coordination or motor planning, but these typically don't significantly impact daily activities.
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h1 id="level2" className="mb-4 underline">Level 2: Requiring Substantial Support</h1>
-
-              <p className="mb-4">
-                An individual at this level requires substantial support. Their challenges are more noticeable and significantly impact their daily life and functioning.
-              </p>
-
-              <div className="mb-4">
-                <h2 id="level2-social-interaction" className="mb-1">{showIcons ? '💏 ' : ''}Social Interaction</h2>
-                <div className="pl-6">
-                  Has marked difficulty with social communication and interaction. May struggle to maintain conversations, understand social cues, or form relationships even with support.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level2-communication" className="mb-1">{showIcons ? '🗨️ ' : ''}Communication</h2>
-                <div className="pl-6">
-                  May have limited verbal communication or use repetitive phrases. Often has difficulty expressing needs and may rely on alternative communication methods.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level2-sensory-processing" className="mb-1">{showIcons ? '👂 ' : ''}Sensory Processing</h2>
-                <div className="pl-6">
-                  Experiences significant sensory sensitivities that noticeably impact daily functioning and may require substantial environmental modifications.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level2-repetitive-behaviours" className="mb-1">{showIcons ? '♻️ ' : ''}Repetitive Behaviours and Special Interests</h2>
-                <div className="pl-6">
-                  Engages in obvious repetitive behaviours that interfere with daily activities. May have intense special interests that significantly impact functioning.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level2-executive-functioning" className="mb-1">{showIcons ? '🏠 ' : ''}Executive Functioning</h2>
-                <div className="pl-6">
-                  Has significant difficulty with planning, organization, and adapting to change. Requires substantial support to manage daily tasks and transitions.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level2-emotional-regulation" className="mb-1">{showIcons ? '😰 ' : ''}Emotional Regulation</h2>
-                <div className="pl-6">
-                  Experiences significant emotional dysregulation that impacts daily functioning. May have frequent meltdowns or shutdowns that require substantial support to manage.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level2-cognitive-learning" className="mb-1">{showIcons ? '📚 ' : ''}Cognitive and Learning Skills</h2>
-                <div className="pl-6">
-                  May have significant learning differences that require specialized educational approaches and substantial support to achieve academic or vocational goals.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level2-motor-skills" className="mb-1">{showIcons ? '🤸‍♀️ ' : ''}Motor Skills and Physical Development</h2>
-                <div className="pl-6">
-                  Has noticeable difficulties with motor coordination that impact daily activities and may require occupational therapy or other interventions.
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h1 id="level3" className="mb-4 underline">Level 3: Requiring Very Substantial Support</h1>
-
-              <p className="mb-4">
-                An individual at this level requires very substantial support. Their challenges are severe and pervasive, significantly limiting their independence and requiring intensive, ongoing support.
-              </p>
-
-              <div className="mb-4">
-                <h2 id="level3-social-interaction" className="mb-1">{showIcons ? '💏 ' : ''}Social Interaction</h2>
-                <div className="pl-6">
-                  Has severe deficits in social communication and interaction. May show very little interest in social interactions or may not initiate or respond to social overtures.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level3-communication" className="mb-1">{showIcons ? '🗨️ ' : ''}Communication</h2>
-                <div className="pl-6">
-                  Has severe limitations in verbal and non-verbal communication. May be non-speaking or have very limited speech, requiring significant support for all communication needs.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level3-sensory-processing" className="mb-1">{showIcons ? '👂 ' : ''}Sensory Processing</h2>
-                <div className="pl-6">
-                  Experiences severe sensory sensitivities or seeking behaviours that significantly limit functioning and participation in daily activities.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level3-repetitive-behaviours" className="mb-1">{showIcons ? '♻️ ' : ''}Repetitive Behaviours and Special Interests</h2>
-                <div className="pl-6">
-                  Shows severe, inflexible behaviours and special interests that markedly interfere with functioning in all settings. May be extremely distressed by small changes.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level3-executive-functioning" className="mb-1">{showIcons ? '🏠 ' : ''}Executive Functioning</h2>
-                <div className="pl-6">
-                  Has severe deficits in planning, organization, and flexibility that require very substantial support for all daily living activities.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level3-emotional-regulation" className="mb-1">{showIcons ? '😰 ' : ''}Emotional Regulation</h2>
-                <div className="pl-6">
-                  Experiences severe emotional dysregulation that significantly impacts all areas of functioning and requires intensive, ongoing support to manage.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level3-cognitive-learning" className="mb-1">{showIcons ? '📚 ' : ''}Cognitive and Learning Skills</h2>
-                <div className="pl-6">
-                  May have significant intellectual disabilities or learning differences that require intensive, specialized support across all learning domains.
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h2 id="level3-motor-skills" className="mb-1">{showIcons ? '🤸‍♀️ ' : ''}Motor Skills and Physical Development</h2>
-                <div className="pl-6">
-                  Has severe difficulties with motor skills that significantly impact independence and require intensive therapeutic intervention and adaptive equipment.
-                </div>
-              </div>
-            </div>
+                        )}
+                      </TableCell>
+                      <TableCell className="align-top text-center">
+                        {(originalSecond || firstSelection) && (
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-center gap-2">
+                              <div 
+                                className="inline-block px-3 py-1 rounded min-w-8 text-center"
+                                style={{ 
+                                  backgroundColor: originalSecond ? baseColor + '80' : baseColor, // 50% opacity for second selection, full for first
+                                  color: originalSecond ? darkenColor(baseColor, 0.15) : darkenColor(baseColor)
+                                }}
+                              >
+                                {originalSecond || firstSelection}
+                              </div>
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              {getSupportNeedsText(originalSecond || firstSelection)}
+                            </div>
+                          </div>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
           </div>
         </div>
       )}
