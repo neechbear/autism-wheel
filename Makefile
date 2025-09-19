@@ -10,7 +10,7 @@ DIST_DIR := dist
 SRC_DIR := src
 NODE_MODULES := node_modules
 TEST_RESULTS_DIR := test-results
-DEV_PORT := 5137
+DEV_PORT := 3000
 DEV_HOST := localhost
 TEST_URL := http://$(DEV_HOST):$(DEV_PORT)
 
