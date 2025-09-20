@@ -4,8 +4,8 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 import path from 'path';
 
 export default defineConfig({
-  base: process.env.VITE_BASE_PATH || '/',
-  plugins: [react(), viteSingleFile()],
+  base: './',
+  plugins: [react(), viteSingleFile({ useRecommendedBuildConfig: true })],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
@@ -51,7 +51,6 @@ export default defineConfig({
     },
   },
   build: {
-    target: 'esnext',
     outDir: 'build',
   },
   server: {

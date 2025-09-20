@@ -6,7 +6,7 @@ NODE_VERSION := $(shell node --version 2>/dev/null || echo "not found")
 NPM_VERSION := $(shell npm --version 2>/dev/null || echo "not found")
 PACKAGE_MANAGER := npm
 BUILD_DIR := build
-DIST_DIR := dist
+DIST_DIR := build
 SRC_DIR := src
 NODE_MODULES := node_modules
 TEST_RESULTS_DIR := test-results
@@ -18,7 +18,7 @@ TEST_URL := http://$(DEV_HOST):$(DEV_PORT)
 .DEFAULT_GOAL := help
 
 # PHONY targets (targets that don't create files)
-.PHONY: help all clean install build dev run test test-headed test-ui test-with-server format lint type-check preview serve deps-check deps-update deps-audit status info
+.PHONY: help all clean install build dev run test test-headed test-ui test-with-server format lint type-check preview serve deps-check deps-update deps-audit status info autismwheel.html
 
 # Help target - displays available commands
 help: ## Show this help message
@@ -140,6 +140,10 @@ status: ## Show git status and project info
 info: status ## Alias for status target
 
 # Development workflow shortcuts
+autismwheel.html: install ## Build the application as a single HTML file
+	$(PACKAGE_MANAGER) run build:singlefile
+	mv $(DIST_DIR)/index.html $(DIST_DIR)/autismwheel.html
+
 quick-build: ## Quick build without cleaning
 	$(PACKAGE_MANAGER) run build
 
