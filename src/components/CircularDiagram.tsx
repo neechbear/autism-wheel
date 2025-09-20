@@ -509,8 +509,27 @@ function CircularDiagramContent() {
     return { x, y, angle };
   };
 
-  const saveDiagramAs = (format: 'png' | 'svg' | 'jpeg') => {
+  const saveDiagramAs = (format: 'png' | 'svg' | 'jpeg' | 'html') => {
     if (!svgRef.current) return;
+
+    if (format === 'html') {
+      const encodedState = encodeState();
+      const metaTag = `<meta name="autism-wheel-state" content="${encodedState}">`;
+
+      const fullHtml = document.documentElement.outerHTML;
+      const newHtml = fullHtml.replace('</head>', `${metaTag}</head>`);
+
+      const blob = new Blob([newHtml], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = 'autismwheel.html';
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      return;
+    }
 
     if (format === 'svg') {
       // Create a new standalone SVG with proper attributes
@@ -947,8 +966,16 @@ function CircularDiagramContent() {
   // Load state from URL on component mount
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const encodedState = urlParams.get('state');
+    let encodedState = urlParams.get('state');
     
+    // If no state in URL, check for embedded meta tag
+    if (!encodedState) {
+      const metaTag = document.querySelector('meta[name="autism-wheel-state"]');
+      if (metaTag) {
+        encodedState = metaTag.getAttribute('content');
+      }
+    }
+
     if (encodedState) {
       const decodedState = decodeState(encodedState);
       if (decodedState) {
@@ -1492,6 +1519,9 @@ function CircularDiagramContent() {
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => saveDiagramAs('jpeg')}>
               Save as JPEG
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => saveDiagramAs('html')}>
+              Save as HTML
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
