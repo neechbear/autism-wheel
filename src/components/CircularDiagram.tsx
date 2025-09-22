@@ -529,7 +529,7 @@ function CircularDiagramContent() {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-      }, 0);
+      }, 150);
       return;
     }
 
