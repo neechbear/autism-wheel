@@ -514,13 +514,23 @@ function CircularDiagramContent() {
 
     if (format === 'html') {
       setTimeout(() => {
+        const clonedDocument = document.documentElement.cloneNode(true) as HTMLElement;
+
+        // Remove dropdowns and other temporary elements from the clone
+        clonedDocument.querySelectorAll('[data-radix-popper-content-wrapper], [data-radix-focus-guard]').forEach(el => el.remove());
+
         const encodedState = encodeState();
         const metaTag = `<meta name="autism-wheel-state" content="${encodedState}">`;
 
-        const fullHtml = document.documentElement.outerHTML;
-        const newHtml = fullHtml.replace('</head>', `${metaTag}</head>`);
+        let htmlString = clonedDocument.outerHTML;
 
-        const blob = new Blob([newHtml], { type: 'text/html' });
+        // Inject the meta tag
+        const headEndIndex = htmlString.indexOf('</head>');
+        if (headEndIndex !== -1) {
+          htmlString = htmlString.slice(0, headEndIndex) + metaTag + htmlString.slice(headEndIndex);
+        }
+
+        const blob = new Blob([htmlString], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.download = 'autismwheel.html';
