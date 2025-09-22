@@ -513,21 +513,23 @@ function CircularDiagramContent() {
     if (!svgRef.current) return;
 
     if (format === 'html') {
-      const encodedState = encodeState();
-      const metaTag = `<meta name="autism-wheel-state" content="${encodedState}">`;
+      setTimeout(() => {
+        const encodedState = encodeState();
+        const metaTag = `<meta name="autism-wheel-state" content="${encodedState}">`;
 
-      const fullHtml = document.documentElement.outerHTML;
-      const newHtml = fullHtml.replace('</head>', `${metaTag}</head>`);
+        const fullHtml = document.documentElement.outerHTML;
+        const newHtml = fullHtml.replace('</head>', `${metaTag}</head>`);
 
-      const blob = new Blob([newHtml], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.download = 'autismwheel.html';
-      link.href = url;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+        const blob = new Blob([newHtml], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = 'autismwheel.html';
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 0);
       return;
     }
 
