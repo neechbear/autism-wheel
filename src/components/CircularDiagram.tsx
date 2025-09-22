@@ -513,27 +513,45 @@ function CircularDiagramContent() {
     if (!svgRef.current) return;
 
     if (format === 'html') {
-      setTimeout(async () => {
+      setTimeout(() => {
         try {
-          // Fetch the original, clean HTML of the page
-          const response = await fetch(window.location.href);
-          if (!response.ok) {
-            throw new Error(`Failed to fetch page HTML: ${response.statusText}`);
-          }
-          let htmlText = await response.text();
+          // 1. Clone the entire document to avoid modifying the live DOM
+          const clonedDocument = document.cloneNode(true) as Document;
 
-          // Create and inject the state meta tag
+          // 2. Clean up attributes that might interfere with the saved page's functionality
+          const root = clonedDocument.querySelector('#root');
+          const body = clonedDocument.body;
+          const html = clonedDocument.documentElement;
+
+          // Remove Radix UI temporary items that can interfere with layout and interaction
+          clonedDocument.querySelectorAll('[data-radix-focus-guard],[data-radix-scroll-area-viewport]').forEach(el => el.remove());
+
+          // Clean attributes from major elements that can lock scrolling or hide content
+          [html, body, root].forEach(el => {
+            if (!el) return;
+            el.removeAttribute('data-scroll-locked');
+            el.removeAttribute('data-aria-hidden');
+            el.removeAttribute('aria-hidden');
+            el.style.cssText = ''; // Remove inline styles that might be temporary
+          });
+
+          // 3. Serialize the cleaned DOM to a string
+          // We add the doctype to ensure it's a valid HTML file
+          let htmlString = '<!DOCTYPE html>' + clonedDocument.documentElement.outerHTML;
+
+          // 4. Create and inject the state meta tag as a string
+          // This is safer than injecting into the DOM before serialization
           const encodedState = encodeState();
-          const metaTag = `<meta name="autism-wheel-state" content="${encodedState}">`;
+          // Use single quotes for the content attribute for robustness
+          const metaTag = `<meta name='autism-wheel-state' content='${encodedState}'>`;
 
-          // Inject the meta tag right before the closing </head> tag
-          const headEndIndex = htmlText.indexOf('</head>');
+          const headEndIndex = htmlString.indexOf('</head>');
           if (headEndIndex !== -1) {
-            htmlText = htmlText.slice(0, headEndIndex) + metaTag + htmlText.slice(headEndIndex);
+            htmlString = htmlString.slice(0, headEndIndex) + metaTag + htmlString.slice(headEndIndex);
           }
 
-          // Create a blob and trigger download
-          const blob = new Blob([htmlText], { type: 'text/html' });
+          // 5. Create a blob and trigger the download
+          const blob = new Blob([htmlString], { type: 'text/html;charset=utf-8' });
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.download = 'autismwheel.html';
@@ -542,11 +560,12 @@ function CircularDiagramContent() {
           link.click();
           document.body.removeChild(link);
           URL.revokeObjectURL(url);
+
         } catch (error) {
           console.error("Failed to save as HTML:", error);
           alert("Sorry, there was an error saving the file. Please try again.");
         }
-      }, 150);
+      }, 150); // A small delay to allow UI to update (e.g., close dropdown)
       return;
     }
 
