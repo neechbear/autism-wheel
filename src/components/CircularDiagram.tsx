@@ -537,16 +537,22 @@ function CircularDiagramContent() {
             el.style.cssText = ''; // Remove inline styles
           });
 
-          // 3. Inject the state meta tag directly into the cloned DOM's head
+          // 3. Find and remove any existing state meta tag to prevent duplicates
+          const existingMeta = clonedDocument.querySelector('meta[name="autism-wheel-state"]');
+          if (existingMeta) {
+            existingMeta.remove();
+          }
+
+          // 4. Inject the new state meta tag directly into the cloned DOM's head
           const metaTag = clonedDocument.createElement('meta');
           metaTag.name = 'autism-wheel-state';
           metaTag.content = encodeState();
           clonedDocument.head.appendChild(metaTag);
 
-          // 4. Serialize the cleaned DOM to a string
+          // 5. Serialize the cleaned DOM to a string
           const finalHtml = '<!DOCTYPE html>' + clonedDocument.documentElement.outerHTML;
 
-          // 5. Create a blob and trigger the download
+          // 6. Create a blob and trigger the download
           const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
