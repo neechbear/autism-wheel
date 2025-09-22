@@ -519,15 +519,26 @@ function CircularDiagramContent() {
         // Remove dropdowns and other temporary elements from the clone
         clonedDocument.querySelectorAll('[data-radix-popper-content-wrapper], [data-radix-focus-guard]').forEach(el => el.remove());
 
-        // Remove scroll lock attributes from the body
+        // Clean up attributes that might break interactivity
+        clonedDocument.removeAttribute('data-aria-hidden');
+        clonedDocument.removeAttribute('aria-hidden');
+
         const body = clonedDocument.querySelector('body');
         if (body) {
           body.removeAttribute('data-scroll-locked');
           body.removeAttribute('style');
         }
 
+        const rootDiv = clonedDocument.querySelector('#root');
+        if (rootDiv) {
+            rootDiv.removeAttribute('data-aria-hidden');
+            rootDiv.removeAttribute('aria-hidden');
+        }
+
         const encodedState = encodeState();
-        const metaTag = `<meta name="autism-wheel-state" content="${encodedState}">`;
+        // Escape quotes to be safe inside HTML attribute
+        const escapedEncodedState = encodedState.replace(/"/g, '&quot;');
+        const metaTag = `<meta name="autism-wheel-state" content="${escapedEncodedState}">`;
 
         let htmlString = clonedDocument.outerHTML;
 
