@@ -536,9 +536,7 @@ function CircularDiagramContent() {
         }
 
         const encodedState = encodeState();
-        // Escape quotes to be safe inside HTML attribute
-        const escapedEncodedState = encodedState.replace(/"/g, '&quot;');
-        const metaTag = `<meta name="autism-wheel-state" content="${escapedEncodedState}">`;
+        const metaTag = `<meta name="autism-wheel-state" content="${encodedState}">`;
 
         let htmlString = clonedDocument.outerHTML;
 
@@ -884,24 +882,28 @@ function CircularDiagramContent() {
     
     // Convert to JSON, compress, and encode for URL
     const jsonString = JSON.stringify(state);
-    const compressedString = LZString.compressToEncodedURIComponent(jsonString);
+    const compressedString = LZString.compressToBase64(jsonString);
     return compressedString;
   };
 
   // Function to decode state from URL parameters (with decompression and fallback)
   const decodeState = (encodedState: string) => {
     try {
-      // First try the new compressed format
-      const decompressedString = LZString.decompressFromEncodedURIComponent(encodedState);
+      // First, try to decompress from Base64, which is the new default
+      let decompressedString = LZString.decompressFromBase64(encodedState);
       if (decompressedString) {
-        const state = JSON.parse(decompressedString);
-        return state;
+        return JSON.parse(decompressedString);
       }
       
-      // Fallback to old base64 format for backward compatibility
+      // Fallback to the URI-encoded component format
+      decompressedString = LZString.decompressFromEncodedURIComponent(encodedState);
+      if (decompressedString) {
+        return JSON.parse(decompressedString);
+      }
+
+      // Fallback to old, uncompressed base64 format for very old links
       const jsonString = decodeURIComponent(escape(atob(encodedState)));
-      const state = JSON.parse(jsonString);
-      return state;
+      return JSON.parse(jsonString);
     } catch (error) {
       console.error('Failed to decode state:', error);
       return null;
