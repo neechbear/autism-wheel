@@ -63,7 +63,6 @@
       "scripts": {
             "dev": "vite",
             "build": "vite build",
-            "build:singlefile": "vite build --config vite.config.singlefile.ts",
             "test": "playwright test"
       }
 }

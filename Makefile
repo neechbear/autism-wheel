@@ -141,7 +141,7 @@ info: status ## Alias for status target
 
 # Development workflow shortcuts
 autismwheel.html: install ## Build the application as a single HTML file
-	$(PACKAGE_MANAGER) run build:singlefile
+	$(PACKAGE_MANAGER) run build
 	mv $(DIST_DIR)/index.html $(DIST_DIR)/autismwheel.html
 
 quick-build: ## Quick build without cleaning
