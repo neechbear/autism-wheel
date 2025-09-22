@@ -519,6 +519,13 @@ function CircularDiagramContent() {
         // Remove dropdowns and other temporary elements from the clone
         clonedDocument.querySelectorAll('[data-radix-popper-content-wrapper], [data-radix-focus-guard]').forEach(el => el.remove());
 
+        // Remove scroll lock attributes from the body
+        const body = clonedDocument.querySelector('body');
+        if (body) {
+          body.removeAttribute('data-scroll-locked');
+          body.removeAttribute('style');
+        }
+
         const encodedState = encodeState();
         const metaTag = `<meta name="autism-wheel-state" content="${encodedState}">`;
 
