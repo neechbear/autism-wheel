@@ -518,40 +518,36 @@ function CircularDiagramContent() {
           // 1. Clone the entire document to avoid modifying the live DOM
           const clonedDocument = document.cloneNode(true) as Document;
 
-          // 2. Clean up attributes that might interfere with the saved page's functionality
+          // 2. Clean up attributes and elements that might interfere
           const root = clonedDocument.querySelector('#root');
           const body = clonedDocument.body;
           const html = clonedDocument.documentElement;
 
-          // Remove Radix UI temporary items that can interfere with layout and interaction
-          clonedDocument.querySelectorAll('[data-radix-focus-guard],[data-radix-scroll-area-viewport]').forEach(el => el.remove());
+          // Remove Radix UI temporary items, including the dropdown content
+          clonedDocument.querySelectorAll(
+            '[data-radix-focus-guard],[data-radix-scroll-area-viewport],[data-radix-popper-content-wrapper]'
+          ).forEach(el => el.remove());
 
-          // Clean attributes from major elements that can lock scrolling or hide content
+          // Clean attributes from major elements
           [html, body, root].forEach(el => {
             if (!el) return;
             el.removeAttribute('data-scroll-locked');
             el.removeAttribute('data-aria-hidden');
             el.removeAttribute('aria-hidden');
-            el.style.cssText = ''; // Remove inline styles that might be temporary
+            el.style.cssText = ''; // Remove inline styles
           });
 
-          // 3. Serialize the cleaned DOM to a string
-          // We add the doctype to ensure it's a valid HTML file
-          let htmlString = '<!DOCTYPE html>' + clonedDocument.documentElement.outerHTML;
+          // 3. Inject the state meta tag directly into the cloned DOM's head
+          const metaTag = clonedDocument.createElement('meta');
+          metaTag.name = 'autism-wheel-state';
+          metaTag.content = encodeState();
+          clonedDocument.head.appendChild(metaTag);
 
-          // 4. Create and inject the state meta tag as a string
-          // This is safer than injecting into the DOM before serialization
-          const encodedState = encodeState();
-          // Use single quotes for the content attribute for robustness
-          const metaTag = `<meta name='autism-wheel-state' content='${encodedState}'>`;
-
-          const headEndIndex = htmlString.indexOf('</head>');
-          if (headEndIndex !== -1) {
-            htmlString = htmlString.slice(0, headEndIndex) + metaTag + htmlString.slice(headEndIndex);
-          }
+          // 4. Serialize the cleaned DOM to a string
+          const finalHtml = '<!DOCTYPE html>' + clonedDocument.documentElement.outerHTML;
 
           // 5. Create a blob and trigger the download
-          const blob = new Blob([htmlString], { type: 'text/html;charset=utf-8' });
+          const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.download = 'autismwheel.html';
