@@ -509,8 +509,67 @@ function CircularDiagramContent() {
     return { x, y, angle };
   };
 
-  const saveDiagramAs = (format: 'png' | 'svg' | 'jpeg') => {
+  const saveDiagramAs = (format: 'png' | 'svg' | 'jpeg' | 'html') => {
     if (!svgRef.current) return;
+
+    if (format === 'html') {
+      setTimeout(() => {
+        try {
+          // 1. Clone the entire document to avoid modifying the live DOM
+          const clonedDocument = document.cloneNode(true) as Document;
+
+          // 2. Clean up attributes and elements that might interfere
+          const root = clonedDocument.querySelector('#root');
+          const body = clonedDocument.body;
+          const html = clonedDocument.documentElement;
+
+          // Remove Radix UI temporary items, including the dropdown content
+          clonedDocument.querySelectorAll(
+            '[data-radix-focus-guard],[data-radix-scroll-area-viewport],[data-radix-popper-content-wrapper]'
+          ).forEach(el => el.remove());
+
+          // Clean attributes from major elements
+          [html, body, root].forEach(el => {
+            if (!el) return;
+            el.removeAttribute('data-scroll-locked');
+            el.removeAttribute('data-aria-hidden');
+            el.removeAttribute('aria-hidden');
+            el.style.cssText = ''; // Remove inline styles
+          });
+
+          // 3. Find and remove any existing state meta tag to prevent duplicates
+          const existingMeta = clonedDocument.querySelector('meta[name="autism-wheel-state"]');
+          if (existingMeta) {
+            existingMeta.remove();
+          }
+
+          // 4. Inject the new state meta tag directly into the cloned DOM's head
+          const metaTag = clonedDocument.createElement('meta');
+          metaTag.name = 'autism-wheel-state';
+          metaTag.content = encodeState();
+          clonedDocument.head.appendChild(metaTag);
+
+          // 5. Serialize the cleaned DOM to a string
+          const finalHtml = '<!DOCTYPE html>' + clonedDocument.documentElement.outerHTML;
+
+          // 6. Create a blob and trigger the download
+          const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.download = 'autismwheel.html';
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+
+        } catch (error) {
+          console.error("Failed to save as HTML:", error);
+          alert("Sorry, there was an error saving the file. Please try again.");
+        }
+      }, 150); // A small delay to allow UI to update (e.g., close dropdown)
+      return;
+    }
 
     if (format === 'svg') {
       // Create a new standalone SVG with proper attributes
@@ -835,24 +894,28 @@ function CircularDiagramContent() {
     
     // Convert to JSON, compress, and encode for URL
     const jsonString = JSON.stringify(state);
-    const compressedString = LZString.compressToEncodedURIComponent(jsonString);
+    const compressedString = LZString.compressToBase64(jsonString);
     return compressedString;
   };
 
   // Function to decode state from URL parameters (with decompression and fallback)
   const decodeState = (encodedState: string) => {
     try {
-      // First try the new compressed format
-      const decompressedString = LZString.decompressFromEncodedURIComponent(encodedState);
+      // First, try to decompress from Base64, which is the new default
+      let decompressedString = LZString.decompressFromBase64(encodedState);
       if (decompressedString) {
-        const state = JSON.parse(decompressedString);
-        return state;
+        return JSON.parse(decompressedString);
       }
-      
-      // Fallback to old base64 format for backward compatibility
+
+      // Fallback to the URI-encoded component format
+      decompressedString = LZString.decompressFromEncodedURIComponent(encodedState);
+      if (decompressedString) {
+        return JSON.parse(decompressedString);
+      }
+
+      // Fallback to old, uncompressed base64 format for very old links
       const jsonString = decodeURIComponent(escape(atob(encodedState)));
-      const state = JSON.parse(jsonString);
-      return state;
+      return JSON.parse(jsonString);
     } catch (error) {
       console.error('Failed to decode state:', error);
       return null;
@@ -947,8 +1010,16 @@ function CircularDiagramContent() {
   // Load state from URL on component mount
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const encodedState = urlParams.get('state');
+    let encodedState = urlParams.get('state');
     
+    // If no state in URL, check for embedded meta tag
+    if (!encodedState) {
+      const metaTag = document.querySelector('meta[name="autism-wheel-state"]');
+      if (metaTag) {
+        encodedState = metaTag.getAttribute('content');
+      }
+    }
+
     if (encodedState) {
       const decodedState = decodeState(encodedState);
       if (decodedState) {
@@ -1492,6 +1563,9 @@ function CircularDiagramContent() {
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => saveDiagramAs('jpeg')}>
               Save as JPEG
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => saveDiagramAs('html')}>
+              Save as HTML
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
