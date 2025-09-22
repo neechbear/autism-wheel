@@ -513,48 +513,39 @@ function CircularDiagramContent() {
     if (!svgRef.current) return;
 
     if (format === 'html') {
-      setTimeout(() => {
-        const clonedDocument = document.documentElement.cloneNode(true) as HTMLElement;
+      setTimeout(async () => {
+        try {
+          // Fetch the original, clean HTML of the page
+          const response = await fetch(window.location.href);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch page HTML: ${response.statusText}`);
+          }
+          let htmlText = await response.text();
 
-        // Remove dropdowns and other temporary elements from the clone
-        clonedDocument.querySelectorAll('[data-radix-popper-content-wrapper], [data-radix-focus-guard]').forEach(el => el.remove());
+          // Create and inject the state meta tag
+          const encodedState = encodeState();
+          const metaTag = `<meta name="autism-wheel-state" content="${encodedState}">`;
 
-        // Clean up attributes that might break interactivity
-        clonedDocument.removeAttribute('data-aria-hidden');
-        clonedDocument.removeAttribute('aria-hidden');
+          // Inject the meta tag right before the closing </head> tag
+          const headEndIndex = htmlText.indexOf('</head>');
+          if (headEndIndex !== -1) {
+            htmlText = htmlText.slice(0, headEndIndex) + metaTag + htmlText.slice(headEndIndex);
+          }
 
-        const body = clonedDocument.querySelector('body');
-        if (body) {
-          body.removeAttribute('data-scroll-locked');
-          body.removeAttribute('style');
+          // Create a blob and trigger download
+          const blob = new Blob([htmlText], { type: 'text/html' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.download = 'autismwheel.html';
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        } catch (error) {
+          console.error("Failed to save as HTML:", error);
+          alert("Sorry, there was an error saving the file. Please try again.");
         }
-
-        const rootDiv = clonedDocument.querySelector('#root');
-        if (rootDiv) {
-            rootDiv.removeAttribute('data-aria-hidden');
-            rootDiv.removeAttribute('aria-hidden');
-        }
-
-        const encodedState = encodeState();
-        const metaTag = `<meta name="autism-wheel-state" content="${encodedState}">`;
-
-        let htmlString = clonedDocument.outerHTML;
-
-        // Inject the meta tag
-        const headEndIndex = htmlString.indexOf('</head>');
-        if (headEndIndex !== -1) {
-          htmlString = htmlString.slice(0, headEndIndex) + metaTag + htmlString.slice(headEndIndex);
-        }
-
-        const blob = new Blob([htmlString], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.download = 'autismwheel.html';
-        link.href = url;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
       }, 150);
       return;
     }
@@ -894,7 +885,7 @@ function CircularDiagramContent() {
       if (decompressedString) {
         return JSON.parse(decompressedString);
       }
-      
+
       // Fallback to the URI-encoded component format
       decompressedString = LZString.decompressFromEncodedURIComponent(encodedState);
       if (decompressedString) {
