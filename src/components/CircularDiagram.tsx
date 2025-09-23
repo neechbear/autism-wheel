@@ -1073,13 +1073,13 @@ function CircularDiagramContent() {
           <p className="text-left text-blue-600 dark:text-blue-400">
             Click on segments to select them. You can select up to 2 segments per slice, to indicate typical and under stress impact. Click{' '}
             <a 
-              href="https://youtu.be/z_VcEjngmMI" 
+              href="https://youtu.be/OvuTHMzbzpQ"
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
             >
               <YouTubeIcon className="w-3 h-3" />
-              https://youtu.be/z_VcEjngmMI
+              https://youtu.be/OvuTHMzbzpQ
             </a>
             {' '}to view a brief tutorial video.
           </p>
