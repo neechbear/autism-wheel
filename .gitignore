@@ -3,3 +3,5 @@ build
 jules-scratch/
 .DS_Store
 test-results/
+playwright-report/
+*.log
