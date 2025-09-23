@@ -1361,6 +1361,14 @@ function CircularDiagramContent() {
                 lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
               }
               
+              const textOutlineProps = labelStyle === 'bold'
+                ? {
+                    stroke: isDarkMode ? '#1f1f1f' : '#ffffff',
+                    strokeWidth: 4,
+                    paintOrder: 'stroke' as const,
+                  }
+                : {};
+
               return (
                 <g key={`label-${sliceIndex}`}>
                   {lines.map((line, lineIndex) => (
@@ -1372,6 +1380,7 @@ function CircularDiagramContent() {
                       dominantBaseline="middle"
                       fontSize="14"
                       fill={isDarkMode ? "#9ca3af" : "#374151"}
+                      {...textOutlineProps}
                       style={{
                         fontFamily: 'system-ui, sans-serif',
                         fontWeight: labelStyle === 'bold' ? 'bold' : 'normal',
@@ -1424,14 +1433,14 @@ function CircularDiagramContent() {
                 transform={`rotate(-90 ${CENTER_X} ${CENTER_Y - radius})`}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize="14"
+                fontSize="13"
                 fill={isDarkMode ? "#9ca3af" : "#374151"}
                 stroke={isDarkMode ? '#1f1f1f' : '#ffffff'}
                 strokeWidth="4"
                 paintOrder="stroke"
                 style={{
                   fontFamily: 'system-ui, sans-serif',
-                  fontWeight: 'bold',
+                  fontWeight: 'normal',
                   pointerEvents: 'none'
                 }}
               >
