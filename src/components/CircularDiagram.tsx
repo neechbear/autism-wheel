@@ -432,8 +432,11 @@ function CircularDiagramContent() {
             [sliceIndex]: [first]
           };
         } else {
-          // Clicked on an uncolored segment, do nothing (already have 2 selections)
-          return prev;
+          // Clicked on an uncolored segment, update the second selection
+          return {
+            ...prev,
+            [sliceIndex]: [first, segmentNumber]
+          };
         }
       }
       
@@ -1106,6 +1109,7 @@ function CircularDiagramContent() {
                         strokeWidth="1"
                         className="cursor-pointer hover:opacity-80 transition-opacity"
                         onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
+                        data-testid={`segment-${sliceIndex}-${ringIndex}`}
                       />
                     </TooltipTrigger>
                     <TooltipContent side="top" className="max-w-xs">
@@ -1171,6 +1175,7 @@ function CircularDiagramContent() {
                         strokeWidth="1"
                         className="cursor-pointer hover:opacity-80 transition-opacity"
                         onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
+                        data-testid={`segment-${sliceIndex}-${ringIndex}`}
                       />
                     </TooltipTrigger>
                     <TooltipContent side="top" className="max-w-xs">
