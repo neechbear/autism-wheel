@@ -1416,7 +1416,7 @@ function CircularDiagramContent() {
             })}
 
             {/* ASD Level Labels */}
-            {asdLabels.map(({ text, radius }) => (
+            {numberPosition !== 'hidden' && asdLabels.map(({ text, radius }) => (
               <text
                 key={text}
                 x={CENTER_X}
