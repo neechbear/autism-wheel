@@ -40,6 +40,12 @@ const MIN_RADIUS = 55;
 const MAX_RADIUS = 265;
 const RING_WIDTH = (MAX_RADIUS - MIN_RADIUS) / TOTAL_RINGS;
 
+const asdLabels = [
+  { text: "ASD-1", radius: (MIN_RADIUS + (MIN_RADIUS + 4 * RING_WIDTH)) / 2 },
+  { text: "ASD-2", radius: ((MIN_RADIUS + 4 * RING_WIDTH) + (MIN_RADIUS + 7 * RING_WIDTH)) / 2 },
+  { text: "ASD-3", radius: ((MIN_RADIUS + 7 * RING_WIDTH) + MAX_RADIUS) / 2 },
+];
+
 const INITIAL_SLICE_LABELS = [
   'Social Interaction & Relationships',
   'Communication Differences',
@@ -1355,6 +1361,14 @@ function CircularDiagramContent() {
                 lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
               }
               
+              const textOutlineProps = labelStyle === 'bold'
+                ? {
+                    stroke: isDarkMode ? '#1f1f1f' : '#ffffff',
+                    strokeWidth: 4,
+                    paintOrder: 'stroke' as const,
+                  }
+                : {};
+
               return (
                 <g key={`label-${sliceIndex}`}>
                   {lines.map((line, lineIndex) => (
@@ -1366,6 +1380,7 @@ function CircularDiagramContent() {
                       dominantBaseline="middle"
                       fontSize="14"
                       fill={isDarkMode ? "#9ca3af" : "#374151"}
+                      {...textOutlineProps}
                       style={{
                         fontFamily: 'system-ui, sans-serif',
                         fontWeight: labelStyle === 'bold' ? 'bold' : 'normal',
@@ -1408,6 +1423,30 @@ function CircularDiagramContent() {
                 </text>
               );
             })}
+
+            {/* ASD Level Labels */}
+            {numberPosition !== 'hidden' && asdLabels.map(({ text, radius }) => (
+              <text
+                key={text}
+                x={CENTER_X}
+                y={CENTER_Y - radius}
+                transform={`rotate(-90 ${CENTER_X} ${CENTER_Y - radius})`}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize="13"
+                fill={isDarkMode ? "#9ca3af" : "#374151"}
+                stroke={isDarkMode ? '#1f1f1f' : '#ffffff'}
+                strokeWidth="4"
+                paintOrder="stroke"
+                style={{
+                  fontFamily: 'system-ui, sans-serif',
+                  fontWeight: 'normal',
+                  pointerEvents: 'none'
+                }}
+              >
+                {text}
+              </text>
+            ))}
           </svg>
         </TooltipProvider>
 

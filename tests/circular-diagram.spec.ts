@@ -17,4 +17,10 @@ test.describe('Autism Wheel - Circular Diagram Interaction', () => {
     const pathCount = await paths.count();
     expect(pathCount).toBeGreaterThan(0);
   });
+
+  test('should display the ASD level labels', async ({ page }) => {
+    await expect(page.locator('text:has-text("ASD-1")')).toBeVisible();
+    await expect(page.locator('text:has-text("ASD-2")')).toBeVisible();
+    await expect(page.locator('text:has-text("ASD-3")')).toBeVisible();
+  });
 });
