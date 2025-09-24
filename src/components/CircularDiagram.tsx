@@ -1065,7 +1065,7 @@ function CircularDiagramContent() {
             >
               my Autism Wheel
             </a>
-            . I developed this tool as a personal project to help individuals visualize and better understand their own unique autistic profiles.
+            . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
             I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
             It is simply a resource for personal reflection.
             Your feedback and suggestions to improve this tool are welcomed at
