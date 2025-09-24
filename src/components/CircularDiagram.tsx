@@ -1065,7 +1065,16 @@ function CircularDiagramContent() {
             >
               my Autism Wheel
             </a>
-            . I developed this tool as a personal project to help individuals visualize and better understand their own unique autistic profiles. I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice. It is simply a resource for personal reflection. Your feedback and suggestions to improve this tool are welcomed at <a href="mailto:nicolaw+autismwheel@tfb.net?subject=Feedback%20on%20Autism%20Wheel">nicolaw@tfb.net</a>.
+            . I developed this tool as a personal project to help individuals visualize and better understand their own unique autistic profiles.
+            I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
+            It is simply a resource for personal reflection.
+            Your feedback and suggestions to improve this tool are welcomed at
+            <a
+              href="mailto:nicolaw+autismwheel@tfb.net?subject=Feedback%20on%20Autism%20Wheel"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+            >nicolaw@tfb.net</a>.
           </p>
         </div>
 
