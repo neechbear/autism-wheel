@@ -126,18 +126,18 @@ interface LabelData {
 const darkenColor = (hexColor: string, amount: number = 0.3): string => {
   // Remove the # if present
   const color = hexColor.replace('#', '');
-  
+
   // Parse the RGB values
   const num = parseInt(color, 16);
   const r = (num >> 16) & 255;
   const g = (num >> 8) & 255;
   const b = num & 255;
-  
+
   // Darken each component
   const darkenedR = Math.floor(r * (1 - amount));
   const darkenedG = Math.floor(g * (1 - amount));
   const darkenedB = Math.floor(b * (1 - amount));
-  
+
   // Convert back to hex
   return `#${((darkenedR << 16) | (darkenedG << 8) | darkenedB).toString(16).padStart(6, '0')}`;
 };
@@ -258,7 +258,7 @@ function DraggableLabelRow({ labelData, index, editingLabels, setEditingLabels, 
     <tr
       ref={dropRef}
       className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
-      style={{ 
+      style={{
         opacity: isDragging ? 0.5 : 1,
         backgroundColor: isOver ? 'rgba(59, 130, 246, 0.1)' : 'transparent'
       }}
@@ -300,8 +300,8 @@ function DraggableLabelRow({ labelData, index, editingLabels, setEditingLabels, 
           size="sm"
           onClick={() => onDelete(labelData.id)}
           disabled={!canDelete}
-          className={canDelete 
-            ? "text-destructive hover:text-destructive hover:bg-destructive/10" 
+          className={canDelete
+            ? "text-destructive hover:text-destructive hover:bg-destructive/10"
             : "text-muted-foreground cursor-not-allowed"
           }
           title={!canDelete ? "Cannot delete - minimum of 2 labels required" : "Delete label"}
@@ -369,7 +369,7 @@ function CircularDiagramContent() {
   useEffect(() => {
     const applyTheme = () => {
       const root = document.documentElement;
-      
+
       if (theme === 'dark') {
         root.classList.add('dark');
       } else if (theme === 'light') {
@@ -399,7 +399,7 @@ function CircularDiagramContent() {
     setSelections(prev => {
       const currentSelections = prev[sliceIndex] || [];
       const segmentNumber = ringIndex + 1; // Convert to 1-based numbering
-      
+
       if (currentSelections.length === 0) {
         // No current selections, add this one
         return {
@@ -408,7 +408,7 @@ function CircularDiagramContent() {
         };
       } else if (currentSelections.length === 1) {
         const [firstSelection] = currentSelections;
-        
+
         if (segmentNumber <= firstSelection) {
           // Clicked on a dark-colored segment, clear all selections
           return {
@@ -424,7 +424,7 @@ function CircularDiagramContent() {
         }
       } else if (currentSelections.length === 2) {
         const [first, second] = currentSelections;
-        
+
         if (segmentNumber <= first) {
           // Clicked on a dark-colored segment, clear all selections
           return {
@@ -445,7 +445,7 @@ function CircularDiagramContent() {
           };
         }
       }
-      
+
       return prev;
     });
   };
@@ -454,11 +454,11 @@ function CircularDiagramContent() {
     const currentSelections = selections[sliceIndex] || [];
     const segmentNumber = ringIndex + 1;
     const baseColor = sliceColors[sliceIndex];
-    
+
     if (currentSelections.length === 0) {
       return 'rgba(0, 0, 0, 0.05)';
     }
-    
+
     if (currentSelections.length === 1) {
       const selectedSegment = currentSelections[0];
       if (segmentNumber <= selectedSegment) {
@@ -473,7 +473,7 @@ function CircularDiagramContent() {
         return baseColor + '80'; // 50% opacity
       }
     }
-    
+
     return 'rgba(0, 0, 0, 0.05)';
   };
 
@@ -481,22 +481,22 @@ function CircularDiagramContent() {
     const angleStep = (2 * Math.PI) / sliceLabels.length;
     const startAngle = sliceIndex * angleStep - Math.PI / 2; // Start from top
     const endAngle = startAngle + angleStep;
-    
+
     const innerRadius = MIN_RADIUS + ringIndex * RING_WIDTH;
     const outerRadius = MIN_RADIUS + (ringIndex + 1) * RING_WIDTH;
-    
+
     const x1 = CENTER_X + innerRadius * Math.cos(startAngle);
     const y1 = CENTER_Y + innerRadius * Math.sin(startAngle);
     const x2 = CENTER_X + outerRadius * Math.cos(startAngle);
     const y2 = CENTER_Y + outerRadius * Math.sin(startAngle);
-    
+
     const x3 = CENTER_X + outerRadius * Math.cos(endAngle);
     const y3 = CENTER_Y + outerRadius * Math.sin(endAngle);
     const x4 = CENTER_X + innerRadius * Math.cos(endAngle);
     const y4 = CENTER_Y + innerRadius * Math.sin(endAngle);
-    
+
     const largeArcFlag = angleStep > Math.PI ? 1 : 0;
-    
+
     return `
       M ${x1} ${y1}
       L ${x2} ${y2}
@@ -511,10 +511,10 @@ function CircularDiagramContent() {
     const angleStep = (2 * Math.PI) / sliceLabels.length;
     const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep / 2; // Center of slice
     const labelRadius = MAX_RADIUS + 30;
-    
+
     const x = CENTER_X + labelRadius * Math.cos(angle);
     const y = CENTER_Y + labelRadius * Math.sin(angle);
-    
+
     return { x, y, angle };
   };
 
@@ -587,7 +587,7 @@ function CircularDiagramContent() {
       svgClone.setAttribute('width', '750');
       svgClone.setAttribute('height', '750');
       svgClone.setAttribute('viewBox', '0 0 750 750');
-      
+
       // Create background rectangle with theme-appropriate color
       const backgroundRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       backgroundRect.setAttribute('x', '0');
@@ -596,13 +596,13 @@ function CircularDiagramContent() {
       backgroundRect.setAttribute('height', '750');
       backgroundRect.setAttribute('fill', isDarkMode ? '#1f1f1f' : '#ffffff');
       svgClone.appendChild(backgroundRect);
-      
+
       // Copy all elements from the original SVG
       const originalSvg = svgRef.current;
       for (let i = 0; i < originalSvg.children.length; i++) {
         const child = originalSvg.children[i];
         const clonedChild = child.cloneNode(true) as Element;
-        
+
         // Ensure text elements have proper font styling
         if (clonedChild.tagName === 'text') {
           clonedChild.setAttribute('font-family', 'Arial, Helvetica, sans-serif');
@@ -611,7 +611,7 @@ function CircularDiagramContent() {
             clonedChild.setAttribute('fill', '#374151');
           }
         }
-        
+
         // Recursively fix text elements in groups
         const textElements = clonedChild.querySelectorAll('text');
         textElements.forEach(textEl => {
@@ -623,10 +623,10 @@ function CircularDiagramContent() {
             textEl.setAttribute('fill', '#374151');
           }
         });
-        
+
         svgClone.appendChild(clonedChild);
       }
-      
+
       // Serialize the new SVG
       const svgData = new XMLSerializer().serializeToString(svgClone);
       const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
@@ -667,18 +667,18 @@ function CircularDiagramContent() {
     // Get SVG data
     const svgData = new XMLSerializer().serializeToString(svgRef.current);
     const img = new Image();
-    
+
     img.onload = () => {
       // Draw the SVG onto the canvas
       ctx.drawImage(img, 0, 0);
-      
+
       // Create download link
       const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
       const quality = format === 'jpeg' ? 0.9 : undefined; // High quality for JPEG
-      
+
       canvas.toBlob((blob) => {
         if (!blob) return;
-        
+
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.download = `autismwheel.${format}`;
@@ -716,20 +716,20 @@ function CircularDiagramContent() {
       const newColors = editingLabels.map(item => item.color);
       const newIcons = editingLabels.map(item => item.icon);
       const newDescriptions = editingLabels.map(item => item.description);
-      
+
       // Create mapping from original indices to new indices
       const indexMapping: { [oldIndex: number]: number } = {};
       editingLabels.forEach((item, newIndex) => {
         indexMapping[item.originalIndex] = newIndex;
       });
-      
+
       // Remap selections based on the new order
       setSelections(prev => {
         const newSelections: Selection = {};
         Object.keys(prev).forEach(key => {
           const oldSliceIndex = parseInt(key);
           const newSliceIndex = indexMapping[oldSliceIndex];
-          
+
           // Only keep selections for labels that still exist and map them to new indices
           if (newSliceIndex !== undefined && newSliceIndex < newLabels.length) {
             newSelections[newSliceIndex] = prev[oldSliceIndex];
@@ -737,7 +737,7 @@ function CircularDiagramContent() {
         });
         return newSelections;
       });
-      
+
       setSliceLabels(newLabels);
       setSliceColors(newColors);
       setSliceIcons(newIcons);
@@ -770,10 +770,10 @@ function CircularDiagramContent() {
   // Check if editing labels have changed from original
   const hasChanges = () => {
     if (originalEditingLabels.length !== editingLabels.length) return true;
-    
+
     return editingLabels.some((label, index) => {
       const original = originalEditingLabels[index];
-      return !original || 
+      return !original ||
         label.label !== original.label ||
         label.color !== original.color ||
         label.icon !== original.icon ||
@@ -784,8 +784,8 @@ function CircularDiagramContent() {
   // Check if current labels match defaults
   const isAtDefaults = () => {
     if (editingLabels.length !== INITIAL_SLICE_LABELS.length) return false;
-    
-    return editingLabels.every((label, index) => 
+
+    return editingLabels.every((label, index) =>
       label.label === INITIAL_SLICE_LABELS[index] &&
       label.color === INITIAL_SLICE_COLORS[index] &&
       label.icon === INITIAL_SLICE_ICONS[index] &&
@@ -834,7 +834,7 @@ function CircularDiagramContent() {
       const [firstSelection, secondSelection] = currentSelections.sort((a, b) => a - b);
       const baseColor = sliceColors[sliceIndex];
       const icon = sliceIcons[sliceIndex];
-      
+
       return {
         sliceIndex,
         label,
@@ -849,7 +849,7 @@ function CircularDiagramContent() {
 
     return tableData.sort((a, b) => {
       let comparison = 0;
-      
+
       switch (sortColumn) {
         case 'category':
           comparison = a.label.localeCompare(b.label);
@@ -867,7 +867,7 @@ function CircularDiagramContent() {
           comparison = aStress - bStress;
           break;
       }
-      
+
       return sortDirection === 'asc' ? comparison : -comparison;
     });
   };
@@ -900,7 +900,7 @@ function CircularDiagramContent() {
       sortDirection,
       theme
     };
-    
+
     // Convert to JSON, compress, and encode for URL
     const jsonString = JSON.stringify(state);
     const compressedString = LZString.compressToBase64(jsonString);
@@ -937,10 +937,10 @@ function CircularDiagramContent() {
     const currentUrl = new URL(window.location.href);
     currentUrl.searchParams.set('state', encodedState);
     const urlString = currentUrl.toString();
-    
+
     // Try multiple methods in order of preference
     let success = false;
-    
+
     // Method 1: Modern Clipboard API (only if available and secure context)
     if (navigator.clipboard && window.isSecureContext) {
       try {
@@ -952,7 +952,7 @@ function CircularDiagramContent() {
         // Continue to fallback methods
       }
     }
-    
+
     // Method 2: execCommand fallback
     try {
       const tempTextArea = document.createElement('textarea');
@@ -964,14 +964,14 @@ function CircularDiagramContent() {
       tempTextArea.style.pointerEvents = 'none';
       tempTextArea.setAttribute('readonly', '');
       tempTextArea.setAttribute('tabindex', '-1');
-      
+
       document.body.appendChild(tempTextArea);
-      
+
       // Focus and select the text
       tempTextArea.focus();
       tempTextArea.select();
       tempTextArea.setSelectionRange(0, tempTextArea.value.length);
-      
+
       // For iOS devices
       if (navigator.userAgent.match(/ipad|iphone/i)) {
         tempTextArea.contentEditable = 'true';
@@ -985,10 +985,10 @@ function CircularDiagramContent() {
         }
         tempTextArea.setSelectionRange(0, 999999);
       }
-      
+
       const successful = document.execCommand('copy');
       document.body.removeChild(tempTextArea);
-      
+
       if (successful) {
         alert('Link copied to clipboard!');
         return;
@@ -996,7 +996,7 @@ function CircularDiagramContent() {
     } catch (error) {
       console.warn('execCommand fallback failed:', error);
     }
-    
+
     // Method 3: Show in prompt for manual copying
     try {
       const message = 'Copy this link:';
@@ -1010,7 +1010,7 @@ function CircularDiagramContent() {
     } catch (error) {
       console.warn('Prompt method failed:', error);
     }
-    
+
     // Method 4: Last resort - show in alert
     const alertMessage = `Please copy this link manually:\n\n${urlString}`;
     alert(alertMessage);
@@ -1020,7 +1020,7 @@ function CircularDiagramContent() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     let encodedState = urlParams.get('state');
-    
+
     // If no state in URL, check for embedded meta tag
     if (!encodedState) {
       const metaTag = document.querySelector('meta[name="autism-wheel-state"]');
@@ -1053,39 +1053,51 @@ function CircularDiagramContent() {
     <div className="flex flex-col items-center gap-8 p-8">
       <div className="text-center">
         <h1 className="mb-2 text-4xl font-bold">Autism Wheel</h1>
-        
+
         <div className="mb-6 max-w-3xl mx-auto space-y-4">
           <p className="text-left">
             Hello! Thank you for using{' '}
-            <a 
-              href="https://neechbear.github.io/autism-wheel/" 
-              target="_blank" 
+            <a
+              href="https://www.myautisticprofile.com/"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
             >
               my Autism Wheel
             </a>
-            . I developed this tool as a personal project to help individuals visualize and better understand their own unique autistic profiles. I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice. It is simply a resource for personal reflection. Always seek the guidance of a doctor or other qualified health professional with any questions you may have regarding a medical condition.
+            . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
+            I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
+            It is simply a resource for personal reflection.
+            Your feedback and suggestions to improve this tool are welcomed at{' '}
+            <a
+              href="mailto:nicolaw+autismwheel@tfb.net?subject=Feedback%20on%20Autism%20Wheel"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+            >
+              nicolaw@tfb.net
+            </a>.
           </p>
         </div>
-        
+
         <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
           <p className="text-left text-blue-600 dark:text-blue-400">
-            Click on segments to select them. You can select up to 2 segments per slice, to indicate typical and under stress impact. Click{' '}
-            <a 
+            Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
+            Click{' '}
+            <a
               href="https://youtu.be/OvuTHMzbzpQ"
-              target="_blank" 
+              target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
             >
               <YouTubeIcon className="w-3 h-3" />
               https://youtu.be/OvuTHMzbzpQ
             </a>
-            {' '}to view a brief tutorial video.
+            {' '}to view a tutorial video.
           </p>
         </div>
       </div>
-      
+
       <div className="relative">
         <TooltipProvider>
           <svg ref={svgRef} width="750" height="750" viewBox="0 0 750 750">
@@ -1094,17 +1106,17 @@ function CircularDiagramContent() {
               Array.from({ length: TOTAL_RINGS }, (_, ringIndex) => {
                 const currentSelections = selections[sliceIndex] || [];
                 if (currentSelections.length !== 2) return null; // Only render for dual selections
-                
+
                 const segmentNumber = ringIndex + 1;
                 const [first, second] = currentSelections.sort((a, b) => a - b);
-                
+
                 // Only render light segments (between first and second selection)
                 if (segmentNumber <= first || segmentNumber > second) return null;
-                
+
                 const path = createSegmentPath(sliceIndex, ringIndex);
                 const baseColor = sliceColors[sliceIndex];
                 const fill = baseColor + '80'; // 50% opacity for light segments
-                
+
                 return (
                   <Tooltip key={`light-segment-${sliceIndex}-${ringIndex}`} delayDuration={600}>
                     <TooltipTrigger asChild>
@@ -1142,10 +1154,10 @@ function CircularDiagramContent() {
                 const currentSelections = selections[sliceIndex] || [];
                 const segmentNumber = ringIndex + 1;
                 const baseColor = sliceColors[sliceIndex];
-                
+
                 let fill = 'rgba(0, 0, 0, 0.05)'; // default unselected
                 let shouldRender = true;
-                
+
                 if (currentSelections.length === 0) {
                   fill = 'rgba(0, 0, 0, 0.05)';
                 } else if (currentSelections.length === 1) {
@@ -1166,11 +1178,11 @@ function CircularDiagramContent() {
                     fill = 'rgba(0, 0, 0, 0.05)'; // Unselected
                   }
                 }
-                
+
                 if (!shouldRender) return null;
-                
+
                 const path = createSegmentPath(sliceIndex, ringIndex);
-                
+
                 return (
                   <Tooltip key={`segment-${sliceIndex}-${ringIndex}`} delayDuration={600}>
                     <TooltipTrigger asChild>
@@ -1207,10 +1219,10 @@ function CircularDiagramContent() {
               const radius = MIN_RADIUS + i * RING_WIDTH;
               // Highlight boundaries between groups: 4-5 (index 4) and 7-8 (index 7)
               const isGroupBoundary = i === 4 || i === 7;
-              
+
               let strokeColor = "#e5e7eb"; // default light grey
               let strokeWidth = "1";
-              
+
               if (isGroupBoundary) {
                 if (boundaryWeight === 'hidden') {
                   strokeColor = isDarkMode ? "#111827" : "#e5e7eb"; // much darker in dark mode
@@ -1227,7 +1239,7 @@ function CircularDiagramContent() {
                 strokeColor = isDarkMode ? "#111827" : "#e5e7eb";
                 strokeWidth = "1";
               }
-              
+
               return (
                 <circle
                   key={`ring-${i}`}
@@ -1240,7 +1252,7 @@ function CircularDiagramContent() {
                 />
               );
             })}
-            
+
             {/* Slice dividers - drawn on top of segments */}
             {Array.from({ length: sliceLabels.length }, (_, i) => {
               // Add a small offset to prevent perfectly vertical/horizontal lines which can render differently
@@ -1248,7 +1260,7 @@ function CircularDiagramContent() {
               const angle = (i * 2 * Math.PI) / sliceLabels.length - Math.PI / 2 + angleOffset;
               const x = CENTER_X + MAX_RADIUS * Math.cos(angle);
               const y = CENTER_Y + MAX_RADIUS * Math.sin(angle);
-              
+
               return (
                 <line
                   key={`divider-${i}`}
@@ -1269,7 +1281,7 @@ function CircularDiagramContent() {
               const angle = (i * 2 * Math.PI) / sliceLabels.length - Math.PI / 2 + angleOffset;
               const innerX = CENTER_X + MIN_RADIUS * Math.cos(angle);
               const innerY = CENTER_Y + MIN_RADIUS * Math.sin(angle);
-              
+
               return (
                 <line
                   key={`inner-divider-${i}`}
@@ -1281,16 +1293,16 @@ function CircularDiagramContent() {
                   strokeWidth="1"
                 />
               );
-            })}            
+            })}
             {/* Selection numbers */}
             {numberPosition !== 'hidden' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
               const currentSelections = selections[sliceIndex] || [];
               if (currentSelections.length === 0) return null;
-              
+
               return currentSelections.map((selectionNumber) => {
                 const ringIndex = selectionNumber - 1; // Convert back to 0-based
                 const angleStep = (2 * Math.PI) / sliceLabels.length;
-                
+
                 // Position numbers based on user preference
                 let angleMultiplier;
                 switch (numberPosition) {
@@ -1305,17 +1317,17 @@ function CircularDiagramContent() {
                     angleMultiplier = 0.75; // 75% towards the end angle
                     break;
                 }
-                
+
                 const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep * angleMultiplier;
                 const radius = MIN_RADIUS + (ringIndex + 0.5) * RING_WIDTH; // Center of ring
-                
+
                 const x = CENTER_X + radius * Math.cos(angle);
                 const y = CENTER_Y + radius * Math.sin(angle);
-                
+
                 // Determine the text color based on segment color
                 const baseColor = sliceColors[sliceIndex];
                 let textColor;
-                
+
                 if (currentSelections.length === 1) {
                   // Only one selection, so this number is in the dark color range
                   textColor = darkenColor(baseColor);
@@ -1330,7 +1342,7 @@ function CircularDiagramContent() {
                     textColor = darkenColor(baseColor, 0.15);
                   }
                 }
-                
+
                 return (
                   <text
                     key={`selection-number-${sliceIndex}-${selectionNumber}`}
@@ -1339,7 +1351,7 @@ function CircularDiagramContent() {
                     textAnchor="middle"
                     dominantBaseline="middle"
                     className="text-sm pointer-events-none"
-                    style={{ 
+                    style={{
                       fontWeight: 'bold',
                       fill: textColor
                     }}
@@ -1356,16 +1368,16 @@ function CircularDiagramContent() {
               const rotation = angle * (180 / Math.PI);
               const shouldFlip = rotation > 90 && rotation < 270;
               const finalRotation = shouldFlip ? rotation + 180 : rotation;
-              
+
               // Split long labels into multiple lines
               const words = label.split(' ');
               const maxWordsPerLine = words.length > 3 ? 2 : words.length;
               const lines = [];
-              
+
               for (let i = 0; i < words.length; i += maxWordsPerLine) {
                 lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
               }
-              
+
               const textOutlineProps = labelStyle === 'bold'
                 ? {
                     stroke: isDarkMode ? '#1f1f1f' : '#ffffff',
@@ -1403,14 +1415,14 @@ function CircularDiagramContent() {
             {/* Center icons */}
             {showIcons && sliceIcons.map((icon, sliceIndex) => {
               if (!icon) return null;
-              
+
               const angleStep = (2 * Math.PI) / sliceLabels.length;
               const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep / 2; // Center of slice
               const iconRadius = MIN_RADIUS * 0.7; // Position icons inside the center circle
-              
+
               const x = CENTER_X + iconRadius * Math.cos(angle);
               const y = CENTER_Y + iconRadius * Math.sin(angle);
-              
+
               return (
                 <text
                   key={`center-icon-${sliceIndex}`}
@@ -1456,7 +1468,7 @@ function CircularDiagramContent() {
         </TooltipProvider>
 
       </div>
-      
+
       {/* Display Options */}
       <div className="flex flex-wrap gap-4 justify-center print:hidden">
         <DropdownMenu>
@@ -1466,25 +1478,25 @@ function CircularDiagramContent() {
             <ChevronDown className="w-4 h-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setNumberPosition('left')}
               className={numberPosition === 'left' ? 'bg-accent' : ''}
             >
               Left aligned
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setNumberPosition('center')}
               className={numberPosition === 'center' ? 'bg-accent' : ''}
             >
               Center aligned
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setNumberPosition('right')}
               className={numberPosition === 'right' ? 'bg-accent' : ''}
             >
               Right aligned
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setNumberPosition('hidden')}
               className={numberPosition === 'hidden' ? 'bg-accent' : ''}
             >
@@ -1500,19 +1512,19 @@ function CircularDiagramContent() {
             <ChevronDown className="w-4 h-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setLabelStyle('normal')}
               className={labelStyle === 'normal' ? 'bg-accent' : ''}
             >
               Normal weight
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setLabelStyle('bold')}
               className={labelStyle === 'bold' ? 'bg-accent' : ''}
             >
               Bold weight
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setLabelStyle('hidden')}
               className={labelStyle === 'hidden' ? 'bg-accent' : ''}
             >
@@ -1528,13 +1540,13 @@ function CircularDiagramContent() {
             <ChevronDown className="w-4 h-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setShowIcons(true)}
               className={showIcons ? 'bg-accent' : ''}
             >
               Show icons
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setShowIcons(false)}
               className={!showIcons ? 'bg-accent' : ''}
             >
@@ -1550,19 +1562,19 @@ function CircularDiagramContent() {
             <ChevronDown className="w-4 h-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setTheme('system')}
               className={theme === 'system' ? 'bg-accent' : ''}
             >
               Use system
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setTheme('light')}
               className={theme === 'light' ? 'bg-accent' : ''}
             >
               Light
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => setTheme('dark')}
               className={theme === 'dark' ? 'bg-accent' : ''}
             >
@@ -1576,14 +1588,14 @@ function CircularDiagramContent() {
       <div className="flex flex-wrap gap-4 justify-center print:hidden">
         {!isEditingLabels && (
           <>
-            <Button 
+            <Button
               onClick={handleCopyLink}
               className="h-10 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Link className="w-4 h-4" />
               Copy link
             </Button>
-            <Button 
+            <Button
               onClick={handlePrint}
               className="h-10 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
             >
@@ -1592,7 +1604,7 @@ function CircularDiagramContent() {
             </Button>
           </>
         )}
-        
+
         <DropdownMenu>
           <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2">
             Save diagram
@@ -1613,17 +1625,17 @@ function CircularDiagramContent() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        
-        <Button 
+
+        <Button
           onClick={handleEditLabels}
           className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
         >
           {isEditingLabels ? "Save labels" : "Edit labels"}
         </Button>
-        
+
         {isEditingLabels && (
           <>
-            <Button 
+            <Button
               onClick={handleRevertChanges}
               variant="destructive"
               className="h-10"
@@ -1632,7 +1644,7 @@ function CircularDiagramContent() {
             >
               Revert changes
             </Button>
-            <Button 
+            <Button
               onClick={handleDefaultLabels}
               variant="destructive"
               className="h-10"
@@ -1720,50 +1732,50 @@ function CircularDiagramContent() {
             <Table className="table-fixed w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead 
+                  <TableHead
                     className="cursor-pointer hover:bg-muted/50 select-none align-top w-1/2"
                     onClick={() => handleSort('category')}
                   >
                     <div className="flex items-center gap-1">
                       Category
                       <div className="flex flex-col">
-                        <ChevronUp 
-                          className={`w-3 h-3 ${sortColumn === 'category' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        <ChevronUp
+                          className={`w-3 h-3 ${sortColumn === 'category' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
                         />
-                        <ChevronDown 
-                          className={`w-3 h-3 -mt-1 ${sortColumn === 'category' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        <ChevronDown
+                          className={`w-3 h-3 -mt-1 ${sortColumn === 'category' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
                         />
                       </div>
                     </div>
                   </TableHead>
-                  <TableHead 
+                  <TableHead
                     className="cursor-pointer hover:bg-muted/50 select-none align-top text-center w-1/4"
                     onClick={() => handleSort('typical')}
                   >
                     <div className="flex items-center justify-center gap-1">
                       Typical impact
                       <div className="flex flex-col">
-                        <ChevronUp 
-                          className={`w-3 h-3 ${sortColumn === 'typical' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        <ChevronUp
+                          className={`w-3 h-3 ${sortColumn === 'typical' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
                         />
-                        <ChevronDown 
-                          className={`w-3 h-3 -mt-1 ${sortColumn === 'typical' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        <ChevronDown
+                          className={`w-3 h-3 -mt-1 ${sortColumn === 'typical' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
                         />
                       </div>
                     </div>
                   </TableHead>
-                  <TableHead 
+                  <TableHead
                     className="cursor-pointer hover:bg-muted/50 select-none align-top text-center w-1/4"
                     onClick={() => handleSort('stress')}
                   >
                     <div className="flex items-center justify-center gap-1">
                       Under stress impact
                       <div className="flex flex-col">
-                        <ChevronUp 
-                          className={`w-3 h-3 ${sortColumn === 'stress' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        <ChevronUp
+                          className={`w-3 h-3 ${sortColumn === 'stress' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
                         />
-                        <ChevronDown 
-                          className={`w-3 h-3 -mt-1 ${sortColumn === 'stress' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`} 
+                        <ChevronDown
+                          className={`w-3 h-3 -mt-1 ${sortColumn === 'stress' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
                         />
                       </div>
                     </div>
@@ -1776,7 +1788,7 @@ function CircularDiagramContent() {
                   const currentSelections = selections[sliceIndex] || [];
                   const [originalFirst, originalSecond] = currentSelections.sort((a, b) => a - b);
                   const description = sliceDescriptions[sliceIndex];
-                  
+
                   return (
                     <TableRow key={`detail-${sliceIndex}`}>
                       <TableCell className="align-top break-words">
@@ -1798,9 +1810,9 @@ function CircularDiagramContent() {
                         {firstSelection && (
                           <div className="space-y-2">
                             <div className="flex items-center justify-center gap-2">
-                              <div 
+                              <div
                                 className="inline-block px-3 py-1 rounded min-w-8 text-center"
-                                style={{ 
+                                style={{
                                   backgroundColor: baseColor,
                                   color: darkenColor(baseColor)
                                 }}
@@ -1818,9 +1830,9 @@ function CircularDiagramContent() {
                         {(originalSecond || firstSelection) && (
                           <div className="space-y-2">
                             <div className="flex items-center justify-center gap-2">
-                              <div 
+                              <div
                                 className="inline-block px-3 py-1 rounded min-w-8 text-center"
-                                style={{ 
+                                style={{
                                   backgroundColor: originalSecond ? baseColor + '80' : baseColor, // 50% opacity for second selection, full for first
                                   color: originalSecond ? darkenColor(baseColor, 0.15) : darkenColor(baseColor)
                                 }}
