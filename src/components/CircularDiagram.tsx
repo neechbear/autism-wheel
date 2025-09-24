@@ -101,16 +101,16 @@ const EMOJI_CATEGORIES = {
 };
 
 const INITIAL_SLICE_COLORS = [
-  '#3B82F6', // blue
-  '#10B981', // emerald
-  '#F59E0B', // amber
-  '#EF4444', // red
-  '#8B5CF6', // violet
-  '#06B6D4', // cyan
-  '#84CC16', // lime
-  '#F97316', // orange
-  '#EC4899', // pink
-  '#14B8A6', // teal
+  '#66c5cc',
+  '#f6cf71',
+  '#f89c74',
+  '#dcb0f2',
+  '#87c55f',
+  '#9eb9f3',
+  '#fe88b1',
+  '#c9db74',
+  '#8be0a4',
+  '#b497e7',
 ];
 
 interface LabelData {
@@ -1651,7 +1651,7 @@ function CircularDiagramContent() {
               disabled={isAtDefaults()}
               style={isAtDefaults() ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
             >
-              Default labels
+              Default categories
             </Button>
           </>
         )}
@@ -1664,7 +1664,7 @@ function CircularDiagramContent() {
             <TableHeader>
               <TableRow>
                 <TableHead>Icon</TableHead>
-                <TableHead>Category Title & Description</TableHead>
+                <TableHead>Category Name & Description</TableHead>
                 <TableHead>Color</TableHead>
                 <TableHead>Delete</TableHead>
                 <TableHead>Reorder</TableHead>
