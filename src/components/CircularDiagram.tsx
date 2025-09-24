@@ -1387,28 +1387,44 @@ function CircularDiagramContent() {
                 : {};
 
               return (
-                <g key={`label-${sliceIndex}`}>
-                  {lines.map((line, lineIndex) => (
-                    <text
-                      key={`label-line-${sliceIndex}-${lineIndex}`}
-                      x={x}
-                      y={y + (lineIndex - (lines.length - 1) / 2) * 12}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fontSize="14"
-                      fill={isDarkMode ? "#9ca3af" : "#374151"}
-                      {...textOutlineProps}
-                      style={{
-                        fontFamily: 'system-ui, sans-serif',
-                        fontWeight: labelStyle === 'bold' ? 'bold' : 'normal',
-                        pointerEvents: 'none'
-                      }}
-                      transform={`rotate(${finalRotation} ${x} ${y})`}
+                <Tooltip key={`label-tooltip-${sliceIndex}`} delayDuration={600}>
+                  <TooltipTrigger asChild>
+                    <g
+                      key={`label-${sliceIndex}`}
+                      className="cursor-pointer"
+                      transform={`translate(${x}, ${y}) rotate(${finalRotation})`}
                     >
-                      {line}
-                    </text>
-                  ))}
-                </g>
+                      {lines.map((line, lineIndex) => (
+                        <text
+                          key={`label-line-${sliceIndex}-${lineIndex}`}
+                          x={0}
+                          y={0 + (lineIndex - (lines.length - 1) / 2) * 12}
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          fontSize="14"
+                          fill={isDarkMode ? "#9ca3af" : "#374151"}
+                          {...textOutlineProps}
+                          style={{
+                            fontFamily: 'system-ui, sans-serif',
+                            fontWeight: labelStyle === 'bold' ? 'bold' : 'normal',
+                          }}
+                        >
+                          {line}
+                        </text>
+                      ))}
+                    </g>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-xs">
+                    <div className="space-y-1">
+                      <div className="font-medium">{sliceLabels[sliceIndex]}</div>
+                      {sliceDescriptions[sliceIndex] && (
+                        <div className="text-sm text-muted-foreground">
+                          {sliceDescriptions[sliceIndex]}
+                        </div>
+                      )}
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
               );
             })}
 
