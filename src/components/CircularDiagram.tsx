@@ -161,7 +161,7 @@ function EmojiPicker({ selectedEmoji, onEmojiSelect }: { selectedEmoji: string; 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <button className="w-12 h-8 p-0 text-3xl inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground">
+        <button className="w-16 h-16 p-0 text-3xl inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground">
           {selectedEmoji || <Smile className="w-4 h-4" />}
         </button>
       </PopoverTrigger>
@@ -1795,7 +1795,7 @@ function CircularDiagramContent() {
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             {showIcons && icon && (
-                              <span className="text-lg flex-shrink-0">{icon}</span>
+                              <span className="text-3xl flex-shrink-0">{icon}</span>
                             )}
                             <span className="font-medium break-words">{label}</span>
                           </div>
