@@ -161,7 +161,7 @@ function EmojiPicker({ selectedEmoji, onEmojiSelect }: { selectedEmoji: string; 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <button className="w-12 h-8 p-0 text-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground">
+        <button className="w-12 h-8 p-0 text-3xl inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground">
           {selectedEmoji || <Smile className="w-4 h-4" />}
         </button>
       </PopoverTrigger>
@@ -1630,7 +1630,7 @@ function CircularDiagramContent() {
           onClick={handleEditLabels}
           className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
         >
-          {isEditingLabels ? "Save labels" : "Edit labels"}
+          {isEditingLabels ? "Save categories" : "Edit categories"}
         </Button>
 
         {isEditingLabels && (
@@ -1659,12 +1659,12 @@ function CircularDiagramContent() {
 
       {isEditingLabels && (
         <div className="w-full max-w-4xl">
-          <h3 className="mb-4 font-semibold">Edit Labels</h3>
+          <h3 className="mb-4 font-semibold">Edit Categories</h3>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Icon</TableHead>
-                <TableHead>Label Name & Description</TableHead>
+                <TableHead>Category Title & Description</TableHead>
                 <TableHead>Color</TableHead>
                 <TableHead>Delete</TableHead>
                 <TableHead>Reorder</TableHead>
