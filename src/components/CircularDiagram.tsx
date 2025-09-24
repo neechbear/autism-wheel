@@ -1082,7 +1082,8 @@ function CircularDiagramContent() {
 
         <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
           <p className="text-left text-blue-600 dark:text-blue-400">
-            Click on segments to select them. You can select either one or two segments per slice, to indicate typical day-to-day and under stress/elevated impact each category has on your life. Click{' '}
+            Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
+            Click{' '}
             <a
               href="https://youtu.be/OvuTHMzbzpQ"
               target="_blank"
@@ -1092,7 +1093,7 @@ function CircularDiagramContent() {
               <YouTubeIcon className="w-3 h-3" />
               https://youtu.be/OvuTHMzbzpQ
             </a>
-            {' '}to view a brief tutorial video.
+            {' '}to view a tutorial video.
           </p>
         </div>
       </div>
