@@ -17,7 +17,7 @@ test.describe('Autism Wheel - Basic App Functionality', () => {
   test('should display basic UI elements', async ({ page }) => {
     // Check for presence of key UI elements
     await expect(page.getByText('Detailed Breakdown')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit labels' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Edit categories' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Save diagram' })).toBeVisible();
   });
 

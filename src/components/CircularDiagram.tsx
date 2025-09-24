@@ -101,16 +101,16 @@ const EMOJI_CATEGORIES = {
 };
 
 const INITIAL_SLICE_COLORS = [
-  '#3B82F6', // blue
-  '#10B981', // emerald
-  '#F59E0B', // amber
-  '#EF4444', // red
-  '#8B5CF6', // violet
-  '#06B6D4', // cyan
-  '#84CC16', // lime
-  '#F97316', // orange
-  '#EC4899', // pink
-  '#14B8A6', // teal
+  '#66c5cc',
+  '#f6cf71',
+  '#f89c74',
+  '#dcb0f2',
+  '#87c55f',
+  '#9eb9f3',
+  '#fe88b1',
+  '#c9db74',
+  '#8be0a4',
+  '#b497e7',
 ];
 
 interface LabelData {
@@ -161,7 +161,7 @@ function EmojiPicker({ selectedEmoji, onEmojiSelect }: { selectedEmoji: string; 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <button className="w-12 h-8 p-0 text-lg inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground">
+        <button className="w-16 h-16 p-0 text-3xl inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground">
           {selectedEmoji || <Smile className="w-4 h-4" />}
         </button>
       </PopoverTrigger>
@@ -1630,7 +1630,7 @@ function CircularDiagramContent() {
           onClick={handleEditLabels}
           className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
         >
-          {isEditingLabels ? "Save labels" : "Edit labels"}
+          {isEditingLabels ? "Save categories" : "Edit categories"}
         </Button>
 
         {isEditingLabels && (
@@ -1651,7 +1651,7 @@ function CircularDiagramContent() {
               disabled={isAtDefaults()}
               style={isAtDefaults() ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
             >
-              Default labels
+              Default categories
             </Button>
           </>
         )}
@@ -1659,12 +1659,12 @@ function CircularDiagramContent() {
 
       {isEditingLabels && (
         <div className="w-full max-w-4xl">
-          <h3 className="mb-4 font-semibold">Edit Labels</h3>
+          <h3 className="mb-4 font-semibold">Edit Categories</h3>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Icon</TableHead>
-                <TableHead>Label Name & Description</TableHead>
+                <TableHead>Category Name & Description</TableHead>
                 <TableHead>Color</TableHead>
                 <TableHead>Delete</TableHead>
                 <TableHead>Reorder</TableHead>
@@ -1795,7 +1795,7 @@ function CircularDiagramContent() {
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             {showIcons && icon && (
-                              <span className="text-lg flex-shrink-0">{icon}</span>
+                              <span className="text-3xl flex-shrink-0">{icon}</span>
                             )}
                             <span className="font-medium break-words">{label}</span>
                           </div>
