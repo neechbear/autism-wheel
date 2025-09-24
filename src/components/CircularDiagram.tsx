@@ -1058,7 +1058,7 @@ function CircularDiagramContent() {
           <p className="text-left">
             Hello! Thank you for using{' '}
             <a
-              href="https://www.myautisticprofile.com/"
+              href="http://www.myautisticprofile.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
