@@ -331,7 +331,7 @@ function CircularDiagramContent() {
   const [originalEditingLabels, setOriginalEditingLabels] = useState<LabelData[]>([]);
   const [newLabelText, setNewLabelText] = useState('');
   const [newLabelIcon, setNewLabelIcon] = useState('😀');
-  const [numberPosition, setNumberPosition] = useState<'left' | 'center' | 'right' | 'hidden'>('center');
+  const [numberPosition, setNumberPosition] = useState<'left' | 'center' | 'right' | 'hide_segment' | 'hide_all'>('center');
   const [labelStyle, setLabelStyle] = useState<'normal' | 'bold' | 'hidden'>('normal');
   const [boundaryWeight, setBoundaryWeight] = useState<'normal' | 'bold' | 'hidden'>('bold');
   const [showIcons, setShowIcons] = useState<boolean>(true);
@@ -339,6 +339,7 @@ function CircularDiagramContent() {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isLockedMode, setIsLockedMode] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
   // Helper function to determine if dark mode is active
@@ -520,10 +521,10 @@ function CircularDiagramContent() {
     return { x, y, angle };
   };
 
-  const saveDiagramAs = (format: 'png' | 'svg' | 'jpeg' | 'html') => {
+  const saveDiagramAs = (format: 'png' | 'svg' | 'jpeg' | 'html' | 'locked_html') => {
     if (!svgRef.current) return;
 
-    if (format === 'html') {
+    if (format === 'html' || format === 'locked_html') {
       setTimeout(() => {
         try {
           // 1. Clone the entire document to avoid modifying the live DOM
@@ -560,6 +561,35 @@ function CircularDiagramContent() {
           metaTag.content = encodeState();
           clonedDocument.head.appendChild(metaTag);
 
+          // If saving as locked HTML, perform additional modifications
+          if (format === 'locked_html') {
+            // Add the locked mode meta tag
+            const lockedMetaTag = clonedDocument.createElement('meta');
+            lockedMetaTag.name = 'autism-wheel-locked-html-mode';
+            lockedMetaTag.content = 'true';
+            clonedDocument.head.appendChild(lockedMetaTag);
+
+            // Change the main title
+            const titleElement = clonedDocument.querySelector('h1');
+            if (titleElement) {
+              titleElement.textContent = 'My Autism Wheel';
+            }
+            const documentTitle = clonedDocument.querySelector('title');
+            if(documentTitle) {
+              documentTitle.textContent = 'My Autism Wheel';
+            }
+
+            // Remove introductory paragraphs
+            const introParagraphs = clonedDocument.querySelectorAll('.max-w-3xl.mx-auto');
+            introParagraphs.forEach(p => p.remove());
+
+            // Remove the settings dropdowns and action buttons container
+            const settingsContainer = clonedDocument.querySelector('.flex.flex-wrap.gap-4.justify-center.print\\:hidden');
+            if(settingsContainer) {
+              settingsContainer.remove();
+            }
+          }
+
           // 5. Serialize the cleaned DOM to a string
           const finalHtml = '<!DOCTYPE html>' + clonedDocument.documentElement.outerHTML;
 
@@ -567,7 +597,7 @@ function CircularDiagramContent() {
           const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
-          link.download = 'autismwheel.html';
+          link.download = format === 'locked_html' ? 'autismwheel-locked.html' : 'autismwheel.html';
           link.href = url;
           document.body.appendChild(link);
           link.click();
@@ -1040,7 +1070,14 @@ function CircularDiagramContent() {
         if (decodedState.sliceColors) setSliceColors(decodedState.sliceColors);
         if (decodedState.sliceIcons) setSliceIcons(decodedState.sliceIcons);
         if (decodedState.sliceDescriptions) setSliceDescriptions(decodedState.sliceDescriptions);
-        if (decodedState.numberPosition) setNumberPosition(decodedState.numberPosition);
+        if (decodedState.numberPosition) {
+          // Backwards compatibility for 'hidden' -> 'hide_all'
+          if (decodedState.numberPosition === 'hidden') {
+            setNumberPosition('hide_all');
+          } else {
+            setNumberPosition(decodedState.numberPosition);
+          }
+        }
         if (decodedState.labelStyle) setLabelStyle(decodedState.labelStyle);
         if (decodedState.boundaryWeight) setBoundaryWeight(decodedState.boundaryWeight);
         if (decodedState.showIcons !== undefined) setShowIcons(decodedState.showIcons);
@@ -1051,52 +1088,64 @@ function CircularDiagramContent() {
     }
   }, []);
 
+  // Check for locked mode on component mount
+  useEffect(() => {
+    const lockedMeta = document.querySelector('meta[name="autism-wheel-locked-html-mode"]');
+    if (lockedMeta) {
+      setIsLockedMode(true);
+    }
+  }, []);
+
   return (
     <div className="flex flex-col items-center gap-8 p-8">
       <div className="text-center">
-        <h1 className="mb-2 text-4xl font-bold">Autism Wheel</h1>
+        <h1 className="mb-2 text-4xl font-bold">{isLockedMode ? 'My Autism Wheel' : 'Autism Wheel'}</h1>
 
-        <div className="mb-6 max-w-3xl mx-auto space-y-4">
-          <p className="text-left">
-            Thank you for using{' '}
-            <a
-              href="https://www.myautisticprofile.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-            >
-              my Autism Wheel
-            </a>
-            . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
-            I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
-            Your feedback to improve this tool is welcomed at{' '}
-            <a
-              href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-            >
-              feedback@myautisticprofile.com
-            </a>.
-          </p>
-        </div>
+        {!isLockedMode && (
+          <>
+            <div className="mb-6 max-w-3xl mx-auto space-y-4">
+              <p className="text-left">
+                Thank you for using{' '}
+                <a
+                  href="https://www.myautisticprofile.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                >
+                  my Autism Wheel
+                </a>
+                . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
+                I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
+                Your feedback to improve this tool is welcomed at{' '}
+                <a
+                  href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                >
+                  feedback@myautisticprofile.com
+                </a>.
+              </p>
+            </div>
 
-        <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
-          <p className="text-left text-blue-600 dark:text-blue-400">
-            Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
-            Click{' '}
-            <a
-              href="https://youtu.be/OvuTHMzbzpQ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-            >
-              <YouTubeIcon className="w-3 h-3" />
-              https://youtu.be/OvuTHMzbzpQ
-            </a>
-            {' '}to view a tutorial video.
-          </p>
-        </div>
+            <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
+              <p className="text-left text-blue-600 dark:text-blue-400">
+                Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
+                Click{' '}
+                <a
+                  href="https://youtu.be/OvuTHMzbzpQ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                >
+                  <YouTubeIcon className="w-3 h-3" />
+                  https://youtu.be/OvuTHMzbzpQ
+                </a>
+                {' '}to view a tutorial video.
+              </p>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="relative">
@@ -1296,7 +1345,7 @@ function CircularDiagramContent() {
               );
             })}
             {/* Selection numbers */}
-            {numberPosition !== 'hidden' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
+            {numberPosition !== 'hide_segment' && numberPosition !== 'hide_all' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
               const currentSelections = selections[sliceIndex] || [];
               if (currentSelections.length === 0) return null;
 
@@ -1459,7 +1508,7 @@ function CircularDiagramContent() {
             })}
 
             {/* ASD Level Labels */}
-            {numberPosition !== 'hidden' && asdLabels.map(({ text, radius }) => (
+            {numberPosition !== 'hide_all' && asdLabels.map(({ text, radius }) => (
               <text
                 key={text}
                 x={CENTER_X}
@@ -1487,119 +1536,127 @@ function CircularDiagramContent() {
       </div>
 
       {/* Display Options */}
-      <div className="flex flex-wrap gap-4 justify-center print:hidden">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-            <Settings className="w-4 h-4" />
-            Numbers
-            <ChevronDown className="w-4 h-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem
-              onClick={() => setNumberPosition('left')}
-              className={numberPosition === 'left' ? 'bg-accent' : ''}
-            >
-              Left aligned
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setNumberPosition('center')}
-              className={numberPosition === 'center' ? 'bg-accent' : ''}
-            >
-              Center aligned
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setNumberPosition('right')}
-              className={numberPosition === 'right' ? 'bg-accent' : ''}
-            >
-              Right aligned
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setNumberPosition('hidden')}
-              className={numberPosition === 'hidden' ? 'bg-accent' : ''}
-            >
-              Hidden
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      {!isLockedMode && (
+        <div className="flex flex-wrap gap-4 justify-center print:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
+              <Settings className="w-4 h-4" />
+              Numbers
+              <ChevronDown className="w-4 h-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem
+                onClick={() => setNumberPosition('left')}
+                className={numberPosition === 'left' ? 'bg-accent' : ''}
+              >
+                Left aligned
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setNumberPosition('center')}
+                className={numberPosition === 'center' ? 'bg-accent' : ''}
+              >
+                Center aligned
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setNumberPosition('right')}
+                className={numberPosition === 'right' ? 'bg-accent' : ''}
+              >
+                Right aligned
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setNumberPosition('hide_segment')}
+                className={numberPosition === 'hide_segment' ? 'bg-accent' : ''}
+              >
+                Hide segment numbers
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setNumberPosition('hide_all')}
+                className={numberPosition === 'hide_all' ? 'bg-accent' : ''}
+              >
+                Hide segment numbers & ASD levels
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-            <Settings className="w-4 h-4" />
-            Labels
-            <ChevronDown className="w-4 h-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem
-              onClick={() => setLabelStyle('normal')}
-              className={labelStyle === 'normal' ? 'bg-accent' : ''}
-            >
-              Normal weight
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setLabelStyle('bold')}
-              className={labelStyle === 'bold' ? 'bg-accent' : ''}
-            >
-              Bold weight
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setLabelStyle('hidden')}
-              className={labelStyle === 'hidden' ? 'bg-accent' : ''}
-            >
-              Hidden
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
+              <Settings className="w-4 h-4" />
+              Labels
+              <ChevronDown className="w-4 h-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem
+                onClick={() => setLabelStyle('normal')}
+                className={labelStyle === 'normal' ? 'bg-accent' : ''}
+              >
+                Normal weight
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setLabelStyle('bold')}
+                className={labelStyle === 'bold' ? 'bg-accent' : ''}
+              >
+                Bold weight
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setLabelStyle('hidden')}
+                className={labelStyle === 'hidden' ? 'bg-accent' : ''}
+              >
+                Hidden
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-            <Settings className="w-4 h-4" />
-            Icons
-            <ChevronDown className="w-4 h-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem
-              onClick={() => setShowIcons(true)}
-              className={showIcons ? 'bg-accent' : ''}
-            >
-              Show icons
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setShowIcons(false)}
-              className={!showIcons ? 'bg-accent' : ''}
-            >
-              Hide icons
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
+              <Settings className="w-4 h-4" />
+              Icons
+              <ChevronDown className="w-4 h-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem
+                onClick={() => setShowIcons(true)}
+                className={showIcons ? 'bg-accent' : ''}
+              >
+                Show icons
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setShowIcons(false)}
+                className={!showIcons ? 'bg-accent' : ''}
+              >
+                Hide icons
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-            <Settings className="w-4 h-4" />
-            Theme
-            <ChevronDown className="w-4 h-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem
-              onClick={() => setTheme('system')}
-              className={theme === 'system' ? 'bg-accent' : ''}
-            >
-              Use system
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setTheme('light')}
-              className={theme === 'light' ? 'bg-accent' : ''}
-            >
-              Light
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setTheme('dark')}
-              className={theme === 'dark' ? 'bg-accent' : ''}
-            >
-              Dark
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
+              <Settings className="w-4 h-4" />
+              Theme
+              <ChevronDown className="w-4 h-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem
+                onClick={() => setTheme('system')}
+                className={theme === 'system' ? 'bg-accent' : ''}
+              >
+                Use system
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setTheme('light')}
+                className={theme === 'light' ? 'bg-accent' : ''}
+              >
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setTheme('dark')}
+                className={theme === 'dark' ? 'bg-accent' : ''}
+              >
+                Dark
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
 
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-4 justify-center print:hidden">
@@ -1637,9 +1694,16 @@ function CircularDiagramContent() {
             <DropdownMenuItem onClick={() => saveDiagramAs('jpeg')}>
               Save as JPEG
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => saveDiagramAs('html')}>
-              Save as HTML
-            </DropdownMenuItem>
+            {!isLockedMode && (
+              <>
+                <DropdownMenuItem onClick={() => saveDiagramAs('html')}>
+                  Save as HTML
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => saveDiagramAs('locked_html')}>
+                  Save as locked HTML
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
 
