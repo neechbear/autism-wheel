@@ -329,7 +329,7 @@ function CircularDiagramContent() {
   const [originalEditingLabels, setOriginalEditingLabels] = useState<LabelData[]>([]);
   const [newLabelText, setNewLabelText] = useState('');
   const [newLabelIcon, setNewLabelIcon] = useState('😀');
-  const [numberPosition, setNumberPosition] = useState<'left' | 'center' | 'right' | 'hidden'>('center');
+  const [numberDisplay, setNumberDisplay] = useState<'left' | 'center' | 'right' | 'hide-segment' | 'hidden'>('center');
   const [labelStyle, setLabelStyle] = useState<'normal' | 'bold' | 'hidden'>('normal');
   const [boundaryWeight, setBoundaryWeight] = useState<'normal' | 'bold' | 'hidden'>('bold');
   const [showIcons, setShowIcons] = useState<boolean>(true);
@@ -518,10 +518,10 @@ function CircularDiagramContent() {
     return { x, y, angle };
   };
 
-  const saveDiagramAs = (format: 'png' | 'svg' | 'jpeg' | 'html') => {
+  const saveDiagramAs = (format: 'png' | 'svg' | 'jpeg' | 'html' | 'html-locked') => {
     if (!svgRef.current) return;
 
-    if (format === 'html') {
+    if (format === 'html' || format === 'html-locked') {
       setTimeout(() => {
         try {
           // 1. Clone the entire document to avoid modifying the live DOM
@@ -558,6 +558,41 @@ function CircularDiagramContent() {
           metaTag.content = encodeState();
           clonedDocument.head.appendChild(metaTag);
 
+          // If locked, apply transformations
+          if (format === 'html-locked') {
+            // Change title
+            const titleElement = clonedDocument.querySelector('h1');
+            if (titleElement) {
+              titleElement.textContent = 'My Autism Wheel';
+            }
+
+            // Hide introductory paragraphs
+            const introParagraphs = clonedDocument.querySelectorAll('.text-center .max-w-3xl');
+            introParagraphs.forEach(p => (p as HTMLElement).style.display = 'none');
+
+
+            // Hide dropdowns and specific save buttons
+            const dropdowns = clonedDocument.querySelectorAll('.flex.flex-wrap.gap-4.justify-center.print\\:hidden');
+            dropdowns.forEach(container => {
+              const children = Array.from(container.children);
+              children.forEach(child => {
+                const button = child.querySelector('button');
+                if (button) {
+                  const buttonText = button.textContent || '';
+                  if (
+                    buttonText.includes('Numbers') ||
+                    buttonText.includes('Labels') ||
+                    buttonText.includes('Icons') ||
+                    buttonText.includes('Theme')
+                  ) {
+                    (child as HTMLElement).style.display = 'none';
+                  }
+                }
+              });
+            });
+
+          }
+
           // 5. Serialize the cleaned DOM to a string
           const finalHtml = '<!DOCTYPE html>' + clonedDocument.documentElement.outerHTML;
 
@@ -565,7 +600,7 @@ function CircularDiagramContent() {
           const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
-          link.download = 'autismwheel.html';
+          link.download = format === 'html-locked' ? 'autismwheel-locked.html' : 'autismwheel.html';
           link.href = url;
           document.body.appendChild(link);
           link.click();
@@ -892,7 +927,7 @@ function CircularDiagramContent() {
       sliceColors,
       sliceIcons,
       sliceDescriptions,
-      numberPosition,
+      numberDisplay,
       labelStyle,
       boundaryWeight,
       showIcons,
@@ -1038,7 +1073,7 @@ function CircularDiagramContent() {
         if (decodedState.sliceColors) setSliceColors(decodedState.sliceColors);
         if (decodedState.sliceIcons) setSliceIcons(decodedState.sliceIcons);
         if (decodedState.sliceDescriptions) setSliceDescriptions(decodedState.sliceDescriptions);
-        if (decodedState.numberPosition) setNumberPosition(decodedState.numberPosition);
+        if (decodedState.numberDisplay) setNumberDisplay(decodedState.numberDisplay);
         if (decodedState.labelStyle) setLabelStyle(decodedState.labelStyle);
         if (decodedState.boundaryWeight) setBoundaryWeight(decodedState.boundaryWeight);
         if (decodedState.showIcons !== undefined) setShowIcons(decodedState.showIcons);
@@ -1294,7 +1329,7 @@ function CircularDiagramContent() {
               );
             })}
             {/* Selection numbers */}
-            {numberPosition !== 'hidden' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
+            {numberDisplay !== 'hidden' && numberDisplay !== 'hide-segment' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
               const currentSelections = selections[sliceIndex] || [];
               if (currentSelections.length === 0) return null;
 
@@ -1304,7 +1339,7 @@ function CircularDiagramContent() {
 
                 // Position numbers based on user preference
                 let angleMultiplier;
-                switch (numberPosition) {
+                switch (numberDisplay) {
                   case 'left':
                     angleMultiplier = 0.25; // 25% towards the end angle
                     break;
@@ -1457,7 +1492,7 @@ function CircularDiagramContent() {
             })}
 
             {/* ASD Level Labels */}
-            {numberPosition !== 'hidden' && asdLabels.map(({ text, radius }) => (
+            {numberDisplay !== 'hidden' && asdLabels.map(({ text, radius }) => (
               <text
                 key={text}
                 x={CENTER_X}
@@ -1494,28 +1529,34 @@ function CircularDiagramContent() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuItem
-              onClick={() => setNumberPosition('left')}
-              className={numberPosition === 'left' ? 'bg-accent' : ''}
+              onClick={() => setNumberDisplay('left')}
+              className={numberDisplay === 'left' ? 'bg-accent' : ''}
             >
               Left aligned
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => setNumberPosition('center')}
-              className={numberPosition === 'center' ? 'bg-accent' : ''}
+              onClick={() => setNumberDisplay('center')}
+              className={numberDisplay === 'center' ? 'bg-accent' : ''}
             >
               Center aligned
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => setNumberPosition('right')}
-              className={numberPosition === 'right' ? 'bg-accent' : ''}
+              onClick={() => setNumberDisplay('right')}
+              className={numberDisplay === 'right' ? 'bg-accent' : ''}
             >
               Right aligned
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => setNumberPosition('hidden')}
-              className={numberPosition === 'hidden' ? 'bg-accent' : ''}
+              onClick={() => setNumberDisplay('hide-segment')}
+              className={numberDisplay === 'hide-segment' ? 'bg-accent' : ''}
             >
-              Hidden
+              Hide segment numbers
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => setNumberDisplay('hidden')}
+              className={numberDisplay === 'hidden' ? 'bg-accent' : ''}
+            >
+              Hide segment numbers & ASD levels
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -1637,6 +1678,9 @@ function CircularDiagramContent() {
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => saveDiagramAs('html')}>
               Save as HTML
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => saveDiagramAs('html-locked')}>
+              Save as locked HTML
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
