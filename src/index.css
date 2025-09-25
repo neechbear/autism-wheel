@@ -853,6 +853,9 @@
   .bg-blue-600 {
     background-color: var(--color-blue-600);
   }
+  .bg-green-600 {
+    background-color: var(--color-green-600);
+  }
 
   .bg-border {
     background-color: var(--border);
@@ -1225,6 +1228,9 @@
   @media (hover: hover) {
     .hover\:bg-destructive\/10:hover {
       background-color: var(--destructive);
+    }
+    .hover\:bg-green-700:hover {
+      background-color: var(--color-green-700);
     }
 
     @supports (color: color-mix(in lab, red, red)) {

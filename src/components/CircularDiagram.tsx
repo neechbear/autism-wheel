@@ -43,7 +43,7 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
 
   return (
     <div className="w-full max-w-4xl text-left">
-      <div className="flex justify-start mb-8">
+      <div className="flex justify-center mb-8">
         <Button onClick={onReturn}>Return to app</Button>
       </div>
 
