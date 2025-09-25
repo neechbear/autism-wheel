@@ -1056,7 +1056,7 @@ function CircularDiagramContent() {
 
         <div className="mb-6 max-w-3xl mx-auto space-y-4">
           <p className="text-left">
-            Hello! Thank you for using{' '}
+            Thank you for using{' '}
             <a
               href="https://www.myautisticprofile.com/"
               target="_blank"
@@ -1067,7 +1067,6 @@ function CircularDiagramContent() {
             </a>
             . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
             I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
-            It is simply a resource for personal reflection.
             Your feedback to improve this tool is welcomed at{' '}
             <a
               href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
