@@ -337,6 +337,7 @@ function CircularDiagramContent() {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
   // Helper function to determine if dark mode is active
@@ -558,39 +559,12 @@ function CircularDiagramContent() {
           metaTag.content = encodeState();
           clonedDocument.head.appendChild(metaTag);
 
-          // If locked, apply transformations
+          // If locked, add the locked version meta tag
           if (format === 'html-locked') {
-            // Change title
-            const titleElement = clonedDocument.querySelector('h1');
-            if (titleElement) {
-              titleElement.textContent = 'My Autism Wheel';
-            }
-
-            // Hide introductory paragraphs
-            const introParagraphs = clonedDocument.querySelectorAll('.text-center .max-w-3xl');
-            introParagraphs.forEach(p => (p as HTMLElement).style.display = 'none');
-
-
-            // Hide dropdowns and specific save buttons
-            const dropdowns = clonedDocument.querySelectorAll('.flex.flex-wrap.gap-4.justify-center.print\\:hidden');
-            dropdowns.forEach(container => {
-              const children = Array.from(container.children);
-              children.forEach(child => {
-                const button = child.querySelector('button');
-                if (button) {
-                  const buttonText = button.textContent || '';
-                  if (
-                    buttonText.includes('Numbers') ||
-                    buttonText.includes('Labels') ||
-                    buttonText.includes('Icons') ||
-                    buttonText.includes('Theme')
-                  ) {
-                    (child as HTMLElement).style.display = 'none';
-                  }
-                }
-              });
-            });
-
+            const lockedMetaTag = clonedDocument.createElement('meta');
+            lockedMetaTag.name = 'autism-wheel-locked-version';
+            lockedMetaTag.content = 'true';
+            clonedDocument.head.appendChild(lockedMetaTag);
           }
 
           // 5. Serialize the cleaned DOM to a string
@@ -1053,6 +1027,12 @@ function CircularDiagramContent() {
 
   // Load state from URL on component mount
   useEffect(() => {
+    // Check for locked version
+    const lockedMeta = document.querySelector('meta[name="autism-wheel-locked-version"]');
+    if (lockedMeta) {
+      setIsLocked(true);
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     let encodedState = urlParams.get('state');
 
@@ -1087,49 +1067,53 @@ function CircularDiagramContent() {
   return (
     <div className="flex flex-col items-center gap-8 p-8">
       <div className="text-center">
-        <h1 className="mb-2 text-4xl font-bold">Autism Wheel</h1>
+        <h1 className="mb-2 text-4xl font-bold">{isLocked ? 'My Autism Wheel' : 'Autism Wheel'}</h1>
 
-        <div className="mb-6 max-w-3xl mx-auto space-y-4">
-          <p className="text-left">
-            Thank you for using{' '}
-            <a
-              href="https://www.myautisticprofile.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-            >
-              my Autism Wheel
-            </a>
-            . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
-            I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
-            Your feedback to improve this tool is welcomed at{' '}
-            <a
-              href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-            >
-              feedback@myautisticprofile.com
-            </a>.
-          </p>
-        </div>
+        {!isLocked && (
+          <>
+            <div className="mb-6 max-w-3xl mx-auto space-y-4">
+              <p className="text-left">
+                Thank you for using{' '}
+                <a
+                  href="https://www.myautisticprofile.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                >
+                  my Autism Wheel
+                </a>
+                . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
+                I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
+                Your feedback to improve this tool is welcomed at{' '}
+                <a
+                  href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                >
+                  feedback@myautisticprofile.com
+                </a>.
+              </p>
+            </div>
 
-        <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
-          <p className="text-left text-blue-600 dark:text-blue-400">
-            Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
-            Click{' '}
-            <a
-              href="https://youtu.be/OvuTHMzbzpQ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-            >
-              <YouTubeIcon className="w-3 h-3" />
-              https://youtu.be/OvuTHMzbzpQ
-            </a>
-            {' '}to view a tutorial video.
-          </p>
-        </div>
+            <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
+              <p className="text-left text-blue-600 dark:text-blue-400">
+                Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
+                Click{' '}
+                <a
+                  href="https://youtu.be/OvuTHMzbzpQ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                >
+                  <YouTubeIcon className="w-3 h-3" />
+                  https://youtu.be/OvuTHMzbzpQ
+                </a>
+                {' '}to view a tutorial video.
+              </p>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="relative">
@@ -1520,6 +1504,7 @@ function CircularDiagramContent() {
       </div>
 
       {/* Display Options */}
+      {!isLocked && (
       <div className="flex flex-wrap gap-4 justify-center print:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
@@ -1639,6 +1624,7 @@ function CircularDiagramContent() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      )}
 
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-4 justify-center print:hidden">
@@ -1676,21 +1662,27 @@ function CircularDiagramContent() {
             <DropdownMenuItem onClick={() => saveDiagramAs('jpeg')}>
               Save as JPEG
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => saveDiagramAs('html')}>
-              Save as HTML
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => saveDiagramAs('html-locked')}>
-              Save as locked HTML
-            </DropdownMenuItem>
+            {!isLocked && (
+              <>
+                <DropdownMenuItem onClick={() => saveDiagramAs('html')}>
+                  Save as HTML
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => saveDiagramAs('html-locked')}>
+                  Save as locked HTML
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button
-          onClick={handleEditLabels}
-          className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
-        >
-          {isEditingLabels ? "Save categories" : "Edit categories"}
-        </Button>
+        {!isLocked && (
+          <Button
+            onClick={handleEditLabels}
+            className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+          >
+            {isEditingLabels ? "Save categories" : "Edit categories"}
+          </Button>
+        )}
 
         {isEditingLabels && (
           <>
