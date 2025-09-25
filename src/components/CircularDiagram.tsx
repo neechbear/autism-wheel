@@ -1168,7 +1168,7 @@ function CircularDiagramContent() {
                 const fill = baseColor + '80'; // 50% opacity for light segments
 
                 return (
-                  <Tooltip key={`light-segment-${sliceIndex}-${ringIndex}`} delayDuration={600}>
+                  <Tooltip key={`light-segment-${sliceIndex}-${ringIndex}`} delayDuration={5000}>
                     <TooltipTrigger asChild>
                       <path
                         d={path}
@@ -1234,7 +1234,7 @@ function CircularDiagramContent() {
                 const path = createSegmentPath(sliceIndex, ringIndex);
 
                 return (
-                  <Tooltip key={`segment-${sliceIndex}-${ringIndex}`} delayDuration={600}>
+                  <Tooltip key={`segment-${sliceIndex}-${ringIndex}`} delayDuration={5000}>
                     <TooltipTrigger asChild>
                       <path
                         d={path}
@@ -1437,7 +1437,7 @@ function CircularDiagramContent() {
                 : {};
 
               return (
-                <Tooltip key={`label-tooltip-${sliceIndex}`} delayDuration={600}>
+                <Tooltip key={`label-tooltip-${sliceIndex}`} delayDuration={5000}>
                   <TooltipTrigger asChild>
                     <g
                       key={`label-${sliceIndex}`}
