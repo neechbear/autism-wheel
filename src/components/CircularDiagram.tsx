@@ -65,43 +65,43 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
       <p className="mb-4">When filling out your profile, it might be helpful to think about your support needs. The official diagnostic framework (the DSM-5) uses three "levels" to describe the varying degrees of support an autistic person might benefit from.</p>
       <p className="mb-4">These levels are just a clinical starting point—they can't capture the full picture of who you are. Your spiky profile will show that your needs can change depending on the environment, your energy levels, or the specific task you're doing.</p>
 
-      <ul className="list-disc list-outside space-y-4 mb-4 pl-6">
+      <ul className="list-disc list-outside space-y-4 mb-4 pl-8">
         <li>
-          <strong>Level 1: "Requiring Support"</strong>
+          <p><strong>Level 1: "Requiring Support"</strong></p>
           <p className="ml-6">You might navigate daily life with a degree of independence but find some situations challenging. For example, you may speak in full sentences but find back-and-forth conversation tiring or difficult to initiate. Unexpected changes to your routine or switching between tasks can be stressful and require extra energy to manage.</p>
         </li>
         <li>
-          <strong>Level 2: "Requiring Substantial Support"</strong>
+          <p><strong>Level 2: "Requiring Substantial Support"</strong></p>
           <p className="ml-6">You may benefit from more consistent support to navigate social situations and daily tasks. Communication might involve simpler sentences or be focused on your deep passions and interests. Sticking to a routine is often very important, and changes can be quite distressing. These support needs are likely apparent to those around you.</p>
         </li>
         <li>
-          <strong>Level 3: "Requiring Very Substantial Support"</strong>
+          <p><strong>Level 3: "Requiring Very Substantial Support"</strong></p>
           <p className="ml-6">You likely require significant, ongoing support in most areas of life. You may communicate in ways other than spoken language (for example, using a device or gestures) or use a few words. Having a predictable structure and coping with change can be a major challenge, and a lot of support is needed to navigate the demands of daily life.</p>
         </li>
       </ul>
 
       <h2 className="text-2xl font-bold underline mb-2">Learn More About Support Levels</h2>
-      <ul className="list-disc list-outside space-y-2 mb-8 pl-6">
+      <ul className="list-disc list-outside space-y-2 mb-8 pl-8">
         <li>For a clear, empathetic explanation with examples, visit the <a href="https://www.seattlechildrens.org/clinics/autism-center/the-autism-blog/autism-levels-support/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Seattle Children's Autism Center Blog</a>.</li>
         <li>To read the direct quotes from the DSM-5, see this page from <a href="https://www.autismspeaks.org/levels-of-autism" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Autism Speaks</a>.</li>
       </ul>
 
-      <h1 className="text-3xl font-bold mt-8 mb-4">Further Reading & Resources 📚</h1>
+      <h1 className="text-3xl font-bold mt-12 mb-4">Further Reading & Resources 📚</h1>
       <p className="mb-4">If you want to explore more before completing your profile, here are some excellent resources.</p>
 
       <h2 className="text-2xl font-bold underline mb-2">Tools for Self-Exploration</h2>
       <p className="mb-4">Please note: These are screening questionnaires, not diagnostic tools. They can't confirm if you're autistic, but they can offer insights and help you understand your own traits.</p>
-      <ul className="list-disc list-outside space-y-2 mb-4 pl-6">
+      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
           <li>
-            <strong>The Autism-Spectrum Quotient (AQ)</strong>: Developed by Cambridge University, this is a widely used questionnaire to measure autistic traits.
-            <ul className="list-disc list-outside space-y-2 mt-2 pl-6">
+            <p><strong>The Autism-Spectrum Quotient (AQ)</strong>: Developed by Cambridge University, this is a widely used questionnaire to measure autistic traits.</p>
+            <ul className="list-disc list-outside space-y-2 mt-2 pl-12">
               <li>Online Version with Analysis: <a href="https://embrace-autism.com/autism-spectrum-quotient/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Embrace Autism - AQ Test</a></li>
               <li>Another Online Version: <a href="https://psychology-tools.com/test/autism-spectrum-quotient" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Prosper Health - AQ Test</a></li>
             </ul>
           </li>
           <li>
-            <strong>The Ritvo Autism Asperger Diagnostic Scale–Revised (RAADS-R)</strong>: This scale was designed specifically with adults in mind, including those who may have gone undiagnosed because they have learned to "mask" their autistic traits.
-            <ul className="list-disc list-outside space-y-2 mt-2 pl-6">
+            <p><strong>The Ritvo Autism Asperger Diagnostic Scale–Revised (RAADS-R)</strong>: This scale was designed specifically with adults in mind, including those who may have gone undiagnosed because they have learned to "mask" their autistic traits.</p>
+            <ul className="list-disc list-outside space-y-2 mt-2 pl-12">
               <li>Online Version: <a href="https://embrace-autism.com/raads-r/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Embrace Autism - RAADS-R Test</a></li>
               <li>Informational Page: <a href="https://www.keyautismservices.com/resources/raads-r-test-for-autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Key Autism Services - About the RAADS-R</a></li>
             </ul>
@@ -110,25 +110,25 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
 
       <h2 className="text-2xl font-bold underline mb-2">Key UK & US Health Information</h2>
       <p className="mb-4">These government and public health bodies provide reliable, evidence-based information on autism diagnosis and support.</p>
-      <ul className="list-disc list-outside space-y-2 mb-4 pl-6">
+      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
         <li><a href="https://www.nhs.uk/conditions/autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The UK National Health Service (NHS)</strong></a>: The official source for understanding autism in the UK, including the steps for seeking an assessment and finding support.</li>
         <li><a href="https://www.cdc.gov/autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The US Centers for Disease Control and Prevention (CDC)</strong></a>: Provides detailed summaries of official diagnostic criteria, data, and links to current research.</li>
       </ul>
 
       <h2 className="text-2xl font-bold underline mb-2">Community & Advocacy</h2>
       <p className="mb-4">These organisations offer practical advice, community connection, and advocate for the autistic community.</p>
-      <ul className="list-disc list-outside space-y-2 mb-4 pl-6">
+      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
         <li><a href="https://www.autism.org.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The National Autistic Society (UK)</strong></a>: The UK's leading charity for autistic people and their families. Their website is a vast library of information on education, employment, mental health, and local support services.</li>
         <li><a href="https://www.autismspeaks.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Autism Speaks (US)</strong></a>: A large US-based organisation focused on funding research and providing resources, such as toolkits for navigating life after diagnosis and transitioning to adulthood.</li>
       </ul>
 
       <h2 className="text-2xl font-bold underline mb-2">Other Reputable Sources</h2>
-      <ul className="list-disc list-outside space-y-2 mb-8 pl-6">
+      <ul className="list-disc list-outside space-y-2 mb-8 pl-8">
         <li><a href="https://embrace-autism.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Embrace Autism</strong></a>: A fantastic resource hub run by a registered psychologist and an autistic advocate. It provides free online versions of the screening tools listed above, along with detailed articles explaining their scoring, history, and validity, all backed by research.</li>
         <li><a href="https://www.clara.psychol.cam.ac.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The Autism Research Centre (Cambridge University)</strong></a>: The academic centre where the AQ test was developed. Their work forms the scientific foundation for many of the tools and understanding we use today.</li>
       </ul>
 
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-12 mb-8">
         <Button onClick={onReturn}>Return to app</Button>
       </div>
     </div>
