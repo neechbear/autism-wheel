@@ -351,9 +351,10 @@ function HelpModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
             <p>To get started, watch this short video guide that walks you through creating your own spiky profile.</p>
           </div>
 
-          <div className="aspect-video w-full">
+          <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
             <iframe
                 src="https://www.youtube.com/embed/OvuTHMzbzpQ"
+                className="absolute top-0 left-0 w-full h-full rounded-md"
                 title="YouTube video player"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -448,6 +449,19 @@ function CircularDiagramContent() {
   const [isLockedMode, setIsLockedMode] = useState(false);
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // Effect to handle body scroll when help modal is open
+  useEffect(() => {
+    if (isHelpModalOpen) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    // Cleanup function
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [isHelpModalOpen]);
 
   // Helper function to determine if dark mode is active
   const checkDarkMode = () => {
@@ -1825,7 +1839,8 @@ function CircularDiagramContent() {
         {!isEditingLabels && (
             <Button
               onClick={() => setIsHelpModalOpen(true)}
-              className="h-10 bg-success text-white hover:bg-success/90"
+              variant="success"
+              className="h-10"
             >
               <HelpCircle className="w-4 h-4" />
               Help
