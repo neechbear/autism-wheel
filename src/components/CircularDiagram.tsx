@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
-import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link } from 'lucide-react';
+import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link, HelpCircle } from 'lucide-react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LZString from 'lz-string';
@@ -47,7 +47,7 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
         <Button onClick={onReturn}>Return to app</Button>
       </div>
 
-      <h1 className="text-3xl font-bold mb-4">How to Use This Tool ⚙️</h1>
+      <h1 className="text-4xl font-bold mb-4">How to Use This Tool ⚙️</h1>
       <p className="mb-4">To get started, watch this short video guide that walks you through creating your own spiky profile.</p>
 
       <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', marginBottom: '2rem' }}>
@@ -61,7 +61,7 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
         </iframe>
       </div>
 
-      <h1 className="text-3xl font-bold mb-4">Understanding Support Needs (ASD Levels)</h1>
+      <h1 className="text-4xl font-bold mb-4">Understanding Support Needs (ASD Levels)</h1>
       <p className="mb-4">When filling out your profile, it might be helpful to think about your support needs. The official diagnostic framework (the DSM-5) uses three "levels" to describe the varying degrees of support an autistic person might benefit from.</p>
       <p className="mb-4">These levels are just a clinical starting point—they can't capture the full picture of who you are. Your spiky profile will show that your needs can change depending on the environment, your energy levels, or the specific task you're doing.</p>
 
@@ -77,7 +77,7 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
         <li>To read the direct quotes from the DSM-5, see this page from <a href="https://www.autismspeaks.org/levels-of-autism" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Autism Speaks</a>.</li>
       </ul>
 
-      <h1 className="text-3xl font-bold mb-4">Further Reading & Resources 📚</h1>
+      <h1 className="text-4xl font-bold mb-4">Further Reading & Resources 📚</h1>
       <p className="mb-4">If you want to explore more before completing your profile, here are some excellent resources.</p>
 
       <h2 className="text-2xl font-bold mb-4">Key UK & US Health Information</h2>
@@ -1807,6 +1807,7 @@ function CircularDiagramContent() {
             onClick={() => setShowHelp(true)}
             className="h-10 bg-green-600 hover:bg-green-700 text-white"
           >
+            <HelpCircle className="w-4 h-4" />
             Help
           </Button>
         )}
