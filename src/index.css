@@ -56,8 +56,8 @@
     --color-blue-300: oklch(.809 .105 251.813);
     --color-blue-400: oklch(.707 .165 254.624);
     --color-blue-500: oklch(.623 .214 259.815);
-    --color-blue-600: oklch(.546 .245 262.881);
-    --color-blue-700: oklch(.488 .243 264.376);
+    --color-blue-600: oklch(.6 .18 263);
+    --color-blue-700: oklch(.55 .18 264);
     --color-blue-800: oklch(.424 .199 265.638);
     --color-white: #fff;
     --spacing: .25rem;
@@ -862,6 +862,10 @@
     background-color: var(--destructive);
   }
 
+  .bg-success {
+    background-color: var(--success);
+  }
+
   .bg-input-background {
     background-color: var(--input-background);
   }
@@ -1242,6 +1246,17 @@
     @supports (color: color-mix(in lab, red, red)) {
       .hover\:bg-destructive\/90:hover {
         background-color: color-mix(in oklab, var(--destructive) 90%, transparent);
+      }
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:bg-success\/90:hover {
+      background-color: var(--success);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .hover\:bg-success\/90:hover {
+        background-color: color-mix(in oklab, var(--success) 90%, transparent);
       }
     }
   }
@@ -1674,7 +1689,8 @@
   --muted-foreground: #717182;
   --accent: #e9ebef;
   --accent-foreground: #030213;
-  --destructive: #d4183d;
+  --destructive: oklch(0.6, 0.2, 25);
+  --success: oklch(0.65, 0.15, 150);
   --destructive-foreground: #fff;
   --border: #0000001a;
   --input: transparent;

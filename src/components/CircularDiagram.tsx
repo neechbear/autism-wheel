@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
-import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link } from 'lucide-react';
+import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link, HelpCircle } from 'lucide-react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LZString from 'lz-string';
@@ -320,6 +320,112 @@ function DraggableLabelRow({ labelData, index, editingLabels, setEditingLabels, 
   );
 }
 
+function HelpModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  if (!isOpen) return null;
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // This allows the link to open in a new tab without closing the modal.
+    e.stopPropagation();
+  };
+
+  return (
+    <div
+      className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4 transition-opacity"
+      onClick={onClose} // Close modal on overlay click
+    >
+      <div
+        className="bg-background rounded-lg shadow-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
+        onClick={(e) => e.stopPropagation()} // Prevent modal close when clicking inside
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-muted-foreground hover:text-foreground p-1 rounded-full hover:bg-muted"
+          aria-label="Close help window"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <div className="space-y-6 text-foreground">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold flex items-center gap-2">How to Use This Tool <span className="text-2xl">⚙️</span></h1>
+            <p>To get started, watch this short video guide that walks you through creating your own spiky profile.</p>
+          </div>
+
+          <div className="aspect-video w-full">
+            <iframe
+                src="https://www.youtube.com/embed/OvuTHMzbzpQ"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full rounded-md"
+            ></iframe>
+          </div>
+
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold">Understanding Support Needs (ASD Levels)</h1>
+            <p>When filling out your profile, it might be helpful to think about your support needs. The official diagnostic framework (the DSM-5) uses three "levels" to describe the varying degrees of support an autistic person might benefit from.</p>
+            <p>These levels are just a clinical starting point—they can't capture the full picture of who you are. Your spiky profile will show that your needs can change depending on the environment, your energy levels, or the specific task you're doing.</p>
+          </div>
+
+          <ul className="space-y-4 list-none pl-0">
+            <li><strong className="font-semibold block">Level 1: "Requiring Support"</strong>You might navigate daily life with a degree of independence but find some situations challenging. For example, you may speak in full sentences but find back-and-forth conversation tiring or difficult to initiate. Unexpected changes to your routine or switching between tasks can be stressful and require extra energy to manage.</li>
+            <li><strong className="font-semibold block">Level 2: "Requiring Substantial Support"</strong>You may benefit from more consistent support to navigate social situations and daily tasks. Communication might involve simpler sentences or be focused on your deep passions and interests. Sticking to a routine is often very important, and changes can be quite distressing. These support needs are likely apparent to those around you.</li>
+            <li><strong className="font-semibold block">Level 3: "Requiring Very Substantial Support"</strong>You likely require significant, ongoing support in most areas of life. You may communicate in ways other than spoken language (for example, using a device or gestures) or use a few words. Having a predictable structure and coping with change can be a major challenge, and a lot of support is needed to navigate the demands of daily life.</li>
+          </ul>
+
+          <div className="space-y-2">
+              <h2 className="text-2xl font-semibold border-t pt-4">Learn More About Support Levels</h2>
+              <ul className="list-disc pl-5 space-y-1">
+                  <li>For a clear, empathetic explanation with examples, visit the <a href="https://www.seattlechildrens.org/clinics/autism-center/the-autism-blog/autism-levels-support/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>Seattle Children's Autism Center Blog</a>.</li>
+                  <li>To read the direct quotes from the DSM-5, see this page from <a href="https://www.autismspeaks.org/levels-of-autism" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>Autism Speaks</a>.</li>
+              </ul>
+          </div>
+
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold border-t pt-4 flex items-center gap-2">Further Reading & Resources <span className="text-2xl">📚</span></h1>
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold">Key UK & US Health Information</h2>
+            <p>These government and public health bodies provide reliable, evidence-based information on autism diagnosis and support.</p>
+            <ul className="list-none pl-0 space-y-3">
+                <li><strong className="font-semibold block">The UK National Health Service (NHS)</strong>The official source for understanding autism in the UK, including the steps for seeking an assessment and finding support.<br /><a href="https://www.nhs.uk/conditions/autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>https://www.nhs.uk/conditions/autism/</a></li>
+                <li><strong className="font-semibold block">The US Centers for Disease Control and Prevention (CDC)</strong>Provides detailed summaries of official diagnostic criteria, data, and links to current research.<br /><a href="https://www.cdc.gov/autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>https://www.cdc.gov/autism/</a></li>
+            </ul>
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold">Community & Advocacy</h2>
+            <p>These organisations offer practical advice, community connection, and advocate for the autistic community.</p>
+            <ul className="list-none pl-0 space-y-3">
+                <li><strong className="font-semibold block">The National Autistic Society (UK)</strong>The UK's leading charity for autistic people and their families. Their website is a vast library of information on education, employment, mental health, and local support services.<br /><a href="https://www.autism.org.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>https://www.autism.org.uk/</a></li>
+                <li><strong className="font-semibold block">Autism Speaks (US)</strong>A large US-based organisation focused on funding research and providing resources, such as toolkits for navigating life after diagnosis and transitioning to adulthood.<br /><a href="https://www.autismspeaks.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>https://www.autismspeaks.org/</a></li>
+            </ul>
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold">Tools for Self-Exploration</h2>
+            <p className="italic">Please note: These are screening questionnaires, not diagnostic tools. They can't confirm if you're autistic, but they can offer insights and help you understand your own traits.</p>
+            <ul className="list-none pl-0 space-y-3">
+                <li><strong className="font-semibold block">The Autism-Spectrum Quotient (AQ)</strong>Developed by Cambridge University, this is a widely used questionnaire to measure autistic traits.<br />Online Version with Analysis: <a href="https://embrace-autism.com/autism-spectrum-quotient/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>Embrace Autism - AQ Test</a><br />Another Online Version: <a href="https://psychology-tools.com/test/autism-spectrum-quotient" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>Prosper Health - AQ Test</a></li>
+                <li><strong className="font-semibold block">The Ritvo Autism Asperger Diagnostic Scale–Revised (RAADS-R)</strong>This scale was designed specifically with adults in mind, including those who may have gone undiagnosed because they have learned to "mask" their autistic traits.<br />Online Version: <a href="https://embrace-autism.com/raads-r/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>Embrace Autism - RAADS-R Test</a><br />Informational Page: <a href="https://www.keyautismservices.com/resources/raads-r-test-for-autism-in-adults/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>Key Autism Services - About the RAADS-R</a></li>
+            </ul>
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold">Other Reputable Sources</h2>
+            <ul className="list-none pl-0 space-y-3">
+                <li><strong className="font-semibold block">Embrace Autism</strong>A fantastic resource hub run by a registered psychologist and an autistic advocate. It provides free online versions of the screening tools listed above, along with detailed articles explaining their scoring, history, and validity, all backed by research.<br /><a href="https://embrace-autism.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>https://embrace-autism.com/</a></li>
+                <li><strong className="font-semibold block">The Autism Research Centre (Cambridge University)</strong>The academic centre where the AQ test was developed. Their work forms the scientific foundation for many of the tools and understanding we use today.<br /><a href="https://www.autismresearch.cam.ac.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" onClick={handleLinkClick}>https://www.autismresearch.cam.ac.uk/</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CircularDiagramContent() {
   const [selections, setSelections] = useState<Selection>({});
   const [sliceLabels, setSliceLabels] = useState<string[]>(INITIAL_SLICE_LABELS);
@@ -340,6 +446,7 @@ function CircularDiagramContent() {
   const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isLockedMode, setIsLockedMode] = useState(false);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
   // Helper function to determine if dark mode is active
@@ -1133,15 +1240,16 @@ function CircularDiagramContent() {
                 Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
                 Click{' '}
                 <a
-                  href="https://youtu.be/OvuTHMzbzpQ"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsHelpModalOpen(true);
+                  }}
+                  className="underline hover:text-blue-800 dark:hover:text-blue-300"
                 >
-                  <YouTubeIcon className="w-3 h-3" />
-                  https://youtu.be/OvuTHMzbzpQ
+                  the help button
                 </a>
-                {' '}to view a tutorial video.
+                {' '}for additional guidance.
               </p>
             </div>
           </>
@@ -1168,7 +1276,7 @@ function CircularDiagramContent() {
                 const fill = baseColor + '80'; // 50% opacity for light segments
 
                 return (
-                  <Tooltip key={`light-segment-${sliceIndex}-${ringIndex}`} delayDuration={600}>
+                  <Tooltip key={`light-segment-${sliceIndex}-${ringIndex}`} delayDuration={1000}>
                     <TooltipTrigger asChild>
                       <path
                         d={path}
@@ -1234,7 +1342,7 @@ function CircularDiagramContent() {
                 const path = createSegmentPath(sliceIndex, ringIndex);
 
                 return (
-                  <Tooltip key={`segment-${sliceIndex}-${ringIndex}`} delayDuration={600}>
+                  <Tooltip key={`segment-${sliceIndex}-${ringIndex}`} delayDuration={1000}>
                     <TooltipTrigger asChild>
                       <path
                         d={path}
@@ -1437,7 +1545,7 @@ function CircularDiagramContent() {
                 : {};
 
               return (
-                <Tooltip key={`label-tooltip-${sliceIndex}`} delayDuration={600}>
+                <Tooltip key={`label-tooltip-${sliceIndex}`} delayDuration={1000}>
                   <TooltipTrigger asChild>
                     <g
                       key={`label-${sliceIndex}`}
@@ -1714,6 +1822,16 @@ function CircularDiagramContent() {
           {isEditingLabels ? "Save categories" : "Edit categories"}
         </Button>
 
+        {!isEditingLabels && (
+            <Button
+              onClick={() => setIsHelpModalOpen(true)}
+              className="h-10 bg-success text-white hover:bg-success/90"
+            >
+              <HelpCircle className="w-4 h-4" />
+              Help
+            </Button>
+        )}
+
         {isEditingLabels && (
           <>
             <Button
@@ -1935,6 +2053,7 @@ function CircularDiagramContent() {
           </div>
         </div>
       )}
+      <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
     </div>
   );
 }
