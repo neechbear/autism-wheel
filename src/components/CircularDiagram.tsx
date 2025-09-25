@@ -87,17 +87,17 @@ const INITIAL_SLICE_ICONS = [
 
 // Common emoji categories for the picker
 const EMOJI_CATEGORIES = {
-  'People': ['😀', '😊', '🥰', '😎', '🤔', '😰', '😭', '🥱', '😴', '🤗', '🤓', '😇', '🙂', '😉', '😍', '🤩', '😘', '😗', '☺️', '😚', 'ksz', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤭', '🤫', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😔', '😪', '🤤', '😷', 'tery', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '🧐'],
-  'Body Parts': ['👁️', '👀', '👂', '👃', '👄', '👅', '🦷', '🧠', '🫀', '🫁', '👶', '🧒', '👦', '👧', '🧑', '👨', '👩', '🧓', '👴', '👵', '👤', '👥', '🗣️', '👣', '🦴', '🦵', '🦶', '💪', '🤳', '👈', '👉', '👆', '👇', '☝️', '✋', '🤚', '🖐️', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤝', '👍', '👎', '👊', '✊', ' Lars', '🤜', '👏', '🙌', 'ONES', '🙏'],
-  'Animals': ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', 'wolf', '🐗', '🐴', '🦄', '🐝', '🪲', '🐛', '🦋', '🐌', '🐞', '蚂蚁', '🪱', '🦗', '🕷️', '🦂', 'turtle', 'snake', ' lizard', '🦖', '🦕', 'octopus', 'squid', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', 'camel', '🐫', '🦒', '🦘', '🦬', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🦙', '🐐', 'deer', '🐕', '🐩', '🦮', '🐕‍🦺', '🐈', '🐈‍⬛'],
-  'Food': ['🍎', '🍏', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑', '🥭', 'pineapple', ' coconut', 'kiwi', 'tomato', 'eggplant', 'avocado', '🥦', '🥬', '🥒', '🌶️', '🫑', 'corn', 'carrot', '🫒', '🧄', '🧅', 'potato', 'sweet potato', '🥐', '🥖', 'bread', '🥨', '🥯', '🥞', '🧇', 'cheese', 'meat', 'poultry', 'veal', 'bacon', 'burger', 'fries', 'taco', 'burrito', '🫔', '🥙', '🧆', 'egg', 'cook', 'soup', '🫕', 'salad', 'popcorn', '🧈', '🧂', '🥫', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🍝', 'sweet potato', 'oden', '🍣', '🍤', '🍥', 'mooncake', '🥟', 'fortune', '🥡', '🦪', 'ice cream', 'cream', 'cake', 'cupcake', 'pie', '🥧', 'chocolate', 'candy', 'lollipop', 'caramel', 'honey', '🍼', 'milk', '☕', '🫖', 'tea', '🍶', '🍾', 'wine', 'cocktail', '🍹', 'beer', '🍻', '🥂', '🥃', '🫗', 'drink', '🧋', '🧃', '🧉', 'ice'],
-  'Medical & Therapy': ['🏥', '⚕️', '🩺', 'pill', 'needle', '🩹', '🩼', '🦽', '🦼', '🧑‍⚕️', '👨‍⚕️', '👩‍⚕️', '🧬', 'microbe', '🧪', '🔬', '🌡️', '🩸', '🫁', 'brain', '🫀', '🦴', '👁️‍🗨️', '🗨️', '💬', '🗣️', '👂', '👁️', '🔍', '🔎', '📋', '📝', '📊', '📈', '📉', '🎯', '🧩', 'dice', '🃏', '🎴', '🀄'],
-  'Gestures': ['👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '👊', '✊', ' Lars', '🤜', '👏', '🙌', '.openg', 'parer', '🤝', '🙏'],
-  'Activities': ['🤸‍♂️', '🤸‍♀', '🏃‍♀️', '🏃‍♂️', '🚶‍♀️', '🚶‍♂️', '🧘‍♀️', '🧘‍♂️', '🏋️‍♀️', '🏋️‍♂️', '🤾‍♀️', '🤾‍♂️', '🏌️‍♀️', '🏌️‍♂️', '🏄‍♀️', '🏄‍♂️', '🚣‍♀️', '🚣‍♂️', '🏊‍♀️', '🏊‍♂️', '⛹️‍♀️', '⛹️‍♂️', 'horse', '🧗‍♀️', '🧗‍♂️', '🚴‍♀️', '🚴‍♂️', '🤹‍♀️', '🤹‍♂️', '🎭', '🎨', '🎪', '🎬', '🎤', '🎧', '🎼', '🎵', '🎶', '🥁', '🎹', ' guitar', ' trumpet', ' saxophone', ' violin', '🪕'],
-  'Objects': ['📱', '💻', '⌚', '📷', '🎥', '📺', '🎮', '🕹️', '🎧', '🎤', '🎵', '🎶', '🎼', '🎹', '🥁', 'saxophone', ' trumpet', ' guitar', ' violin', '🪕', '📚', '📖', '📝', '✏️', '🖍️', '🖊️', '🖋️', '✒️', '🖌️', '📐', '📏', '🧮', '📌', '📍', '✂️', '🗃️', '🗂️', '📂', '📁', '🗄️', '🔧', '🔨', '⚒️', '🛠️', '⛏️', '🪓', 'nuts', '⚙️', '🧰', '🪜', '🪣', '🧽', '🧼', '🪥', '🪒', '🔍', '🪞', '🪟', '🛏️', '🪑', '🚪', 'toy', 'gift', 'ribbon', '🪩', '🎊', '🎉'],
-  'Symbols': ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '-ms', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚡', '💫', '⭐', '🌟', '✨', '☄️', '💥', '🔥', '🌈', '☀️', '🌞', '🌙', '🌛', '🌜', '🌚', '🌕', '🌖', '🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '☁️', '⛅', '⛈️', '🌤️', '🌦️', '🌧️', '🌩️', '🌨️', '❄️', '☃️', '⛄', '🌬️', '💨', '🌪️', '🌫️', '☂️', '☔', '💧', '💦', '🌊', '✅', '❌', '⭕', '🛑', '⛔', '📵', '🚫', '💯', '💢', '♨️', '💤', '🕳️', 'bomb', '💬', '👁️‍🗨️', '💭', '🗯️'],
-  'Buildings': ['🏠', '🏡', '🏘️', '🏚️', '🏗️', '🏭', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '.Logf', '💒', '🏛️', '⛪', '🕌', '🛕', '🕍', '⛩️', '🕋', '⛲', '⛺', '🌁', '🌃', '🏙️', '🌄', '🌅', '🌆', '🌇', '🌉', '♨️', 'carousel', 'dance', 'roller', 'blade', 'celebration'],
-  'Misc': ['♻️', '🔄', '🔁', '🔂', '⏩', '⏪', '⏫', '⏬', '◀️', '▶️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️', '⤴️', '⤵️', '🔀', 'uffs', '➕', '➖', '➗', '✖️', '♾️', '💲', '💱', '™️', '©️', '®️', '〰️', '➰', '➿', '🔚', '🔙', '🔛', '🔝', '🔜', '🔒', '🔓', '🔏', '🔐', '🔑', '🗝️', '🔨', '🪓', '⛏️', '⚒️', '🛠️', '🗡️', '⚔️', 'bomb', '🪃', 'arrow', 'shield', '🪚', '🔧', '🪛', 'nuts', '⚙️', '🗜️', '⚖️', '🦯', '🔗', 'chains', '🪝', '🧰', 'magnet', '🪜', 'alchemy', '🧪', '🧫', '🧬', '🔬', '🔭', '📡', 'pill', '🩸', '🩹', '🩼', '🩺', '🪶']
+  'People': ['😀', '😊', '🥰', '😎', '🤔', '😰', '😭', '🥱', '😴', '🤗', '🤓', '😇', '🙂', '😉', '😍', '🤩', '😘', '😗', '☺️', '😚', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤭', '🤫', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😔', '😪', '🤤', '😷', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '🧐'],
+  'Body Parts': ['👁️', '👀', '👂', '👃', '👄', '👅', '🦷', '🧠', '🫀', '🫁', '👶', '🧒', '👦', '👧', '🧑', '👨', '👩', '🧓', '👴', '👵', '👤', '👥', '🗣️', '👣', '🦴', '🦵', '🦶', '💪', '🤳', '👈', '👉', '👆', '👇', '☝️', '✋', '🤚', '🖐️', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤝', '👍', '👎', '👊', '✊', '🤛', '🤜', '👏', '🙌', '🙏'],
+  'Animals': ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🪲', '🐛', '🦋', '🐌', '🐞', '🐜', '🪱', '🦗', '🕷️', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🦬', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🦙', '🐐', '🦌', '🐕', '🐩', '🦮', '🐕‍🦺', '🐈', '🐈‍⬛'],
+  'Food': ['🍎', '🍏', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🫑', '🌽', '🥕', '🫒', '🧄', '🧅', '🥔', '🍠', '🥐', '🥖', '🍞', '🥨', '🥯', '🥞', '🧇', '🧀', '🍖', '🍗', '🥩', '🥓', '🍔', '🍟', '🍕', '🌭', '🥪', '🫔', '🥙', '🧆', '🥚', '🍳', '🍲', '🫕', '🥗', '🍿', '🧈', '🧂', '🥫', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🍝', '🍠', '🍢', '🍣', '🍤', '🍥', '🥮', '🥟', '🥠', '🥡', '🦪', '🍦', '🍧', '🎂', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯', '🍼', '🥛', '☕', '🫖', '🍵', '🍶', '🍾', '🍷', '🍸', '🍹', '🍺', '🍻', '🥂', '🥃', '🫗', '🥤', '🧋', '🧃', '🧉', '🧊'],
+  'Medical & Therapy': ['🏥', '⚕️', '🩺', '💊', '💉', '🩹', '🩼', '🦽', '🦼', '🧑‍⚕️', '👨‍⚕️', '👩‍⚕️', '🧬', '🦠', '🧪', '🔬', '🌡️', '🩸', '🫁', '🧠', '🫀', '🦴', '👁️‍🗨️', '🗨️', '💬', '🗣️', '👂', '👁️', '🔍', '🔎', '📋', '📝', '📊', '📈', '📉', '🎯', '🧩', '🎲', '🃏', '🎴', '🀄'],
+  'Gestures': ['👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '👊', '✊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏'],
+  'Activities': ['🤸‍♂️', '🤸‍♀', '🏃‍♀️', '🏃‍♂️', '🚶‍♀️', '🚶‍♂️', '🧘‍♀️', '🧘‍♂️', '🏋️‍♀️', '🏋️‍♂️', '🤾‍♀️', '🤾‍♂️', '🏌️‍♀️', '🏌️‍♂️', '🏄‍♀️', '🏄‍♂️', '🚣‍♀️', '🚣‍♂️', '🏊‍♀️', '🏊‍♂️', '⛹️‍♀️', '⛹️‍♂️', '🏇', '🧗‍♀️', '🧗‍♂️', '🚴‍♀️', '🚴‍♂️', '🤹‍♀️', '🤹‍♂️', '🎭', '🎨', '🎪', '🎬', '🎤', '🎧', '🎼', '🎵', '🎶', '🥁', '🎹', '🎸', '🎺', '🎷', '🎻', '🪕'],
+  'Objects': ['📱', '💻', '⌚', '📷', '🎥', '📺', '🎮', '🕹️', '🎧', '🎤', '🎵', '🎶', '🎼', '🎹', '🥁', '🎷', '🎺', '🎸', '🎻', '🪕', '📚', '📖', '📝', '✏️', '🖍️', '🖊️', '🖋️', '✒️', '🖌️', '📐', '📏', '🧮', '📌', '📍', '✂️', '🗃️', '🗂️', '📂', '📁', '🗄️', '🔧', '🔨', '⚒️', '🛠️', '⛏️', '🪓', '🔩', '⚙️', '🧰', '🪜', '🪣', '🧽', '🧼', '🪥', '🪒', '🔍', '🪞', '🪟', '🛏️', '🪑', '🚪', '🧸', '🎁', '🎀', '🪩', '🎊', '🎉'],
+  'Symbols': ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚡', '💫', '⭐', '🌟', '✨', '☄️', '💥', '🔥', '🌈', '☀️', '🌞', '🌙', '🌛', '🌜', '🌚', '🌕', '🌖', '🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '☁️', '⛅', '⛈️', '🌤️', '🌦️', '🌧️', '🌩️', '🌨️', '❄️', '☃️', '⛄', '🌬️', '💨', '🌪️', '🌫️', '☂️', '☔', '💧', '💦', '🌊', '✅', '❌', '⭕', '🛑', '⛔', '📵', '🚫', '💯', '💢', '♨️', '💤', '🕳️', '💣', '💬', '👁️‍🗨️', '💭', '🗯️'],
+  'Buildings': ['🏠', '🏡', '🏘️', '🏚️', '🏗️', '🏭', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '🏬', '💒', '🏛️', '⛪', '🕌', '🛕', '🕍', '⛩️', '🕋', '⛲', '⛺', '🌁', '🌃', '🏙️', '🌄', '🌅', '🌆', '🌇', '🌉', '♨️', '🎠', '💃', '🎢', '🎡', '🎈'],
+  'Misc': ['♻️', '🔄', '🔁', '🔂', '⏩', '⏪', '⏫', '⏬', '◀️', '▶️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️', '⤴️', '⤵️', '🔀', '🔤', '➕', '➖', '➗', '✖️', '♾️', '💲', '💱', '™️', '©️', '®️', '〰️', '➰', '➿', '🔚', '🔙', '🔛', '🔝', '🔜', '🔒', '🔓', '🔏', '🔐', '🔑', '🗝️', '🔨', '🪓', '⛏️', '⚒️', '🛠️', '🗡️', '⚔️', '💣', '🪃', '🏹', '🛡️', '🪚', '🔧', '🪛', '🔩', '⚙️', '🗜️', '⚖️', '🦯', '🔗', '⛓️', '🪝', '🧰', '🧲', '🪜', '⚗️', '🧪', '🧫', '🧬', '🔬', '🔭', '📡', '💊', '🩸', '🩹', '🩼', '🩺', '🪶']
 };
 
 const INITIAL_SLICE_COLORS = [
@@ -329,7 +329,7 @@ function CircularDiagramContent() {
   const [originalEditingLabels, setOriginalEditingLabels] = useState<LabelData[]>([]);
   const [newLabelText, setNewLabelText] = useState('');
   const [newLabelIcon, setNewLabelIcon] = useState('😀');
-  const [numberDisplay, setNumberDisplay] = useState<'left' | 'center' | 'right' | 'hide-segment' | 'hidden'>('center');
+  const [numberPosition, setNumberPosition] = useState<'left' | 'center' | 'right' | 'hidden'>('center');
   const [labelStyle, setLabelStyle] = useState<'normal' | 'bold' | 'hidden'>('normal');
   const [boundaryWeight, setBoundaryWeight] = useState<'normal' | 'bold' | 'hidden'>('bold');
   const [showIcons, setShowIcons] = useState<boolean>(true);
@@ -337,7 +337,6 @@ function CircularDiagramContent() {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isLocked, setIsLocked] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
   // Helper function to determine if dark mode is active
@@ -519,10 +518,10 @@ function CircularDiagramContent() {
     return { x, y, angle };
   };
 
-  const saveDiagramAs = (format: 'png' | 'svg' | 'jpeg' | 'html' | 'html-locked') => {
+  const saveDiagramAs = (format: 'png' | 'svg' | 'jpeg' | 'html') => {
     if (!svgRef.current) return;
 
-    if (format === 'html' || format === 'html-locked') {
+    if (format === 'html') {
       setTimeout(() => {
         try {
           // 1. Clone the entire document to avoid modifying the live DOM
@@ -559,14 +558,6 @@ function CircularDiagramContent() {
           metaTag.content = encodeState();
           clonedDocument.head.appendChild(metaTag);
 
-          // If locked, add the locked version meta tag
-          if (format === 'html-locked') {
-            const lockedMetaTag = clonedDocument.createElement('meta');
-            lockedMetaTag.name = 'autism-wheel-locked-version';
-            lockedMetaTag.content = 'true';
-            clonedDocument.head.appendChild(lockedMetaTag);
-          }
-
           // 5. Serialize the cleaned DOM to a string
           const finalHtml = '<!DOCTYPE html>' + clonedDocument.documentElement.outerHTML;
 
@@ -574,7 +565,7 @@ function CircularDiagramContent() {
           const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
-          link.download = format === 'html-locked' ? 'autismwheel-locked.html' : 'autismwheel.html';
+          link.download = 'autismwheel.html';
           link.href = url;
           document.body.appendChild(link);
           link.click();
@@ -901,7 +892,7 @@ function CircularDiagramContent() {
       sliceColors,
       sliceIcons,
       sliceDescriptions,
-      numberDisplay,
+      numberPosition,
       labelStyle,
       boundaryWeight,
       showIcons,
@@ -1027,12 +1018,6 @@ function CircularDiagramContent() {
 
   // Load state from URL on component mount
   useEffect(() => {
-    // Check for locked version
-    const lockedMeta = document.querySelector('meta[name="autism-wheel-locked-version"]');
-    if (lockedMeta) {
-      setIsLocked(true);
-    }
-
     const urlParams = new URLSearchParams(window.location.search);
     let encodedState = urlParams.get('state');
 
@@ -1053,7 +1038,7 @@ function CircularDiagramContent() {
         if (decodedState.sliceColors) setSliceColors(decodedState.sliceColors);
         if (decodedState.sliceIcons) setSliceIcons(decodedState.sliceIcons);
         if (decodedState.sliceDescriptions) setSliceDescriptions(decodedState.sliceDescriptions);
-        if (decodedState.numberDisplay) setNumberDisplay(decodedState.numberDisplay);
+        if (decodedState.numberPosition) setNumberPosition(decodedState.numberPosition);
         if (decodedState.labelStyle) setLabelStyle(decodedState.labelStyle);
         if (decodedState.boundaryWeight) setBoundaryWeight(decodedState.boundaryWeight);
         if (decodedState.showIcons !== undefined) setShowIcons(decodedState.showIcons);
@@ -1067,53 +1052,49 @@ function CircularDiagramContent() {
   return (
     <div className="flex flex-col items-center gap-8 p-8">
       <div className="text-center">
-        <h1 className="mb-2 text-4xl font-bold">{isLocked ? 'My Autism Wheel' : 'Autism Wheel'}</h1>
+        <h1 className="mb-2 text-4xl font-bold">Autism Wheel</h1>
 
-        {!isLocked && (
-          <>
-            <div className="mb-6 max-w-3xl mx-auto space-y-4">
-              <p className="text-left">
-                Thank you for using{' '}
-                <a
-                  href="https://www.myautisticprofile.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-                >
-                  my Autism Wheel
-                </a>
-                . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
-                I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
-                Your feedback to improve this tool is welcomed at{' '}
-                <a
-                  href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-                >
-                  feedback@myautisticprofile.com
-                </a>.
-              </p>
-            </div>
+        <div className="mb-6 max-w-3xl mx-auto space-y-4">
+          <p className="text-left">
+            Thank you for using{' '}
+            <a
+              href="https://www.myautisticprofile.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+            >
+              my Autism Wheel
+            </a>
+            . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
+            I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
+            Your feedback to improve this tool is welcomed at{' '}
+            <a
+              href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+            >
+              feedback@myautisticprofile.com
+            </a>.
+          </p>
+        </div>
 
-            <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
-              <p className="text-left text-blue-600 dark:text-blue-400">
-                Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
-                Click{' '}
-                <a
-                  href="https://youtu.be/OvuTHMzbzpQ"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-                >
-                  <YouTubeIcon className="w-3 h-3" />
-                  https://youtu.be/OvuTHMzbzpQ
-                </a>
-                {' '}to view a tutorial video.
-              </p>
-            </div>
-          </>
-        )}
+        <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
+          <p className="text-left text-blue-600 dark:text-blue-400">
+            Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
+            Click{' '}
+            <a
+              href="https://youtu.be/OvuTHMzbzpQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+            >
+              <YouTubeIcon className="w-3 h-3" />
+              https://youtu.be/OvuTHMzbzpQ
+            </a>
+            {' '}to view a tutorial video.
+          </p>
+        </div>
       </div>
 
       <div className="relative">
@@ -1313,7 +1294,7 @@ function CircularDiagramContent() {
               );
             })}
             {/* Selection numbers */}
-            {numberDisplay !== 'hidden' && numberDisplay !== 'hide-segment' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
+            {numberPosition !== 'hidden' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
               const currentSelections = selections[sliceIndex] || [];
               if (currentSelections.length === 0) return null;
 
@@ -1323,7 +1304,7 @@ function CircularDiagramContent() {
 
                 // Position numbers based on user preference
                 let angleMultiplier;
-                switch (numberDisplay) {
+                switch (numberPosition) {
                   case 'left':
                     angleMultiplier = 0.25; // 25% towards the end angle
                     break;
@@ -1476,7 +1457,7 @@ function CircularDiagramContent() {
             })}
 
             {/* ASD Level Labels */}
-            {numberDisplay !== 'hidden' && asdLabels.map(({ text, radius }) => (
+            {numberPosition !== 'hidden' && asdLabels.map(({ text, radius }) => (
               <text
                 key={text}
                 x={CENTER_X}
@@ -1504,7 +1485,6 @@ function CircularDiagramContent() {
       </div>
 
       {/* Display Options */}
-      {!isLocked && (
       <div className="flex flex-wrap gap-4 justify-center print:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
@@ -1514,34 +1494,28 @@ function CircularDiagramContent() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuItem
-              onClick={() => setNumberDisplay('left')}
-              className={numberDisplay === 'left' ? 'bg-accent' : ''}
+              onClick={() => setNumberPosition('left')}
+              className={numberPosition === 'left' ? 'bg-accent' : ''}
             >
               Left aligned
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => setNumberDisplay('center')}
-              className={numberDisplay === 'center' ? 'bg-accent' : ''}
+              onClick={() => setNumberPosition('center')}
+              className={numberPosition === 'center' ? 'bg-accent' : ''}
             >
               Center aligned
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => setNumberDisplay('right')}
-              className={numberDisplay === 'right' ? 'bg-accent' : ''}
+              onClick={() => setNumberPosition('right')}
+              className={numberPosition === 'right' ? 'bg-accent' : ''}
             >
               Right aligned
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => setNumberDisplay('hide-segment')}
-              className={numberDisplay === 'hide-segment' ? 'bg-accent' : ''}
+              onClick={() => setNumberPosition('hidden')}
+              className={numberPosition === 'hidden' ? 'bg-accent' : ''}
             >
-              Hide segment numbers
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setNumberDisplay('hidden')}
-              className={numberDisplay === 'hidden' ? 'bg-accent' : ''}
-            >
-              Hide segment numbers & ASD levels
+              Hidden
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -1624,7 +1598,6 @@ function CircularDiagramContent() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      )}
 
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-4 justify-center print:hidden">
@@ -1662,27 +1635,18 @@ function CircularDiagramContent() {
             <DropdownMenuItem onClick={() => saveDiagramAs('jpeg')}>
               Save as JPEG
             </DropdownMenuItem>
-            {!isLocked && (
-              <>
-                <DropdownMenuItem onClick={() => saveDiagramAs('html')}>
-                  Save as HTML
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => saveDiagramAs('html-locked')}>
-                  Save as locked HTML
-                </DropdownMenuItem>
-              </>
-            )}
+            <DropdownMenuItem onClick={() => saveDiagramAs('html')}>
+              Save as HTML
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {!isLocked && (
-          <Button
-            onClick={handleEditLabels}
-            className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
-          >
-            {isEditingLabels ? "Save categories" : "Edit categories"}
-          </Button>
-        )}
+        <Button
+          onClick={handleEditLabels}
+          className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+        >
+          {isEditingLabels ? "Save categories" : "Edit categories"}
+        </Button>
 
         {isEditingLabels && (
           <>
