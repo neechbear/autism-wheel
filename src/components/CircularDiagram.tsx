@@ -1274,7 +1274,7 @@ function CircularDiagramContent() {
           {!isLockedMode && (
             <div className="text-center">
               {!hideIntro && (
-              <div className="mb-6 max-w-3xl mx-auto space-y-4">
+              <div className="mb-6 max-w-3xl mx-auto space-y-4 print:hidden">
                   <p className="text-left">
                     Thank you for using{' '}
                     <a
