@@ -73,7 +73,27 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
       </div>
 
       <h1 className="text-3xl font-bold mb-4">How to Use This Tool</h1>
-      <p className="mb-4">To get started, watch this short video guide that walks you through creating your own autistic wheel profile.</p>
+      <p className="mb-4">
+        To get started, watch this short video guide that walks you through creating your own autistic wheel profile.
+        An alternative{' '}
+        <a
+          href={`${window.location.origin}${window.location.pathname}?state=N4IgzgpgNhDGAuBLA9gOzCAXKADFg2gLoA0IAjASSAEyWkDMdIALEwKxMBsTA7JQL6kwURLAgAZAIYAjaBkz4QAZWQBXVABMABAAoAgqo2J4yAE4BPAJQhSSxAHMAFvF0A1RGFWSo12wFtoKF0AeSgAM0kEMysbEAAVSTB4CF0AcVUkyRMLX3i1WEddBIREGFyAIW9JVDE3CCTEaVUoSVMK5A1zLT0Ad1aIVHqwXQAFU2QAB1MUMQmkNFyASVRk01RvLSUBsCyUdF1l1eRZ%2BdRrKmFRCABhZCgzeUUAYk5OWDZYWFinsLewngopB%2BAA4AJywHisIEaWDSHBhWhA4E8d5sMLfUEQaSgsKMIFhCDA4HSQEgJ6wUEaaSQkAXERiRawNCPECAXg3AEI7sVZgEEdwDwf1zAMI7XMAojuxQDQ5LFAHwbgA5dwCwBIABMi5gDa92WAITJ%2BaRWYBcndpQnpEAAIvVYNM5nsWQBNNSmLTqRAAR1UKVM9QmzJSJi0YDUmgAdN0tPcel6mS6tIhNKIsvUtOY1FpYNUtPYBhBTN4oF0wqVVlppJEANb2cbqbSoZAeFLVbQmGDp5JaCAANzT5g0ki63tLYH9ei0jgchTAoedEDCMAQwwgAA94C6Al7tsZEE3jF0dI5zBM05ZiFoeo40ykmX4%2FGgtOXK8N%2BloJpII2FmlozM%2BW6YD9A%2FBH7HuX6W0wAtJA6DLqu8Drpubq7vuh5hnGqhaF%2BTguJAEAFs%2BqguPchh7hGyToCkXaaMMnoEtAWguvYzTRhovqxFaqg2jO27TAMtTIGEWjwIeWirp4Gw9GYUC0QGQYhmYhGqPYKZJMM8H9tWMBcVuUZBCIyHflo1a8R4XhBLAUCYbmJ5hGY8AyJmvb9oO4lhomqCIRASaQWmwFgKBa57h%2BYbSNMyGBoO8DDC%2BTRgF0d7wKs%2Bw3kY3qsSs36%2FjakHIG5HngV5sEpPJSHOHmKQaOmPQOZ6eHbCkfF6V6SB%2BM0iABQWKTjokA6oPYAXISRyBaGRQQDPYkgprR9HWouIFIGBXTaS6kSnFx3VGGEBIuisIYDEFVlicOEmOdUcnxuWSC1GAARQFAwxNC4N6HcpEyqZmr5ph%2BUABCJfYDk4tnHkmEZGImDYuaYaUTZ5MFHgmyCnueJ2BMMIiNbeaaPguL6mR0WlhusGROUgbVJf2W6pUuIMZWDcHxrlLg3YdVzVeMbXPho1rBTafgdlpJQtg9qHodxEB%2BBh8B0aQDE2sDK5rvNPUtE2zNaZoXEzvAjExhGsajWemGOJtyDBttYYBHt6sIQMABWyBTbxrSIBA2hGBALg9MYjhqC4HieBAVkfUOI4JkmhsOYD4uTYGTlGAznqSBR9RzqIyR2zbjtZQmabmWrySzir15huositBZED4ylweS952Xxiakgto2s7ztAnZzmg7XNbLjHDDonv2L6e5vp2d2wF0L5dm0UuUR4uZ81xiTJMLICizXLE2zUKQcbem7uYm%2BloOZCDyzWStZ8%2BDnwWLBYRjreu%2B79UbJMMJlmfuztW6x2gGcg3GJYrfgsVkWd7tp4FtzBU4iYVQBQvY2X1t9ByAcCYsRLqTNmZ8GZvw%2FhHQaLMOp5VAQUHqEByJ3gfM0IuhMEHmEyuDHKgULzvxoUdFIhCHIvjZp2fB6END4ImLeF0YBPBhlIvg%2FS3g%2BCz3nmVNYGw3Ir04vmFoy89xnhbAEFY%2F8FZgAiogDYZgl7mVOBfL6XopIySCsbPB5FMjSCUtpJkZhw40QgZ9KBiFqEunHHAFwQdiYS1JomDImkzxzQ3gWQYvCerjAFidDMiFkBKPWmAEhboyF7hgJIcO7VI4XnwdoUyNoyoEWibE1a8NCJ3VQKgTSL5xiwGQek7qvVo5URaPHURo1fL3lQAAcmGOoJk6BYAoAyFpPoK0hjPk4mXY2NppAdC6B4cMDl1GRE9qJXWBiA77QQoolITtuIQ1QNmDhy894UX6A9L8YBTaGBTD1MwYgHE%2Bx2vZRC1REAEiSFpO%2Bhk%2FDuRCfEvMqhv6aTwt1ZA0hTbuL%2BX%2BH5tTuq1VwS%2BEw3URCRSUjk2oHdfRdy8tMXGMKFKmG0C%2BF2wlNJoPsF1JFyAiaZmghxfCi40KaQ4RALhUwhgqylimK6%2BVIppjGpAMZky8wzJaYxLS0hSiS09CxMQK5CIOHWOdMJkN5nuQ4UK6ZnR9FOPWaYl0IgLJdBprUcRiqExOjhogBGjh1AplMHuD%2BQN4D40YfcgxriJwmMWtmWAzRwLRyZPYcp0KuKHgFe5IN3g%2FkHlEIUJ5KSazdRujjTS6gkBBAiOcw8Gg9w3UKhGGptoEpBA4ZuQqNF8Y3UQIcpAYRzCaX5u%2Fc0Rb02hogF0WQJ4V5vmel%2BNqdEqCoABbIUwIxUrLjQFgEAYgVhpliC0WQUAlDgRgFO6ZwlYjTNLK0cwAB1CAgU113A0LEMALseiMmZFgOcTohBmVuF81AU6kg8IwHe0w8ADSIBdCUSdmAQAcOHLEPmAQp3qWcCAfgQA%3D%3D`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+        >
+          sensory wheel
+        </a>{' '}
+        is available by{' '}
+        <a
+          href={`${window.location.origin}${window.location.pathname}?state=N4IgzgpgNhDGAuBLA9gOzCAXKADFg2gLoA0IAjASSAEyWkDMdIALEwKxMBsTA7JQL6kwURLAgAZAIYAjaBkz4QAZWQBXVABMABAAoAgqo2J4yAE4BPAJQhSSxAHMAFvF0A1RGFWSo12wFtoKF0AeSgAM0kEMysbEAAVSTB4CF0AcVUkyRMLX3i1WEddBIREGFyAIW9JVDE3CCTEaVUoSVMK5A1zLT0Ad1aIVHqwXQAFU2QAB1MUMQmkNFyASVRk01RvLSUBsCyUdF1l1eRZ%2BdRrKmFRCABhZCgzeUUAYk5OWDZYWFinsLewngopB%2BAA4AJywHisIEaWDSHBhWhA4E8d5sMLfUEQaSgsKMIFhCDA4HSQEgJ6wUEaaSQkAXERiRawNCPECAXg3AEI7sVZgEEdwDwf1zAMI7XMAojuxQDQ5LFAHwbgA5dwCwBIABMi5gDa92WAITJ%2BaRWYBcndpQnpEAAIvVYNM5nsWQBNNSmLTqRAAR1UKVM9QmzJSJi0YDUmgAdN0tPcel6mS6tIhNKIsvUtOY1FpYNUtPYBhBTN4oF0wqVVlppJEANb2cbqbSoZAeFLVbQmGDp5JaCAANzT5g0ki63tLYH9ei0jgchTAoedEDCMAQwwgAA94C6Al7tsZEE3jF0dI5zBM05ZiFoeo40ykmX4%2FGgtOXK8N%2BloJpII2FmlozM%2BW6YD9A%2FBH7HuX6W0wAtJA6DLqu8Drpubq7vuh5hnGqhaF%2BTguJAEAFs%2BqguPchh7hGyToCkXaaMMnoEtAWguvYzTRhovqxFaqg2jO27TAMtTIGEWjwIeWirp4Gw9GYUC0QGQYhmYhGqPYKZJMM8H9tWMBcVuUZBCIyHflo1a8R4XhBLAUCYbmJ5hGY8AyJmvb9oO4lhomqCIRASaQWmwFgKBa57h%2BYbSNMyGBoO8DDC%2BTRgF0d7wKs%2Bw3kY3qsSs36%2FjakHIG5HngV5sEpPJSHOHmKQaOmPQOZ6eHbCkfF6V6SB%2BM0iABQWKTjokA6oPYAXISRyBaGRQQDPYkgprR9HWouIFIGBXTaS6kSnFx3VGGEBIuisIYDEFVlicOEmOdUcnxuWSC1GAARQFAwxNC4N6HcpEyqZmr5ph%2BUABCJfYDk4tnHkmEZGImDYuaYaUTZ5MFHgmyCnueJ2BMMIiNbeaaPguL6mR0WlhusGROUgbVJf2W6pUuIMZWDcHxrlLg3YdVzVeMbXPho1rBTafgdlpJQtg9qHodxEB%2BBh8B0aQDE2sDK5rvNPUtE2zNaZoXEzvAjExhGsajWemGOJtyDBttYYBHt6sIQMABWyBTbxrSIBA2hGBALg9MYjhqC4HieBAVkfUOI4JkmhsOYD4uTYGTlGAznqSBR9RzqIyR2zbjtZQmabmWrySzir15huositBZED4ylweS952Xxiakgto2s7ztAnZzmg7XNbLjHDDonv2L6e5vp2d2wF0L5dm0UuUR4uZ81xiTJMLICizXLE2zUKQcbem7uYm%2BloOZCDyzWStZ8%2BDnwWLBYRjreu%2B79UbJMMJlmfuztW6x2gGcg3GJYrfgsVkWd7tp4FtzBU4iYVQBQvY2X1t9ByAcCYsRLqTNmZ8GZvw%2FhHQaLMOp5VAQUHqEByJ3gfM0IuhMEHmEyuDHKgULzvxoUdFIhCHIvjZp2fB6END4ImLeF0YBPBhlIvg%2FS3g%2FCz3nmVNYGw3Ir04vmFoy89xnhbAEFY%2F8FZgAiogDYZgl7mVOBfL6XopIySCsbPB5FMjSCUtpJkZhw40QgZ9KBiFqEunHHAFwQdiYS1JomDImkzxzQ3gWQYvCerjAFidDMiFkBKPWmAEhboyF7hgJIcO7VI4XnwdoUyNoyoEWibE1a8NCJ3VQKgTSL5xiwGQek7qvVo5URaPHURo1fL3lQAAcmGOoJk6BYAoAyFpPoK0hjPk4mXY2NppAdC6B4cMDl1GRE9qJXWBiA77QQoolITtuIQ1QNmDhy894UX6A9L8YBTaGBTD1MwYgHE%2Bx2vZRC1REAEiSFpO%2Bhk%2FDuRCfEvMqhv6aTwt1ZA0hTbuL%2BX%2BH5tTuq1VwS%2BEw3URCRSUjk2oHdfRdy8tMXGMKFKmG0C%2BF2wlNJoPsF1JFyAiaZmghxfCi40KaQ4RALhUwhgqylimK6%2BVIppjGpAMZky8wzJaYxLS0hSiS09CxMQK5CIOHWOdMJkN5nuQ4UK6ZnR9FOPWaYl0IgLJdBprUcRiqExOjhogBGjh1AplMHuD%2BQN4D40YfcgxriJwmMWtmWAzRwLRyZPYcp0KuKHgFe5IN3g%2FkHlEIUJ5KSazdRujjTS6gkBBAiOcw8Gg9w3UKhGGptoEpBA4ZuQqNF8Y3UQIcpAYRzCaX5u%2Fc0Rb02hogF0WQJ4V5vmel%2BNqdEqCoABbIUwIxUrLjQFgEAYgVhpliC0WQUAlDgRgFO6ZwlYjTNLK0cwAB1CAgU113A0LEMALseiMmZFgOcTohBmVuF81AU6kg8IwHe0w8ADSIBdCUSdmAQAcOHLEPmAQp3qWcCAfgQA%3D%3D`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+        >
+          clicking this link
+        </a>.
+      </p>
 
       <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', marginBottom: '2rem' }}>
         <iframe
@@ -462,7 +482,7 @@ function CircularDiagramContent() {
   const [newLabelText, setNewLabelText] = useState('');
   const [newLabelIcon, setNewLabelIcon] = useState('😀');
   const [numberPosition, setNumberPosition] = useState<'left' | 'center' | 'right' | 'hide_segment' | 'hide_all'>('center');
-  const [labelStyle, setLabelStyle] = useState<'normal' | 'bold' | 'hidden'>('normal');
+  const [labelStyle, setLabelStyle] = useState<'normal' | 'bold' | 'hidden'>('bold');
   const [boundaryWeight, setBoundaryWeight] = useState<'normal' | 'bold' | 'hidden'>('bold');
   const [showIcons, setShowIcons] = useState<boolean>(true);
   const [sortColumn, setSortColumn] = useState<'category' | 'typical' | 'stress' | null>('stress');
