@@ -6,10 +6,35 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
-import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link } from 'lucide-react';
+import { Trash2, GripVertical, Plus, ChevronDown, ChevronUp, Settings, Smile, Printer, Link, HelpCircle } from 'lucide-react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LZString from 'lz-string';
+
+// Conditional Tooltip wrapper component
+interface ConditionalTooltipProps {
+  children: React.ReactNode;
+  content: React.ReactNode;
+  disabled?: boolean;
+  delayDuration?: number;
+}
+
+function ConditionalTooltip({ children, content, disabled = false, delayDuration }: ConditionalTooltipProps) {
+  if (disabled) {
+    return <>{children}</>;
+  }
+
+  return (
+    <Tooltip delayDuration={delayDuration}>
+      <TooltipTrigger asChild>
+        {children}
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-xs">
+        {content}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
 
 // YouTube icon component
 function YouTubeIcon({ className }: { className?: string }) {
@@ -25,6 +50,111 @@ function YouTubeIcon({ className }: { className?: string }) {
       />
       <path fill="#FFF" d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
     </svg>
+  );
+}
+
+function HelpContent({ onReturn }: { onReturn: () => void }) {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onReturn();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onReturn]);
+
+  return (
+    <div className="w-full max-w-4xl text-left">
+      <div className="flex justify-center mb-8">
+        <Button onClick={onReturn}>Return to app</Button>
+      </div>
+
+      <h1 className="text-3xl font-bold mb-4">How to Use This Tool</h1>
+      <p className="mb-4">To get started, watch this short video guide that walks you through creating your own autistic wheel profile.</p>
+
+      <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', marginBottom: '2rem' }}>
+        <iframe
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+          src="https://www.youtube.com/embed/OvuTHMzbzpQ"
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen>
+        </iframe>
+      </div>
+
+      <h1 className="text-3xl font-bold mb-4">Understanding Support Needs (ASD Levels)</h1>
+      <p className="mb-4">
+        When filling out your profile, it might be helpful to think about your support needs. The official diagnostic
+        framework (the DSM-5) uses three "levels" to describe the varying degrees of support an autistic person might
+        benefit from. These levels are just a clinical starting point—they can't capture the full picture of who you are.
+        Your autistic wheel profile will show that your needs can change depending on the environment, your energy levels, or
+        the specific task you're doing.
+        </p>
+      <ul className="list-disc list-outside space-y-4 mb-4 pl-8">
+        <li>
+          <p><strong>Level 1: "Requiring Support"</strong></p>
+          <p className="ml-6">You might navigate daily life with a degree of independence but find some situations challenging. For example, you may speak in full sentences but find back-and-forth conversation tiring or difficult to initiate. Unexpected changes to your routine or switching between tasks can be stressful and require extra energy to manage.</p>
+        </li>
+        <li>
+          <p><strong>Level 2: "Requiring Substantial Support"</strong></p>
+          <p className="ml-6">You may benefit from more consistent support to navigate social situations and daily tasks. Communication might involve simpler sentences or be focused on your deep passions and interests. Sticking to a routine is often very important, and changes can be quite distressing. These support needs are likely apparent to those around you.</p>
+        </li>
+        <li>
+          <p><strong>Level 3: "Requiring Very Substantial Support"</strong></p>
+          <p className="ml-6">You likely require significant, ongoing support in most areas of life. You may communicate in ways other than spoken language (for example, using a device or gestures) or use a few words. Having a predictable structure and coping with change can be a major challenge, and a lot of support is needed to navigate the demands of daily life.</p>
+        </li>
+      </ul>
+
+            <p className="mb-4">
+              For a clear, empathetic child-centric explanation with examples, visit the <a href="https://www.seattlechildrens.org/clinics/autism-center/the-autism-blog/autism-levels-support/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Seattle Children's Autism Center Blog</a>.
+        To read the direct quotes from the DSM-5, see this page from <a href="https://www.autismspeaks.org/levels-of-autism" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Autism Speaks</a>.</p>
+
+<p>&nbsp;</p>
+      <h1 className="text-3xl font-bold mt-12 mb-4">Further Reading & Resources 📚</h1>
+      <p className="mb-4">If you want to explore more before completing your profile, here are some excellent resources.</p>
+
+      <h2 className="text-2xl font-bold underline mb-2">Tools for Self-Exploration</h2>
+      <p className="mb-4">These are screening questionnaires, not diagnostic tools. They can't confirm if you're autistic, but they can offer insights and help you understand your own traits.</p>
+            <p><strong>The Autism-Spectrum Quotient (AQ)</strong>: Developed by Cambridge University, this is a widely used questionnaire to measure autistic traits.</p>
+      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
+              <li>Online Version with Analysis: <a href="https://embrace-autism.com/autism-spectrum-quotient/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Embrace Autism - AQ Test</a></li>
+              <li>Another Online Version: <a href="https://psychology-tools.com/test/autism-spectrum-quotient" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Prosper Health - AQ Test</a></li>
+            </ul>
+
+            <p><strong>The Ritvo Autism Asperger Diagnostic Scale–Revised (RAADS-R)</strong>: This scale was designed specifically with adults in mind, including those who may have gone undiagnosed because they have learned to "mask" their autistic traits.</p>
+      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
+              <li>Online Version: <a href="https://embrace-autism.com/raads-r/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Embrace Autism - RAADS-R Test</a></li>
+              <li>Informational Page: <a href="https://www.keyautismservices.com/resources/raads-r-test-for-autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Key Autism Services - About the RAADS-R</a></li>
+            </ul>
+
+      <h2 className="text-2xl font-bold underline mb-2">Community & Advocacy</h2>
+      <p className="mb-4">These organisations offer practical advice, community connection, and advocate for the autistic community.</p>
+      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
+        <li><a href="https://www.autism.org.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The National Autistic Society (UK)</strong></a>: The UK's leading charity for autistic people and their families. Their website is a vast library of information on education, employment, mental health, and local support services.</li>
+        <li><a href="https://www.autismspeaks.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Autism Speaks (US)</strong></a>: A large US-based organisation focused on funding research and providing resources, such as toolkits for navigating life after diagnosis and transitioning to adulthood.</li>
+      </ul>
+
+      <h2 className="text-2xl font-bold underline mb-2">Key UK & US Health Information</h2>
+      <p className="mb-4">These government and public health bodies provide reliable, evidence-based information on autism diagnosis and support.</p>
+      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
+        <li><a href="https://www.nhs.uk/conditions/autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The UK National Health Service (NHS)</strong></a>: The official source for understanding autism in the UK, including the steps for seeking an assessment and finding support.</li>
+        <li><a href="https://www.cdc.gov/autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The US Centers for Disease Control and Prevention (CDC)</strong></a>: Provides detailed summaries of official diagnostic criteria, data, and links to current research.</li>
+      </ul>
+
+      <h2 className="text-2xl font-bold underline mb-2">Other Reputable Sources</h2>
+      <ul className="list-disc list-outside space-y-2 mb-8 pl-8">
+        <li><a href="https://embrace-autism.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Embrace Autism</strong></a>: A fantastic resource hub run by a registered psychologist and an autistic advocate. It provides free online versions of the screening tools listed above, along with detailed articles explaining their scoring, history, and validity, all backed by research.</li>
+        <li><a href="https://www.clara.psychol.cam.ac.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The Autism Research Centre (Cambridge University)</strong></a>: The academic centre where the AQ test was developed. Their work forms the scientific foundation for many of the tools and understanding we use today.</li>
+      </ul>
+      <p>&nbsp;</p>
+      <div className="flex justify-center mt-12 mb-8">
+        <Button onClick={onReturn}>Return to app</Button>
+      </div>
+    </div>
   );
 }
 
@@ -340,7 +470,42 @@ function CircularDiagramContent() {
   const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isLockedMode, setIsLockedMode] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // URL parameter configurations
+  const [hideIntro, setHideIntro] = useState(false);
+  const [tooltipsDisabled, setTooltipsDisabled] = useState(false);
+  const [tooltipDelay, setTooltipDelay] = useState(1000); // Default 1000ms
+
+  // Parse URL parameters on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Check for hideintro parameter
+    if (urlParams.get('hideintro') === '1') {
+      setHideIntro(true);
+    }
+
+    // Check for disabletooltip parameter
+    if (urlParams.get('disabletooltip') === '1') {
+      setTooltipsDisabled(true);
+    }
+
+    // Check for tooltipwaitms parameter
+    const tooltipWaitMs = urlParams.get('tooltipwaitms');
+    if (tooltipWaitMs && !isNaN(Number(tooltipWaitMs))) {
+      const delay = Math.max(0, Number(tooltipWaitMs)); // Ensure non-negative
+      setTooltipDelay(delay);
+    }
+  }, []);
+
+  // Helper function to show help and scroll to top
+  const handleShowHelp = () => {
+    setShowHelp(true);
+    // Scroll to top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Helper function to determine if dark mode is active
   const checkDarkMode = () => {
@@ -1100,840 +1265,861 @@ function CircularDiagramContent() {
     <div className="flex flex-col items-center gap-8 p-8">
       <div className="text-center">
         <h1 className="mb-2 text-4xl font-bold">{isLockedMode ? 'My Autism Wheel' : 'Autism Wheel'}</h1>
-
-        {!isLockedMode && (
-          <>
-            <div className="mb-6 max-w-3xl mx-auto space-y-4">
-              <p className="text-left">
-                Thank you for using{' '}
-                <a
-                  href="https://www.myautisticprofile.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-                >
-                  my Autism Wheel
-                </a>
-                . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
-                I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
-                Your feedback to improve this tool is welcomed at{' '}
-                <a
-                  href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-                >
-                  feedback@myautisticprofile.com
-                </a>.
-              </p>
-            </div>
-
-            <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
-              <p className="text-left text-blue-600 dark:text-blue-400">
-                Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
-                Click{' '}
-                <a
-                  href="https://youtu.be/OvuTHMzbzpQ"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-                >
-                  <YouTubeIcon className="w-3 h-3" />
-                  https://youtu.be/OvuTHMzbzpQ
-                </a>
-                {' '}to view a tutorial video.
-              </p>
-            </div>
-          </>
-        )}
       </div>
 
-      <div className="relative">
-        <TooltipProvider>
-          <svg ref={svgRef} width="750" height="750" viewBox="0 0 750 750">
-            {/* Light segments (second selection) - drawn first, behind all grid lines */}
-            {Array.from({ length: sliceLabels.length }, (_, sliceIndex) =>
-              Array.from({ length: TOTAL_RINGS }, (_, ringIndex) => {
-                const currentSelections = selections[sliceIndex] || [];
-                if (currentSelections.length !== 2) return null; // Only render for dual selections
-
-                const segmentNumber = ringIndex + 1;
-                const [first, second] = currentSelections.sort((a, b) => a - b);
-
-                // Only render light segments (between first and second selection)
-                if (segmentNumber <= first || segmentNumber > second) return null;
-
-                const path = createSegmentPath(sliceIndex, ringIndex);
-                const baseColor = sliceColors[sliceIndex];
-                const fill = baseColor + '80'; // 50% opacity for light segments
-
-                return (
-                  <Tooltip key={`light-segment-${sliceIndex}-${ringIndex}`} delayDuration={600}>
-                    <TooltipTrigger asChild>
-                      <path
-                        d={path}
-                        fill={fill}
-                        stroke={isDarkMode ? "#808080" : "white"}
-                        strokeWidth="1"
-                        className="cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
-                        data-testid={`segment-${sliceIndex}-${ringIndex}`}
-                      />
-                    </TooltipTrigger>
-                    <TooltipContent side="top" className="max-w-xs">
-                      <div className="space-y-1">
-                        <div className="font-medium">{sliceLabels[sliceIndex]}</div>
-                        <div className="text-sm text-muted-foreground">
-                          Impact {ringIndex + 1}/10 - {getSupportNeedsText(ringIndex + 1)}
-                        </div>
-                        {sliceDescriptions[sliceIndex] && (
-                          <div className="text-sm text-muted-foreground">
-                            {sliceDescriptions[sliceIndex]}
-                          </div>
-                        )}
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                );
-              })
-            )}
-
-            {/* Dark segments and unselected segments - drawn second, still behind all grid lines */}
-            {Array.from({ length: sliceLabels.length }, (_, sliceIndex) =>
-              Array.from({ length: TOTAL_RINGS }, (_, ringIndex) => {
-                const currentSelections = selections[sliceIndex] || [];
-                const segmentNumber = ringIndex + 1;
-                const baseColor = sliceColors[sliceIndex];
-
-                let fill = 'rgba(0, 0, 0, 0.05)'; // default unselected
-                let shouldRender = true;
-
-                if (currentSelections.length === 0) {
-                  fill = 'rgba(0, 0, 0, 0.05)';
-                } else if (currentSelections.length === 1) {
-                  const selectedSegment = currentSelections[0];
-                  if (segmentNumber <= selectedSegment) {
-                    fill = baseColor; // Dark segment
-                  } else {
-                    fill = 'rgba(0, 0, 0, 0.05)'; // Unselected
-                  }
-                } else if (currentSelections.length === 2) {
-                  const [first, second] = currentSelections.sort((a, b) => a - b);
-                  if (segmentNumber <= first) {
-                    fill = baseColor; // Dark segment
-                  } else if (segmentNumber <= second) {
-                    // Light segment - don't render here as it's already rendered above
-                    shouldRender = false;
-                  } else {
-                    fill = 'rgba(0, 0, 0, 0.05)'; // Unselected
-                  }
-                }
-
-                if (!shouldRender) return null;
-
-                const path = createSegmentPath(sliceIndex, ringIndex);
-
-                return (
-                  <Tooltip key={`segment-${sliceIndex}-${ringIndex}`} delayDuration={600}>
-                    <TooltipTrigger asChild>
-                      <path
-                        d={path}
-                        fill={fill}
-                        stroke={isDarkMode ? "#808080" : "white"}
-                        strokeWidth="1"
-                        className="cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
-                        data-testid={`segment-${sliceIndex}-${ringIndex}`}
-                      />
-                    </TooltipTrigger>
-                    <TooltipContent side="top" className="max-w-xs">
-                      <div className="space-y-1">
-                        <div className="font-medium">{sliceLabels[sliceIndex]}</div>
-                        <div className="text-sm text-muted-foreground">
-                          Impact {ringIndex + 1}/10 - {getSupportNeedsText(ringIndex + 1)}
-                        </div>
-                        {sliceDescriptions[sliceIndex] && (
-                          <div className="text-sm text-muted-foreground">
-                            {sliceDescriptions[sliceIndex]}
-                          </div>
-                        )}
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                );
-              })
-            )}
-
-            {/* Grid lines - drawn on top of all segments */}
-            {Array.from({ length: TOTAL_RINGS + 1 }, (_, i) => {
-              const radius = MIN_RADIUS + i * RING_WIDTH;
-              // Highlight boundaries between groups: 4-5 (index 4) and 7-8 (index 7)
-              const isGroupBoundary = i === 4 || i === 7;
-
-              let strokeColor = "#e5e7eb"; // default light grey
-              let strokeWidth = "1";
-
-              if (isGroupBoundary) {
-                if (boundaryWeight === 'hidden') {
-                  strokeColor = isDarkMode ? "#111827" : "#e5e7eb"; // much darker in dark mode
-                  strokeWidth = "1";
-                } else if (boundaryWeight === 'bold') {
-                  strokeColor = isDarkMode ? "#4b5563" : "#9ca3af"; // darker in dark mode, lighter in light mode
-                  strokeWidth = isDarkMode ? "4" : "3"; // even thicker in dark mode
-                } else { // normal
-                  strokeColor = isDarkMode ? "#4b5563" : "#9ca3af"; // darker in dark mode, lighter in light mode
-                  strokeWidth = isDarkMode ? "4" : "3"; // even thicker in dark mode
-                }
-              } else {
-                // Regular grid lines - much darker in dark mode
-                strokeColor = isDarkMode ? "#111827" : "#e5e7eb";
-                strokeWidth = "1";
-              }
-
-              return (
-                <circle
-                  key={`ring-${i}`}
-                  cx={CENTER_X}
-                  cy={CENTER_Y}
-                  r={radius}
-                  fill="none"
-                  stroke={strokeColor}
-                  strokeWidth={strokeWidth}
-                />
-              );
-            })}
-
-            {/* Slice dividers - drawn on top of segments */}
-            {Array.from({ length: sliceLabels.length }, (_, i) => {
-              // Add a small offset to prevent perfectly vertical/horizontal lines which can render differently
-              const angleOffset = 0.001; // Very small offset in radians
-              const angle = (i * 2 * Math.PI) / sliceLabels.length - Math.PI / 2 + angleOffset;
-              const x = CENTER_X + MAX_RADIUS * Math.cos(angle);
-              const y = CENTER_Y + MAX_RADIUS * Math.sin(angle);
-
-              return (
-                <line
-                  key={`divider-${i}`}
-                  x1={CENTER_X}
-                  y1={CENTER_Y}
-                  x2={x}
-                  y2={y}
-                  stroke={isDarkMode ? "#111827" : "#e5e7eb"}
-                  strokeWidth="1"
-                />
-              );
-            })}
-
-            {/* Inner circle radial dividers - 30% dark grey - drawn on top of segments */}
-            {Array.from({ length: sliceLabels.length }, (_, i) => {
-              // Add a small offset to prevent perfectly vertical/horizontal lines which can render differently
-              const angleOffset = 0.001; // Very small offset in radians
-              const angle = (i * 2 * Math.PI) / sliceLabels.length - Math.PI / 2 + angleOffset;
-              const innerX = CENTER_X + MIN_RADIUS * Math.cos(angle);
-              const innerY = CENTER_Y + MIN_RADIUS * Math.sin(angle);
-
-              return (
-                <line
-                  key={`inner-divider-${i}`}
-                  x1={CENTER_X}
-                  y1={CENTER_Y}
-                  x2={innerX}
-                  y2={innerY}
-                  stroke={isDarkMode ? "#4b5563" : "#B3B3B3"}
-                  strokeWidth="1"
-                />
-              );
-            })}
-            {/* Selection numbers */}
-            {numberPosition !== 'hide_segment' && numberPosition !== 'hide_all' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
-              const currentSelections = selections[sliceIndex] || [];
-              if (currentSelections.length === 0) return null;
-
-              return currentSelections.map((selectionNumber) => {
-                const ringIndex = selectionNumber - 1; // Convert back to 0-based
-                const angleStep = (2 * Math.PI) / sliceLabels.length;
-
-                // Position numbers based on user preference
-                let angleMultiplier;
-                switch (numberPosition) {
-                  case 'left':
-                    angleMultiplier = 0.25; // 25% towards the end angle
-                    break;
-                  case 'center':
-                    angleMultiplier = 0.5; // Center of segment
-                    break;
-                  case 'right':
-                  default:
-                    angleMultiplier = 0.75; // 75% towards the end angle
-                    break;
-                }
-
-                const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep * angleMultiplier;
-                const radius = MIN_RADIUS + (ringIndex + 0.5) * RING_WIDTH; // Center of ring
-
-                const x = CENTER_X + radius * Math.cos(angle);
-                const y = CENTER_Y + radius * Math.sin(angle);
-
-                // Determine the text color based on segment color
-                const baseColor = sliceColors[sliceIndex];
-                let textColor;
-
-                if (currentSelections.length === 1) {
-                  // Only one selection, so this number is in the dark color range
-                  textColor = darkenColor(baseColor);
-                } else if (currentSelections.length === 2) {
-                  const [firstSelection, secondSelection] = currentSelections;
-                  if (selectionNumber === firstSelection) {
-                    // This is the first selection, in the dark color range
-                    textColor = darkenColor(baseColor);
-                  } else {
-                    // This is the second selection, in the light color range
-                    // Since the light color is baseColor + '80' (50% opacity), we darken the base color less
-                    textColor = darkenColor(baseColor, 0.15);
-                  }
-                }
-
-                return (
-                  <text
-                    key={`selection-number-${sliceIndex}-${selectionNumber}`}
-                    x={x}
-                    y={y}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    className="text-sm pointer-events-none"
-                    style={{
-                      fontWeight: 'bold',
-                      fill: textColor
-                    }}
-                  >
-                    {selectionNumber}
-                  </text>
-                );
-              });
-            })}
-
-            {/* Labels as SVG text */}
-            {labelStyle !== 'hidden' && sliceLabels.map((label, sliceIndex) => {
-              const { x, y, angle } = getLabelPosition(sliceIndex);
-              const rotation = angle * (180 / Math.PI);
-              const shouldFlip = rotation > 90 && rotation < 270;
-              const finalRotation = shouldFlip ? rotation + 180 : rotation;
-
-              // Split long labels into multiple lines
-              const words = label.split(' ');
-              const maxWordsPerLine = words.length > 3 ? 2 : words.length;
-              const lines = [];
-
-              for (let i = 0; i < words.length; i += maxWordsPerLine) {
-                lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
-              }
-
-              const textOutlineProps = labelStyle === 'bold'
-                ? {
-                    stroke: isDarkMode ? '#1f1f1f' : '#ffffff',
-                    strokeWidth: 4,
-                    paintOrder: 'stroke' as const,
-                  }
-                : {};
-
-              return (
-                <Tooltip key={`label-tooltip-${sliceIndex}`} delayDuration={600}>
-                  <TooltipTrigger asChild>
-                    <g
-                      key={`label-${sliceIndex}`}
-                      className="cursor-pointer"
-                      transform={`translate(${x}, ${y}) rotate(${finalRotation})`}
+      {showHelp ? (
+        <HelpContent onReturn={() => setShowHelp(false)} />
+      ) : (
+        <>
+          {!isLockedMode && (
+            <div className="text-center">
+              {!hideIntro && (
+              <div className="mb-6 max-w-3xl mx-auto space-y-4">
+                  <p className="text-left">
+                    Thank you for using{' '}
+                    <a
+                      href="https://www.myautisticprofile.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
                     >
-                      {lines.map((line, lineIndex) => (
-                        <text
-                          key={`label-line-${sliceIndex}-${lineIndex}`}
-                          x={0}
-                          y={0 + (lineIndex - (lines.length - 1) / 2) * 12}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                          fontSize="14"
-                          fill={isDarkMode ? "#9ca3af" : "#374151"}
-                          {...textOutlineProps}
-                          style={{
-                            fontFamily: 'system-ui, sans-serif',
-                            fontWeight: labelStyle === 'bold' ? 'bold' : 'normal',
-                          }}
-                        >
-                          {line}
-                        </text>
-                      ))}
-                    </g>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="max-w-xs">
-                    <div className="space-y-1">
-                      <div className="font-medium">{sliceLabels[sliceIndex]}</div>
-                      {sliceDescriptions[sliceIndex] && (
-                        <div className="text-sm text-muted-foreground">
-                          {sliceDescriptions[sliceIndex]}
-                        </div>
-                      )}
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              );
-            })}
+                      my Autism Wheel
+                    </a>
+                    . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
+                    I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
+                    Your feedback to improve this tool is welcomed at{' '}
+                    <a
+                      href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                    >
+                      feedback@myautisticprofile.com
+                    </a>.
+                  </p>
+              </div>
+              )}
 
-            {/* Center icons */}
-            {showIcons && sliceIcons.map((icon, sliceIndex) => {
-              if (!icon) return null;
-
-              const angleStep = (2 * Math.PI) / sliceLabels.length;
-              const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep / 2; // Center of slice
-              const iconRadius = MIN_RADIUS * 0.7; // Position icons inside the center circle
-
-              const x = CENTER_X + iconRadius * Math.cos(angle);
-              const y = CENTER_Y + iconRadius * Math.sin(angle);
-
-              return (
-                <text
-                  key={`center-icon-${sliceIndex}`}
-                  x={x}
-                  y={y}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fontSize="20"
-                  style={{
-                    fontFamily: 'system-ui, sans-serif',
-                    pointerEvents: 'none'
-                  }}
-                >
-                  {icon}
-                </text>
-              );
-            })}
-
-            {/* ASD Level Labels */}
-            {numberPosition !== 'hide_all' && asdLabels.map(({ text, radius }) => (
-              <text
-                key={text}
-                x={CENTER_X}
-                y={CENTER_Y - radius}
-                transform={`rotate(-90 ${CENTER_X} ${CENTER_Y - radius})`}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontSize="13"
-                fill={isDarkMode ? "#9ca3af" : "#374151"}
-                stroke={isDarkMode ? '#1f1f1f' : '#ffffff'}
-                strokeWidth="4"
-                paintOrder="stroke"
-                style={{
-                  fontFamily: 'system-ui, sans-serif',
-                  fontWeight: 'normal',
-                  pointerEvents: 'none'
-                }}
-              >
-                {text}
-              </text>
-            ))}
-          </svg>
-        </TooltipProvider>
-
-      </div>
-
-      {/* Display Options */}
-      {!isLockedMode && (
-        <div className="flex flex-wrap gap-4 justify-center print:hidden">
-          <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-              <Settings className="w-4 h-4" />
-              Numbers
-              <ChevronDown className="w-4 h-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem
-                onClick={() => setNumberPosition('left')}
-                className={numberPosition === 'left' ? 'bg-accent' : ''}
-              >
-                Left aligned
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setNumberPosition('center')}
-                className={numberPosition === 'center' ? 'bg-accent' : ''}
-              >
-                Center aligned
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setNumberPosition('right')}
-                className={numberPosition === 'right' ? 'bg-accent' : ''}
-              >
-                Right aligned
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setNumberPosition('hide_segment')}
-                className={numberPosition === 'hide_segment' ? 'bg-accent' : ''}
-              >
-                Hide segment numbers
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setNumberPosition('hide_all')}
-                className={numberPosition === 'hide_all' ? 'bg-accent' : ''}
-              >
-                Hide segment numbers & ASD levels
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-              <Settings className="w-4 h-4" />
-              Labels
-              <ChevronDown className="w-4 h-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem
-                onClick={() => setLabelStyle('normal')}
-                className={labelStyle === 'normal' ? 'bg-accent' : ''}
-              >
-                Normal weight
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setLabelStyle('bold')}
-                className={labelStyle === 'bold' ? 'bg-accent' : ''}
-              >
-                Bold weight
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setLabelStyle('hidden')}
-                className={labelStyle === 'hidden' ? 'bg-accent' : ''}
-              >
-                Hidden
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-              <Settings className="w-4 h-4" />
-              Icons
-              <ChevronDown className="w-4 h-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem
-                onClick={() => setShowIcons(true)}
-                className={showIcons ? 'bg-accent' : ''}
-              >
-                Show icons
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setShowIcons(false)}
-                className={!showIcons ? 'bg-accent' : ''}
-              >
-                Hide icons
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-              <Settings className="w-4 h-4" />
-              Theme
-              <ChevronDown className="w-4 h-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem
-                onClick={() => setTheme('system')}
-                className={theme === 'system' ? 'bg-accent' : ''}
-              >
-                Use system
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setTheme('light')}
-                className={theme === 'light' ? 'bg-accent' : ''}
-              >
-                Light
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setTheme('dark')}
-                className={theme === 'dark' ? 'bg-accent' : ''}
-              >
-                Dark
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )}
-
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-4 justify-center print:hidden">
-        {!isEditingLabels && (
-          <>
-            <Button
-              onClick={handleCopyLink}
-              className="h-10 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              <Link className="w-4 h-4" />
-              Copy link
-            </Button>
-            <Button
-              onClick={handlePrint}
-              className="h-10 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              <Printer className="w-4 h-4" />
-              Print
-            </Button>
-          </>
-        )}
-
-        <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2">
-            Save diagram
-            <ChevronDown className="w-4 h-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={() => saveDiagramAs('png')}>
-              Save as PNG
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => saveDiagramAs('svg')}>
-              Save as SVG
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => saveDiagramAs('jpeg')}>
-              Save as JPEG
-            </DropdownMenuItem>
-            {!isLockedMode && (
-              <>
-                <DropdownMenuItem onClick={() => saveDiagramAs('html')}>
-                  Save as HTML
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => saveDiagramAs('locked_html')}>
-                  Save as locked HTML
-                </DropdownMenuItem>
-              </>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <Button
-          onClick={handleEditLabels}
-          className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
-        >
-          {isEditingLabels ? "Save categories" : "Edit categories"}
-        </Button>
-
-        {isEditingLabels && (
-          <>
-            <Button
-              onClick={handleRevertChanges}
-              variant="destructive"
-              className="h-10"
-              disabled={!hasChanges()}
-              style={!hasChanges() ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
-            >
-              Revert changes
-            </Button>
-            <Button
-              onClick={handleDefaultLabels}
-              variant="destructive"
-              className="h-10"
-              disabled={isAtDefaults()}
-              style={isAtDefaults() ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
-            >
-              Default categories
-            </Button>
-          </>
-        )}
-      </div>
-
-      {isEditingLabels && (
-        <div className="w-full max-w-4xl">
-          <h3 className="mb-4 font-semibold">Edit Categories</h3>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Icon</TableHead>
-                <TableHead>Category Name & Description</TableHead>
-                <TableHead>Color</TableHead>
-                <TableHead>Delete</TableHead>
-                <TableHead>Reorder</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {editingLabels.map((labelData, index) => (
-                <DraggableLabelRow
-                  key={labelData.id}
-                  labelData={labelData}
-                  index={index}
-                  editingLabels={editingLabels}
-                  setEditingLabels={setEditingLabels}
-                  onDelete={handleDeleteLabel}
-                  canDelete={editingLabels.length > 2}
-                />
-              ))}
-              <TableRow>
-                <TableCell>
-                  <EmojiPicker
-                    selectedEmoji={newLabelIcon}
-                    onEmojiSelect={setNewLabelIcon}
-                  />
-                </TableCell>
-                <TableCell>
-                  <div className="space-y-2">
-                    <Input
-                      placeholder="Enter new label name..."
-                      value={newLabelText}
-                      onChange={(e) => setNewLabelText(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleAddLabel()}
-                    />
-                    <Textarea
-                      placeholder="Enter description..."
-                      className="text-sm resize-none"
-                      rows={3}
-                    />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="w-6 h-6 rounded border bg-blue-500" />
-                </TableCell>
-                <TableCell>
-                  <Button
-                    onClick={handleAddLabel}
-                    variant="ghost"
-                    size="sm"
-                    disabled={!newLabelText.trim()}
-                    className="text-green-600 hover:text-green-700 hover:bg-green-50"
+              <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
+                <p className="text-left text-blue-600 dark:text-blue-400">
+                  Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
+                  Click{' '}
+                  <button
+                    onClick={handleShowHelp}
+                    className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
                   >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </TableCell>
-                <TableCell />
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      )}
+                    the help button
+                  </button>
+                  {' '}for additional guidance.
+                </p>
+              </div>
+            </div>
+          )}
 
-      {!isEditingLabels && (
-        <div className="w-full max-w-3xl print-break-avoid">
-          <h3 className="mb-4 font-semibold">Detailed Breakdown</h3>
-          <div className="overflow-hidden">
-            <Table className="table-fixed w-full">
-              <TableHeader>
-                <TableRow>
-                  <TableHead
-                    className="cursor-pointer hover:bg-muted/50 select-none align-top w-1/2"
-                    onClick={() => handleSort('category')}
-                  >
-                    <div className="flex items-center gap-1">
-                      Category
-                      <div className="flex flex-col">
-                        <ChevronUp
-                          className={`w-3 h-3 ${sortColumn === 'category' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
+          <div className="relative">
+            <TooltipProvider delayDuration={tooltipDelay}>
+              <svg ref={svgRef} width="750" height="750" viewBox="0 0 750 750">
+                {/* Light segments (second selection) - drawn first, behind all grid lines */}
+                {Array.from({ length: sliceLabels.length }, (_, sliceIndex) =>
+                  Array.from({ length: TOTAL_RINGS }, (_, ringIndex) => {
+                    const currentSelections = selections[sliceIndex] || [];
+                    if (currentSelections.length !== 2) return null; // Only render for dual selections
+
+                    const segmentNumber = ringIndex + 1;
+                    const [first, second] = currentSelections.sort((a, b) => a - b);
+
+                    // Only render light segments (between first and second selection)
+                    if (segmentNumber <= first || segmentNumber > second) return null;
+
+                    const path = createSegmentPath(sliceIndex, ringIndex);
+                    const baseColor = sliceColors[sliceIndex];
+                    const fill = baseColor + '80'; // 50% opacity for light segments
+
+                    return (
+                      <ConditionalTooltip
+                        key={`light-segment-${sliceIndex}-${ringIndex}`}
+                        disabled={tooltipsDisabled}
+                        delayDuration={tooltipDelay}
+                        content={
+                          <div className="space-y-1">
+                            <div className="font-medium">{sliceLabels[sliceIndex]}</div>
+                            <div className="text-sm text-muted-foreground">
+                              Impact {ringIndex + 1}/10 - {getSupportNeedsText(ringIndex + 1)}
+                            </div>
+                            {sliceDescriptions[sliceIndex] && (
+                              <div className="text-sm text-muted-foreground">
+                                {sliceDescriptions[sliceIndex]}
+                              </div>
+                            )}
+                          </div>
+                        }
+                      >
+                        <path
+                          d={path}
+                          fill={fill}
+                          stroke={isDarkMode ? "#808080" : "white"}
+                          strokeWidth="1"
+                          className="cursor-pointer hover:opacity-80 transition-opacity"
+                          onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
+                          data-testid={`segment-${sliceIndex}-${ringIndex}`}
                         />
-                        <ChevronDown
-                          className={`w-3 h-3 -mt-1 ${sortColumn === 'category' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
+                      </ConditionalTooltip>
+                    );
+                  })
+                )}
+
+                {/* Dark segments and unselected segments - drawn second, still behind all grid lines */}
+                {Array.from({ length: sliceLabels.length }, (_, sliceIndex) =>
+                  Array.from({ length: TOTAL_RINGS }, (_, ringIndex) => {
+                    const currentSelections = selections[sliceIndex] || [];
+                    const segmentNumber = ringIndex + 1;
+                    const baseColor = sliceColors[sliceIndex];
+
+                    let fill = 'rgba(0, 0, 0, 0.05)'; // default unselected
+                    let shouldRender = true;
+
+                    if (currentSelections.length === 0) {
+                      fill = 'rgba(0, 0, 0, 0.05)';
+                    } else if (currentSelections.length === 1) {
+                      const selectedSegment = currentSelections[0];
+                      if (segmentNumber <= selectedSegment) {
+                        fill = baseColor; // Dark segment
+                      } else {
+                        fill = 'rgba(0, 0, 0, 0.05)'; // Unselected
+                      }
+                    } else if (currentSelections.length === 2) {
+                      const [first, second] = currentSelections.sort((a, b) => a - b);
+                      if (segmentNumber <= first) {
+                        fill = baseColor; // Dark segment
+                      } else if (segmentNumber <= second) {
+                        // Light segment - don't render here as it's already rendered above
+                        shouldRender = false;
+                      } else {
+                        fill = 'rgba(0, 0, 0, 0.05)'; // Unselected
+                      }
+                    }
+
+                    if (!shouldRender) return null;
+
+                    const path = createSegmentPath(sliceIndex, ringIndex);
+
+                    return (
+                      <ConditionalTooltip
+                        key={`segment-${sliceIndex}-${ringIndex}`}
+                        disabled={tooltipsDisabled}
+                        delayDuration={tooltipDelay}
+                        content={
+                          <div className="space-y-1">
+                            <div className="font-medium">{sliceLabels[sliceIndex]}</div>
+                            <div className="text-sm text-muted-foreground">
+                              Impact {ringIndex + 1}/10 - {getSupportNeedsText(ringIndex + 1)}
+                            </div>
+                            {sliceDescriptions[sliceIndex] && (
+                              <div className="text-sm text-muted-foreground">
+                                {sliceDescriptions[sliceIndex]}
+                              </div>
+                            )}
+                          </div>
+                        }
+                      >
+                        <path
+                          d={path}
+                          fill={fill}
+                          stroke={isDarkMode ? "#808080" : "white"}
+                          strokeWidth="1"
+                          className="cursor-pointer hover:opacity-80 transition-opacity"
+                          onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
+                          data-testid={`segment-${sliceIndex}-${ringIndex}`}
                         />
-                      </div>
-                    </div>
-                  </TableHead>
-                  <TableHead
-                    className="cursor-pointer hover:bg-muted/50 select-none align-top text-center w-1/4"
-                    onClick={() => handleSort('typical')}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      Typical impact
-                      <div className="flex flex-col">
-                        <ChevronUp
-                          className={`w-3 h-3 ${sortColumn === 'typical' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
-                        />
-                        <ChevronDown
-                          className={`w-3 h-3 -mt-1 ${sortColumn === 'typical' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
-                        />
-                      </div>
-                    </div>
-                  </TableHead>
-                  <TableHead
-                    className="cursor-pointer hover:bg-muted/50 select-none align-top text-center w-1/4"
-                    onClick={() => handleSort('stress')}
-                  >
-                    <div className="flex items-center justify-center gap-1">
-                      Under stress impact
-                      <div className="flex flex-col">
-                        <ChevronUp
-                          className={`w-3 h-3 ${sortColumn === 'stress' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
-                        />
-                        <ChevronDown
-                          className={`w-3 h-3 -mt-1 ${sortColumn === 'stress' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
-                        />
-                      </div>
-                    </div>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {getSortedTableData().map((rowData) => {
-                  const { sliceIndex, label, icon, baseColor, firstSelection, secondSelection } = rowData;
-                  const currentSelections = selections[sliceIndex] || [];
-                  const [originalFirst, originalSecond] = currentSelections.sort((a, b) => a - b);
-                  const description = sliceDescriptions[sliceIndex];
+                      </ConditionalTooltip>
+                    );
+                  })
+                )}
+
+                {/* Grid lines - drawn on top of all segments */}
+                {Array.from({ length: TOTAL_RINGS + 1 }, (_, i) => {
+                  const radius = MIN_RADIUS + i * RING_WIDTH;
+                  // Highlight boundaries between groups: 4-5 (index 4) and 7-8 (index 7)
+                  const isGroupBoundary = i === 4 || i === 7;
+
+                  let strokeColor = "#e5e7eb"; // default light grey
+                  let strokeWidth = "1";
+
+                  if (isGroupBoundary) {
+                    if (boundaryWeight === 'hidden') {
+                      strokeColor = isDarkMode ? "#111827" : "#e5e7eb"; // much darker in dark mode
+                      strokeWidth = "1";
+                    } else if (boundaryWeight === 'bold') {
+                      strokeColor = isDarkMode ? "#4b5563" : "#9ca3af"; // darker in dark mode, lighter in light mode
+                      strokeWidth = isDarkMode ? "4" : "3"; // even thicker in dark mode
+                    } else { // normal
+                      strokeColor = isDarkMode ? "#4b5563" : "#9ca3af"; // darker in dark mode, lighter in light mode
+                      strokeWidth = isDarkMode ? "4" : "3"; // even thicker in dark mode
+                    }
+                  } else {
+                    // Regular grid lines - much darker in dark mode
+                    strokeColor = isDarkMode ? "#111827" : "#e5e7eb";
+                    strokeWidth = "1";
+                  }
 
                   return (
-                    <TableRow key={`detail-${sliceIndex}`}>
-                      <TableCell className="align-top break-words">
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            {showIcons && icon && (
-                              <span className="text-3xl flex-shrink-0">{icon}</span>
-                            )}
-                            <span className="font-medium break-words">{label}</span>
-                          </div>
-                          {description && (
-                            <div className="text-sm text-muted-foreground break-words whitespace-normal">
-                              {description}
+                    <circle
+                      key={`ring-${i}`}
+                      cx={CENTER_X}
+                      cy={CENTER_Y}
+                      r={radius}
+                      fill="none"
+                      stroke={strokeColor}
+                      strokeWidth={strokeWidth}
+                    />
+                  );
+                })}
+
+                {/* Slice dividers - drawn on top of segments */}
+                {Array.from({ length: sliceLabels.length }, (_, i) => {
+                  // Add a small offset to prevent perfectly vertical/horizontal lines which can render differently
+                  const angleOffset = 0.001; // Very small offset in radians
+                  const angle = (i * 2 * Math.PI) / sliceLabels.length - Math.PI / 2 + angleOffset;
+                  const x = CENTER_X + MAX_RADIUS * Math.cos(angle);
+                  const y = CENTER_Y + MAX_RADIUS * Math.sin(angle);
+
+                  return (
+                    <line
+                      key={`divider-${i}`}
+                      x1={CENTER_X}
+                      y1={CENTER_Y}
+                      x2={x}
+                      y2={y}
+                      stroke={isDarkMode ? "#111827" : "#e5e7eb"}
+                      strokeWidth="1"
+                    />
+                  );
+                })}
+
+                {/* Inner circle radial dividers - 30% dark grey - drawn on top of segments */}
+                {Array.from({ length: sliceLabels.length }, (_, i) => {
+                  // Add a small offset to prevent perfectly vertical/horizontal lines which can render differently
+                  const angleOffset = 0.001; // Very small offset in radians
+                  const angle = (i * 2 * Math.PI) / sliceLabels.length - Math.PI / 2 + angleOffset;
+                  const innerX = CENTER_X + MIN_RADIUS * Math.cos(angle);
+                  const innerY = CENTER_Y + MIN_RADIUS * Math.sin(angle);
+
+                  return (
+                    <line
+                      key={`inner-divider-${i}`}
+                      x1={CENTER_X}
+                      y1={CENTER_Y}
+                      x2={innerX}
+                      y2={innerY}
+                      stroke={isDarkMode ? "#4b5563" : "#B3B3B3"}
+                      strokeWidth="1"
+                    />
+                  );
+                })}
+                {/* Selection numbers */}
+                {numberPosition !== 'hide_segment' && numberPosition !== 'hide_all' && Array.from({ length: sliceLabels.length }, (_, sliceIndex) => {
+                  const currentSelections = selections[sliceIndex] || [];
+                  if (currentSelections.length === 0) return null;
+
+                  return currentSelections.map((selectionNumber) => {
+                    const ringIndex = selectionNumber - 1; // Convert back to 0-based
+                    const angleStep = (2 * Math.PI) / sliceLabels.length;
+
+                    // Position numbers based on user preference
+                    let angleMultiplier;
+                    switch (numberPosition) {
+                      case 'left':
+                        angleMultiplier = 0.25; // 25% towards the end angle
+                        break;
+                      case 'center':
+                        angleMultiplier = 0.5; // Center of segment
+                        break;
+                      case 'right':
+                      default:
+                        angleMultiplier = 0.75; // 75% towards the end angle
+                        break;
+                    }
+
+                    const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep * angleMultiplier;
+                    const radius = MIN_RADIUS + (ringIndex + 0.5) * RING_WIDTH; // Center of ring
+
+                    const x = CENTER_X + radius * Math.cos(angle);
+                    const y = CENTER_Y + radius * Math.sin(angle);
+
+                    // Determine the text color based on segment color
+                    const baseColor = sliceColors[sliceIndex];
+                    let textColor;
+
+                    if (currentSelections.length === 1) {
+                      // Only one selection, so this number is in the dark color range
+                      textColor = darkenColor(baseColor);
+                    } else if (currentSelections.length === 2) {
+                      const [firstSelection, secondSelection] = currentSelections;
+                      if (selectionNumber === firstSelection) {
+                        // This is the first selection, in the dark color range
+                        textColor = darkenColor(baseColor);
+                      } else {
+                        // This is the second selection, in the light color range
+                        // Since the light color is baseColor + '80' (50% opacity), we darken the base color less
+                        textColor = darkenColor(baseColor, 0.15);
+                      }
+                    }
+
+                    return (
+                      <text
+                        key={`selection-number-${sliceIndex}-${selectionNumber}`}
+                        x={x}
+                        y={y}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        className="text-sm pointer-events-none"
+                        style={{
+                          fontWeight: 'bold',
+                          fill: textColor
+                        }}
+                      >
+                        {selectionNumber}
+                      </text>
+                    );
+                  });
+                })}
+
+                {/* Labels as SVG text */}
+                {labelStyle !== 'hidden' && sliceLabels.map((label, sliceIndex) => {
+                  const { x, y, angle } = getLabelPosition(sliceIndex);
+                  const rotation = angle * (180 / Math.PI);
+                  const shouldFlip = rotation > 90 && rotation < 270;
+                  const finalRotation = shouldFlip ? rotation + 180 : rotation;
+
+                  // Split long labels into multiple lines
+                  const words = label.split(' ');
+                  const maxWordsPerLine = words.length > 3 ? 2 : words.length;
+                  const lines = [];
+
+                  for (let i = 0; i < words.length; i += maxWordsPerLine) {
+                    lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
+                  }
+
+                  const textOutlineProps = labelStyle === 'bold'
+                    ? {
+                        stroke: isDarkMode ? '#1f1f1f' : '#ffffff',
+                        strokeWidth: 4,
+                        paintOrder: 'stroke' as const,
+                      }
+                    : {};
+
+                  return (
+                    <ConditionalTooltip
+                      key={`label-tooltip-${sliceIndex}`}
+                      disabled={tooltipsDisabled}
+                      delayDuration={tooltipDelay}
+                      content={
+                        <div className="space-y-1">
+                          <div className="font-medium">{sliceLabels[sliceIndex]}</div>
+                          {sliceDescriptions[sliceIndex] && (
+                            <div className="text-sm text-muted-foreground">
+                              {sliceDescriptions[sliceIndex]}
                             </div>
                           )}
                         </div>
-                      </TableCell>
-                      <TableCell className="align-top text-center">
-                        {firstSelection && (
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-center gap-2">
-                              <div
-                                className="inline-block px-3 py-1 rounded min-w-8 text-center"
-                                style={{
-                                  backgroundColor: baseColor,
-                                  color: darkenColor(baseColor)
-                                }}
-                              >
-                                {firstSelection}
-                              </div>
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              {getSupportNeedsText(firstSelection)}
-                            </div>
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell className="align-top text-center">
-                        {(originalSecond || firstSelection) && (
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-center gap-2">
-                              <div
-                                className="inline-block px-3 py-1 rounded min-w-8 text-center"
-                                style={{
-                                  backgroundColor: originalSecond ? baseColor + '80' : baseColor, // 50% opacity for second selection, full for first
-                                  color: originalSecond ? darkenColor(baseColor, 0.15) : darkenColor(baseColor)
-                                }}
-                              >
-                                {originalSecond || firstSelection}
-                              </div>
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              {getSupportNeedsText(originalSecond || firstSelection)}
-                            </div>
-                          </div>
-                        )}
-                      </TableCell>
-                    </TableRow>
+                      }
+                    >
+                      <g
+                        key={`label-${sliceIndex}`}
+                        className="cursor-pointer"
+                        transform={`translate(${x}, ${y}) rotate(${finalRotation})`}
+                      >
+                        {lines.map((line, lineIndex) => (
+                          <text
+                            key={`label-line-${sliceIndex}-${lineIndex}`}
+                            x={0}
+                            y={0 + (lineIndex - (lines.length - 1) / 2) * 12}
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                            fontSize="14"
+                            fill={isDarkMode ? "#9ca3af" : "#374151"}
+                            {...textOutlineProps}
+                            style={{
+                              fontFamily: 'system-ui, sans-serif',
+                              fontWeight: labelStyle === 'bold' ? 'bold' : 'normal',
+                            }}
+                          >
+                            {line}
+                          </text>
+                        ))}
+                      </g>
+                    </ConditionalTooltip>
                   );
                 })}
-              </TableBody>
-            </Table>
+
+                {/* Center icons */}
+                {showIcons && sliceIcons.map((icon, sliceIndex) => {
+                  if (!icon) return null;
+
+                  const angleStep = (2 * Math.PI) / sliceLabels.length;
+                  const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep / 2; // Center of slice
+                  const iconRadius = MIN_RADIUS * 0.7; // Position icons inside the center circle
+
+                  const x = CENTER_X + iconRadius * Math.cos(angle);
+                  const y = CENTER_Y + iconRadius * Math.sin(angle);
+
+                  return (
+                    <text
+                      key={`center-icon-${sliceIndex}`}
+                      x={x}
+                      y={y}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fontSize="20"
+                      style={{
+                        fontFamily: 'system-ui, sans-serif',
+                        pointerEvents: 'none'
+                      }}
+                    >
+                      {icon}
+                    </text>
+                  );
+                })}
+
+                {/* ASD Level Labels */}
+                {numberPosition !== 'hide_all' && asdLabels.map(({ text, radius }) => (
+                  <text
+                    key={text}
+                    x={CENTER_X}
+                    y={CENTER_Y - radius}
+                    transform={`rotate(-90 ${CENTER_X} ${CENTER_Y - radius})`}
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    fontSize="13"
+                    fill={isDarkMode ? "#9ca3af" : "#374151"}
+                    stroke={isDarkMode ? '#1f1f1f' : '#ffffff'}
+                    strokeWidth="4"
+                    paintOrder="stroke"
+                    style={{
+                      fontFamily: 'system-ui, sans-serif',
+                      fontWeight: 'normal',
+                      pointerEvents: 'none'
+                    }}
+                  >
+                    {text}
+                  </text>
+                ))}
+              </svg>
+            </TooltipProvider>
+
           </div>
-        </div>
+
+          {/* Display Options */}
+          {!isLockedMode && (
+            <div className="flex flex-wrap gap-4 justify-center print:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
+                  <Settings className="w-4 h-4" />
+                  Numbers
+                  <ChevronDown className="w-4 h-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem
+                    onClick={() => setNumberPosition('left')}
+                    className={numberPosition === 'left' ? 'bg-accent' : ''}
+                  >
+                    Left aligned
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setNumberPosition('center')}
+                    className={numberPosition === 'center' ? 'bg-accent' : ''}
+                  >
+                    Center aligned
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setNumberPosition('right')}
+                    className={numberPosition === 'right' ? 'bg-accent' : ''}
+                  >
+                    Right aligned
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setNumberPosition('hide_segment')}
+                    className={numberPosition === 'hide_segment' ? 'bg-accent' : ''}
+                  >
+                    Hide segment numbers
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setNumberPosition('hide_all')}
+                    className={numberPosition === 'hide_all' ? 'bg-accent' : ''}
+                  >
+                    Hide segment numbers & ASD levels
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
+                  <Settings className="w-4 h-4" />
+                  Labels
+                  <ChevronDown className="w-4 h-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem
+                    onClick={() => setLabelStyle('normal')}
+                    className={labelStyle === 'normal' ? 'bg-accent' : ''}
+                  >
+                    Normal weight
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setLabelStyle('bold')}
+                    className={labelStyle === 'bold' ? 'bg-accent' : ''}
+                  >
+                    Bold weight
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setLabelStyle('hidden')}
+                    className={labelStyle === 'hidden' ? 'bg-accent' : ''}
+                  >
+                    Hidden
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
+                  <Settings className="w-4 h-4" />
+                  Icons
+                  <ChevronDown className="w-4 h-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem
+                    onClick={() => setShowIcons(true)}
+                    className={showIcons ? 'bg-accent' : ''}
+                  >
+                    Show icons
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setShowIcons(false)}
+                    className={!showIcons ? 'bg-accent' : ''}
+                  >
+                    Hide icons
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
+                  <Settings className="w-4 h-4" />
+                  Theme
+                  <ChevronDown className="w-4 h-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem
+                    onClick={() => setTheme('system')}
+                    className={theme === 'system' ? 'bg-accent' : ''}
+                  >
+                    Use system
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setTheme('light')}
+                    className={theme === 'light' ? 'bg-accent' : ''}
+                  >
+                    Light
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setTheme('dark')}
+                    className={theme === 'dark' ? 'bg-accent' : ''}
+                  >
+                    Dark
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-4 justify-center print:hidden">
+            {!isEditingLabels && (
+              <>
+                <Button
+                  onClick={handleCopyLink}
+                  className="h-10 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  <Link className="w-4 h-4" />
+                  Copy link
+                </Button>
+                <Button
+                  onClick={handlePrint}
+                  className="h-10 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  <Printer className="w-4 h-4" />
+                  Print
+                </Button>
+              </>
+            )}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2">
+                Save diagram
+                <ChevronDown className="w-4 h-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={() => saveDiagramAs('png')}>
+                  Save as PNG
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => saveDiagramAs('svg')}>
+                  Save as SVG
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => saveDiagramAs('jpeg')}>
+                  Save as JPEG
+                </DropdownMenuItem>
+                {!isLockedMode && (
+                  <>
+                    <DropdownMenuItem onClick={() => saveDiagramAs('html')}>
+                      Save as HTML
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => saveDiagramAs('locked_html')}>
+                      Save as locked HTML
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button
+              onClick={handleEditLabels}
+              className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+            >
+              {isEditingLabels ? "Save categories" : "Edit categories"}
+            </Button>
+
+        {!isEditingLabels && (
+          <Button
+            onClick={handleShowHelp}
+            className="h-10 bg-green-600 hover:bg-green-700 text-white"
+          >
+            <HelpCircle className="w-4 h-4" />
+            Help
+          </Button>
+        )}
+
+            {isEditingLabels && (
+              <>
+                <Button
+                  onClick={handleRevertChanges}
+                  variant="destructive"
+                  className="h-10"
+                  disabled={!hasChanges()}
+                  style={!hasChanges() ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                >
+                  Revert changes
+                </Button>
+                <Button
+                  onClick={handleDefaultLabels}
+                  variant="destructive"
+                  className="h-10"
+                  disabled={isAtDefaults()}
+                  style={isAtDefaults() ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                >
+                  Default categories
+                </Button>
+              </>
+            )}
+          </div>
+
+          {isEditingLabels && (
+            <div className="w-full max-w-4xl">
+              <h3 className="mb-4 font-semibold">Edit Categories</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Icon</TableHead>
+                    <TableHead>Category Name & Description</TableHead>
+                    <TableHead>Color</TableHead>
+                    <TableHead>Delete</TableHead>
+                    <TableHead>Reorder</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {editingLabels.map((labelData, index) => (
+                    <DraggableLabelRow
+                      key={labelData.id}
+                      labelData={labelData}
+                      index={index}
+                      editingLabels={editingLabels}
+                      setEditingLabels={setEditingLabels}
+                      onDelete={handleDeleteLabel}
+                      canDelete={editingLabels.length > 2}
+                    />
+                  ))}
+                  <TableRow>
+                    <TableCell>
+                      <EmojiPicker
+                        selectedEmoji={newLabelIcon}
+                        onEmojiSelect={setNewLabelIcon}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-2">
+                        <Input
+                          placeholder="Enter new label name..."
+                          value={newLabelText}
+                          onChange={(e) => setNewLabelText(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && handleAddLabel()}
+                        />
+                        <Textarea
+                          placeholder="Enter description..."
+                          className="text-sm resize-none"
+                          rows={3}
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="w-6 h-6 rounded border bg-blue-500" />
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        onClick={handleAddLabel}
+                        variant="ghost"
+                        size="sm"
+                        disabled={!newLabelText.trim()}
+                        className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </TableCell>
+                    <TableCell />
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          )}
+
+          {!isEditingLabels && (
+            <div className="w-full max-w-3xl print-break-avoid">
+              <h3 className="mb-4 font-semibold">Detailed Breakdown</h3>
+              <div className="overflow-hidden">
+                <Table className="table-fixed w-full">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead
+                        className="cursor-pointer hover:bg-muted/50 select-none align-top w-1/2"
+                        onClick={() => handleSort('category')}
+                      >
+                        <div className="flex items-center gap-1">
+                          Category
+                          <div className="flex flex-col">
+                            <ChevronUp
+                              className={`w-3 h-3 ${sortColumn === 'category' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
+                            />
+                            <ChevronDown
+                              className={`w-3 h-3 -mt-1 ${sortColumn === 'category' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
+                            />
+                          </div>
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer hover:bg-muted/50 select-none align-top text-center w-1/4"
+                        onClick={() => handleSort('typical')}
+                      >
+                        <div className="flex items-center justify-center gap-1">
+                          Typical impact
+                          <div className="flex flex-col">
+                            <ChevronUp
+                              className={`w-3 h-3 ${sortColumn === 'typical' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
+                            />
+                            <ChevronDown
+                              className={`w-3 h-3 -mt-1 ${sortColumn === 'typical' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
+                            />
+                          </div>
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer hover:bg-muted/50 select-none align-top text-center w-1/4"
+                        onClick={() => handleSort('stress')}
+                      >
+                        <div className="flex items-center justify-center gap-1">
+                          Under stress impact
+                          <div className="flex flex-col">
+                            <ChevronUp
+                              className={`w-3 h-3 ${sortColumn === 'stress' && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground'}`}
+                            />
+                            <ChevronDown
+                              className={`w-3 h-3 -mt-1 ${sortColumn === 'stress' && sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground'}`}
+                            />
+                          </div>
+                        </div>
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {getSortedTableData().map((rowData) => {
+                      const { sliceIndex, label, icon, baseColor, firstSelection, secondSelection } = rowData;
+                      const currentSelections = selections[sliceIndex] || [];
+                      const [originalFirst, originalSecond] = currentSelections.sort((a, b) => a - b);
+                      const description = sliceDescriptions[sliceIndex];
+
+                      return (
+                        <TableRow key={`detail-${sliceIndex}`}>
+                          <TableCell className="align-top break-words">
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                {showIcons && icon && (
+                                  <span className="text-3xl flex-shrink-0">{icon}</span>
+                                )}
+                                <span className="font-medium break-words">{label}</span>
+                              </div>
+                              {description && (
+                                <div className="text-sm text-muted-foreground break-words whitespace-normal">
+                                  {description}
+                                </div>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="align-top text-center">
+                            {firstSelection && (
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-center gap-2">
+                                  <div
+                                    className="inline-block px-3 py-1 rounded min-w-8 text-center"
+                                    style={{
+                                      backgroundColor: baseColor,
+                                      color: darkenColor(baseColor)
+                                    }}
+                                  >
+                                    {firstSelection}
+                                  </div>
+                                </div>
+                                <div className="text-sm text-muted-foreground">
+                                  {getSupportNeedsText(firstSelection)}
+                                </div>
+                              </div>
+                            )}
+                          </TableCell>
+                          <TableCell className="align-top text-center">
+                            {(originalSecond || firstSelection) && (
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-center gap-2">
+                                  <div
+                                    className="inline-block px-3 py-1 rounded min-w-8 text-center"
+                                    style={{
+                                      backgroundColor: originalSecond ? baseColor + '80' : baseColor, // 50% opacity for second selection, full for first
+                                      color: originalSecond ? darkenColor(baseColor, 0.15) : darkenColor(baseColor)
+                                    }}
+                                  >
+                                    {originalSecond || firstSelection}
+                                  </div>
+                                </div>
+                                <div className="text-sm text-muted-foreground">
+                                  {getSupportNeedsText(originalSecond || firstSelection)}
+                                </div>
+                              </div>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
