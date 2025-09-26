@@ -11,6 +11,31 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LZString from 'lz-string';
 
+// Conditional Tooltip wrapper component
+interface ConditionalTooltipProps {
+  children: React.ReactNode;
+  content: React.ReactNode;
+  disabled?: boolean;
+  delayDuration?: number;
+}
+
+function ConditionalTooltip({ children, content, disabled = false, delayDuration }: ConditionalTooltipProps) {
+  if (disabled) {
+    return <>{children}</>;
+  }
+
+  return (
+    <Tooltip delayDuration={delayDuration}>
+      <TooltipTrigger asChild>
+        {children}
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-xs">
+        {content}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 // YouTube icon component
 function YouTubeIcon({ className }: { className?: string }) {
   return (
@@ -47,8 +72,8 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
         <Button onClick={onReturn}>Return to app</Button>
       </div>
 
-      <h1 className="text-3xl font-bold mb-4">How to Use This Tool ⚙️</h1>
-      <p className="mb-4">To get started, watch this short video guide that walks you through creating your own spiky profile.</p>
+      <h1 className="text-3xl font-bold mb-4">How to Use This Tool</h1>
+      <p className="mb-4">To get started, watch this short video guide that walks you through creating your own autistic wheel profile.</p>
 
       <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', marginBottom: '2rem' }}>
         <iframe
@@ -62,9 +87,13 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
       </div>
 
       <h1 className="text-3xl font-bold mb-4">Understanding Support Needs (ASD Levels)</h1>
-      <p className="mb-4">When filling out your profile, it might be helpful to think about your support needs. The official diagnostic framework (the DSM-5) uses three "levels" to describe the varying degrees of support an autistic person might benefit from.</p>
-      <p className="mb-4">These levels are just a clinical starting point—they can't capture the full picture of who you are. Your spiky profile will show that your needs can change depending on the environment, your energy levels, or the specific task you're doing.</p>
-
+      <p className="mb-4">
+        When filling out your profile, it might be helpful to think about your support needs. The official diagnostic
+        framework (the DSM-5) uses three "levels" to describe the varying degrees of support an autistic person might
+        benefit from. These levels are just a clinical starting point—they can't capture the full picture of who you are.
+        Your autistic wheel profile will show that your needs can change depending on the environment, your energy levels, or
+        the specific task you're doing.
+        </p>
       <ul className="list-disc list-outside space-y-4 mb-4 pl-8">
         <li>
           <p><strong>Level 1: "Requiring Support"</strong></p>
@@ -80,32 +109,33 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
         </li>
       </ul>
 
-      <h2 className="text-2xl font-bold underline mb-2">Learn More About Support Levels</h2>
-      <ul className="list-disc list-outside space-y-2 mb-8 pl-8">
-        <li>For a clear, empathetic explanation with examples, visit the <a href="https://www.seattlechildrens.org/clinics/autism-center/the-autism-blog/autism-levels-support/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Seattle Children's Autism Center Blog</a>.</li>
-        <li>To read the direct quotes from the DSM-5, see this page from <a href="https://www.autismspeaks.org/levels-of-autism" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Autism Speaks</a>.</li>
-      </ul>
+            <p className="mb-4">
+              For a clear, empathetic child-centric explanation with examples, visit the <a href="https://www.seattlechildrens.org/clinics/autism-center/the-autism-blog/autism-levels-support/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Seattle Children's Autism Center Blog</a>.
+        To read the direct quotes from the DSM-5, see this page from <a href="https://www.autismspeaks.org/levels-of-autism" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Autism Speaks</a>.</p>
 
+<p>&nbsp;</p>
       <h1 className="text-3xl font-bold mt-12 mb-4">Further Reading & Resources 📚</h1>
       <p className="mb-4">If you want to explore more before completing your profile, here are some excellent resources.</p>
 
       <h2 className="text-2xl font-bold underline mb-2">Tools for Self-Exploration</h2>
-      <p className="mb-4">Please note: These are screening questionnaires, not diagnostic tools. They can't confirm if you're autistic, but they can offer insights and help you understand your own traits.</p>
-      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
-          <li>
+      <p className="mb-4">These are screening questionnaires, not diagnostic tools. They can't confirm if you're autistic, but they can offer insights and help you understand your own traits.</p>
             <p><strong>The Autism-Spectrum Quotient (AQ)</strong>: Developed by Cambridge University, this is a widely used questionnaire to measure autistic traits.</p>
-            <ul className="list-disc list-outside space-y-2 mt-2 pl-12">
+      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
               <li>Online Version with Analysis: <a href="https://embrace-autism.com/autism-spectrum-quotient/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Embrace Autism - AQ Test</a></li>
               <li>Another Online Version: <a href="https://psychology-tools.com/test/autism-spectrum-quotient" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Prosper Health - AQ Test</a></li>
             </ul>
-          </li>
-          <li>
+
             <p><strong>The Ritvo Autism Asperger Diagnostic Scale–Revised (RAADS-R)</strong>: This scale was designed specifically with adults in mind, including those who may have gone undiagnosed because they have learned to "mask" their autistic traits.</p>
-            <ul className="list-disc list-outside space-y-2 mt-2 pl-12">
+      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
               <li>Online Version: <a href="https://embrace-autism.com/raads-r/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Embrace Autism - RAADS-R Test</a></li>
               <li>Informational Page: <a href="https://www.keyautismservices.com/resources/raads-r-test-for-autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Key Autism Services - About the RAADS-R</a></li>
             </ul>
-          </li>
+
+      <h2 className="text-2xl font-bold underline mb-2">Community & Advocacy</h2>
+      <p className="mb-4">These organisations offer practical advice, community connection, and advocate for the autistic community.</p>
+      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
+        <li><a href="https://www.autism.org.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The National Autistic Society (UK)</strong></a>: The UK's leading charity for autistic people and their families. Their website is a vast library of information on education, employment, mental health, and local support services.</li>
+        <li><a href="https://www.autismspeaks.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Autism Speaks (US)</strong></a>: A large US-based organisation focused on funding research and providing resources, such as toolkits for navigating life after diagnosis and transitioning to adulthood.</li>
       </ul>
 
       <h2 className="text-2xl font-bold underline mb-2">Key UK & US Health Information</h2>
@@ -115,19 +145,12 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
         <li><a href="https://www.cdc.gov/autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The US Centers for Disease Control and Prevention (CDC)</strong></a>: Provides detailed summaries of official diagnostic criteria, data, and links to current research.</li>
       </ul>
 
-      <h2 className="text-2xl font-bold underline mb-2">Community & Advocacy</h2>
-      <p className="mb-4">These organisations offer practical advice, community connection, and advocate for the autistic community.</p>
-      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
-        <li><a href="https://www.autism.org.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The National Autistic Society (UK)</strong></a>: The UK's leading charity for autistic people and their families. Their website is a vast library of information on education, employment, mental health, and local support services.</li>
-        <li><a href="https://www.autismspeaks.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Autism Speaks (US)</strong></a>: A large US-based organisation focused on funding research and providing resources, such as toolkits for navigating life after diagnosis and transitioning to adulthood.</li>
-      </ul>
-
       <h2 className="text-2xl font-bold underline mb-2">Other Reputable Sources</h2>
       <ul className="list-disc list-outside space-y-2 mb-8 pl-8">
         <li><a href="https://embrace-autism.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Embrace Autism</strong></a>: A fantastic resource hub run by a registered psychologist and an autistic advocate. It provides free online versions of the screening tools listed above, along with detailed articles explaining their scoring, history, and validity, all backed by research.</li>
         <li><a href="https://www.clara.psychol.cam.ac.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The Autism Research Centre (Cambridge University)</strong></a>: The academic centre where the AQ test was developed. Their work forms the scientific foundation for many of the tools and understanding we use today.</li>
       </ul>
-
+      <p>&nbsp;</p>
       <div className="flex justify-center mt-12 mb-8">
         <Button onClick={onReturn}>Return to app</Button>
       </div>
@@ -449,6 +472,40 @@ function CircularDiagramContent() {
   const [isLockedMode, setIsLockedMode] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // URL parameter configurations
+  const [hideIntro, setHideIntro] = useState(false);
+  const [tooltipsDisabled, setTooltipsDisabled] = useState(false);
+  const [tooltipDelay, setTooltipDelay] = useState(1000); // Default 1000ms
+
+  // Parse URL parameters on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Check for hideintro parameter
+    if (urlParams.get('hideintro') === '1') {
+      setHideIntro(true);
+    }
+
+    // Check for disabletooltip parameter
+    if (urlParams.get('disabletooltip') === '1') {
+      setTooltipsDisabled(true);
+    }
+
+    // Check for tooltipwaitms parameter
+    const tooltipWaitMs = urlParams.get('tooltipwaitms');
+    if (tooltipWaitMs && !isNaN(Number(tooltipWaitMs))) {
+      const delay = Math.max(0, Number(tooltipWaitMs)); // Ensure non-negative
+      setTooltipDelay(delay);
+    }
+  }, []);
+
+  // Helper function to show help and scroll to top
+  const handleShowHelp = () => {
+    setShowHelp(true);
+    // Scroll to top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Helper function to determine if dark mode is active
   const checkDarkMode = () => {
@@ -1216,37 +1273,39 @@ function CircularDiagramContent() {
         <>
           {!isLockedMode && (
             <div className="text-center">
+              {!hideIntro && (
               <div className="mb-6 max-w-3xl mx-auto space-y-4">
-                <p className="text-left">
-                  Thank you for using{' '}
-                  <a
-                    href="https://www.myautisticprofile.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-                  >
-                    my Autism Wheel
-                  </a>
-                  . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
-                  I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
-                  Your feedback to improve this tool is welcomed at{' '}
-                  <a
-                    href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-                  >
-                    feedback@myautisticprofile.com
-                  </a>.
-                </p>
+                  <p className="text-left">
+                    Thank you for using{' '}
+                    <a
+                      href="https://www.myautisticprofile.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                    >
+                      my Autism Wheel
+                    </a>
+                    . I developed this tool as a personal project to help myself and others visualize and better communicate their own unique autistic profiles.
+                    I am not a medical professional, and this tool is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
+                    Your feedback to improve this tool is welcomed at{' '}
+                    <a
+                      href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                    >
+                      feedback@myautisticprofile.com
+                    </a>.
+                  </p>
               </div>
+              )}
 
               <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
                 <p className="text-left text-blue-600 dark:text-blue-400">
                   Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
                   Click{' '}
                   <button
-                    onClick={() => setShowHelp(true)}
+                    onClick={handleShowHelp}
                     className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
                   >
                     the help button
@@ -1258,7 +1317,7 @@ function CircularDiagramContent() {
           )}
 
           <div className="relative">
-            <TooltipProvider>
+            <TooltipProvider delayDuration={tooltipDelay}>
               <svg ref={svgRef} width="750" height="750" viewBox="0 0 750 750">
                 {/* Light segments (second selection) - drawn first, behind all grid lines */}
                 {Array.from({ length: sliceLabels.length }, (_, sliceIndex) =>
@@ -1277,19 +1336,11 @@ function CircularDiagramContent() {
                     const fill = baseColor + '80'; // 50% opacity for light segments
 
                     return (
-                      <Tooltip key={`light-segment-${sliceIndex}-${ringIndex}`} delayDuration={1000}>
-                        <TooltipTrigger asChild>
-                          <path
-                            d={path}
-                            fill={fill}
-                            stroke={isDarkMode ? "#808080" : "white"}
-                            strokeWidth="1"
-                            className="cursor-pointer hover:opacity-80 transition-opacity"
-                            onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
-                            data-testid={`segment-${sliceIndex}-${ringIndex}`}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="max-w-xs">
+                      <ConditionalTooltip
+                        key={`light-segment-${sliceIndex}-${ringIndex}`}
+                        disabled={tooltipsDisabled}
+                        delayDuration={tooltipDelay}
+                        content={
                           <div className="space-y-1">
                             <div className="font-medium">{sliceLabels[sliceIndex]}</div>
                             <div className="text-sm text-muted-foreground">
@@ -1301,8 +1352,18 @@ function CircularDiagramContent() {
                               </div>
                             )}
                           </div>
-                        </TooltipContent>
-                      </Tooltip>
+                        }
+                      >
+                        <path
+                          d={path}
+                          fill={fill}
+                          stroke={isDarkMode ? "#808080" : "white"}
+                          strokeWidth="1"
+                          className="cursor-pointer hover:opacity-80 transition-opacity"
+                          onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
+                          data-testid={`segment-${sliceIndex}-${ringIndex}`}
+                        />
+                      </ConditionalTooltip>
                     );
                   })
                 )}
@@ -1343,19 +1404,11 @@ function CircularDiagramContent() {
                     const path = createSegmentPath(sliceIndex, ringIndex);
 
                     return (
-                      <Tooltip key={`segment-${sliceIndex}-${ringIndex}`} delayDuration={1000}>
-                        <TooltipTrigger asChild>
-                          <path
-                            d={path}
-                            fill={fill}
-                            stroke={isDarkMode ? "#808080" : "white"}
-                            strokeWidth="1"
-                            className="cursor-pointer hover:opacity-80 transition-opacity"
-                            onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
-                            data-testid={`segment-${sliceIndex}-${ringIndex}`}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="max-w-xs">
+                      <ConditionalTooltip
+                        key={`segment-${sliceIndex}-${ringIndex}`}
+                        disabled={tooltipsDisabled}
+                        delayDuration={tooltipDelay}
+                        content={
                           <div className="space-y-1">
                             <div className="font-medium">{sliceLabels[sliceIndex]}</div>
                             <div className="text-sm text-muted-foreground">
@@ -1367,8 +1420,18 @@ function CircularDiagramContent() {
                               </div>
                             )}
                           </div>
-                        </TooltipContent>
-                      </Tooltip>
+                        }
+                      >
+                        <path
+                          d={path}
+                          fill={fill}
+                          stroke={isDarkMode ? "#808080" : "white"}
+                          strokeWidth="1"
+                          className="cursor-pointer hover:opacity-80 transition-opacity"
+                          onClick={() => handleSegmentClick(sliceIndex, ringIndex)}
+                          data-testid={`segment-${sliceIndex}-${ringIndex}`}
+                        />
+                      </ConditionalTooltip>
                     );
                   })
                 )}
@@ -1546,34 +1609,11 @@ function CircularDiagramContent() {
                     : {};
 
                   return (
-                    <Tooltip key={`label-tooltip-${sliceIndex}`} delayDuration={1000}>
-                      <TooltipTrigger asChild>
-                        <g
-                          key={`label-${sliceIndex}`}
-                          className="cursor-pointer"
-                          transform={`translate(${x}, ${y}) rotate(${finalRotation})`}
-                        >
-                          {lines.map((line, lineIndex) => (
-                            <text
-                              key={`label-line-${sliceIndex}-${lineIndex}`}
-                              x={0}
-                              y={0 + (lineIndex - (lines.length - 1) / 2) * 12}
-                              textAnchor="middle"
-                              dominantBaseline="middle"
-                              fontSize="14"
-                              fill={isDarkMode ? "#9ca3af" : "#374151"}
-                              {...textOutlineProps}
-                              style={{
-                                fontFamily: 'system-ui, sans-serif',
-                                fontWeight: labelStyle === 'bold' ? 'bold' : 'normal',
-                              }}
-                            >
-                              {line}
-                            </text>
-                          ))}
-                        </g>
-                      </TooltipTrigger>
-                      <TooltipContent side="top" className="max-w-xs">
+                    <ConditionalTooltip
+                      key={`label-tooltip-${sliceIndex}`}
+                      disabled={tooltipsDisabled}
+                      delayDuration={tooltipDelay}
+                      content={
                         <div className="space-y-1">
                           <div className="font-medium">{sliceLabels[sliceIndex]}</div>
                           {sliceDescriptions[sliceIndex] && (
@@ -1582,8 +1622,33 @@ function CircularDiagramContent() {
                             </div>
                           )}
                         </div>
-                      </TooltipContent>
-                    </Tooltip>
+                      }
+                    >
+                      <g
+                        key={`label-${sliceIndex}`}
+                        className="cursor-pointer"
+                        transform={`translate(${x}, ${y}) rotate(${finalRotation})`}
+                      >
+                        {lines.map((line, lineIndex) => (
+                          <text
+                            key={`label-line-${sliceIndex}-${lineIndex}`}
+                            x={0}
+                            y={0 + (lineIndex - (lines.length - 1) / 2) * 12}
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                            fontSize="14"
+                            fill={isDarkMode ? "#9ca3af" : "#374151"}
+                            {...textOutlineProps}
+                            style={{
+                              fontFamily: 'system-ui, sans-serif',
+                              fontWeight: labelStyle === 'bold' ? 'bold' : 'normal',
+                            }}
+                          >
+                            {line}
+                          </text>
+                        ))}
+                      </g>
+                    </ConditionalTooltip>
                   );
                 })}
 
@@ -1825,7 +1890,7 @@ function CircularDiagramContent() {
 
         {!isEditingLabels && (
           <Button
-            onClick={() => setShowHelp(true)}
+            onClick={handleShowHelp}
             className="h-10 bg-green-600 hover:bg-green-700 text-white"
           >
             <HelpCircle className="w-4 h-4" />
