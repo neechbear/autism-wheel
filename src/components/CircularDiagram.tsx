@@ -11,22 +11,82 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import LZString from 'lz-string';
 
-// YouTube icon component
-function YouTubeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className={className}
-      fill="currentColor"
-    >
-      <path
-        fill="#FF0000"
-        d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"
-      />
-      <path fill="#FFF" d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-    </svg>
-  );
-}
+const helpContentData = [
+  { type: 'h1', content: 'How to Use This Tool ⚙️' },
+  { type: 'p', content: 'To get started, watch this short video guide that walks you through creating your own spiky profile.' },
+  { type: 'video', src: 'https://www.youtube.com/embed/OvuTHMzbzpQ' },
+  { type: 'h1', content: 'Understanding Support Needs (ASD Levels)' },
+  { type: 'p', content: "When filling out your profile, it might be helpful to think about your support needs. The official diagnostic framework (the DSM-5) uses three \"levels\" to describe the varying degrees of support an autistic person might benefit from. These levels are just a clinical starting point—they can't capture the full picture of who you are. Your spiky profile will show that your needs can change depending on the environment, your energy levels, or the specific task you're doing." },
+  {
+    type: 'list',
+    items: [
+      {
+        bold: 'Level 1: "Requiring Support"',
+        text: 'You might navigate daily life with a degree of independence but find some situations challenging. For example, you may speak in full sentences but find back-and-forth conversation tiring or difficult to initiate. Unexpected changes to your routine or switching between tasks can be stressful and require extra energy to manage.'
+      },
+      {
+        bold: 'Level 2: "Requiring Substantial Support"',
+        text: 'You may benefit from more consistent support to navigate social situations and daily tasks. Communication might involve simpler sentences or be focused on your deep passions and interests. Sticking to a routine is often very important, and changes can be quite distressing. These support needs are likely apparent to those around you.'
+      },
+      {
+        bold: 'Level 3: "Requiring Very Substantial Support"',
+        text: 'You likely require significant, ongoing support in most areas of life. You may communicate in ways other than spoken language (for example, using a device or gestures) or use a few words. Having a predictable structure and coping with change can be a major challenge, and a lot of support is needed to navigate the demands of daily life.'
+      }
+    ]
+  },
+  { type: 'p', content: 'For a clear, child-centric, empathetic explanation with examples, visit the <a href="https://www.seattlechildrens.org/clinics/autism-center/the-autism-blog/autism-levels-support/">Seattle Children\'s Autism Center Blog</a>. To read the direct quotes from the DSM-5, see this page from <a href="https://www.autismspeaks.org/levels-of-autism">Autism Speaks</a>.' },
+  { type: 'h1', content: 'Further Reading & Resources 📚', className: 'mt-12' },
+  { type: 'p', content: 'If you want to explore more before completing your profile, here are some excellent resources.' },
+  { type: 'h2', content: 'Tools for Self-Exploration' },
+  { type: 'p', content: "These are screening questionnaires, not diagnostic tools. They can't confirm if you're autistic, but they can offer insights and help you understand your own traits." },
+  {
+    type: 'list',
+    className: 'pl-5 space-y-4',
+    items: [
+      {
+        text: '<strong>The Autism-Spectrum Quotient (AQ)</strong>: Developed by Cambridge University, this is a widely used questionnaire to measure autistic traits.',
+        children: [
+          { text: '<a href="https://embrace-autism.com/autism-spectrum-quotient/">Online Version with Analysis: Embrace Autism - AQ Test</a>' },
+          { text: '<a href="https://psychology-tools.com/test/autism-spectrum-quotient">Another Online Version: Prosper Health - AQ Test</a>' },
+        ]
+      },
+      {
+        text: '<strong>The Ritvo Autism Asperger Diagnostic Scale–Revised (RAADS-R)</strong>: This scale was designed specifically with adults in mind, including those who may have gone undiagnosed because they have learned to "mask" their autistic traits.',
+        children: [
+          { text: '<a href="https://embrace-autism.com/raads-r/">Online Version: Embrace Autism - RAADS-R Test</a>' },
+          { text: '<a href="https://www.keyautismservices.com/resources/raads-r-test-for-autism/">Informational Page: Key Autism Services - About the RAADS-R</a>' },
+        ]
+      }
+    ]
+  },
+  { type: 'h2', content: 'Key UK & US Health Information' },
+  { type: 'p', content: 'These government and public health bodies provide reliable, evidence-based information on autism diagnosis and support.' },
+  {
+    type: 'list',
+    items: [
+      { text: '<a href="https://www.nhs.uk/conditions/autism/"><strong>The UK National Health Service (NHS)</strong></a>: The official source for understanding autism in the UK, including the steps for seeking an assessment and finding support.' },
+      { text: '<a href="https://www.cdc.gov/autism/"><strong>The US Centers for Disease Control and Prevention (CDC)</strong></a>: Provides detailed summaries of official diagnostic criteria, data, and links to current research.' },
+    ]
+  },
+  { type: 'h2', content: 'Community & Advocacy' },
+  { type: 'p', content: 'These organisations offer practical advice, community connection, and advocate for the autistic community.' },
+  {
+    type: 'list',
+    items: [
+      { text: '<a href="https://www.autism.org.uk/"><strong>The National Autistic Society (UK)</strong></a>: The UK\'s leading charity for autistic people and their families. Their website is a vast library of information on education, employment, mental health, and local support services.' },
+      { text: '<a href="https://www.autismspeaks.org/"><strong>Autism Speaks (US)</strong></a>: A large US-based organisation focused on funding research and providing resources, such as toolkits for navigating life after diagnosis and transitioning to adulthood.' },
+    ]
+  },
+  { type: 'h2', content: 'Other Reputable Sources' },
+  {
+    type: 'list',
+    items: [
+      { text: '<a href="https://embrace-autism.com/"><strong>Embrace Autism</strong></a>: A fantastic resource hub run by a registered psychologist and an autistic advocate. It provides free online versions of the screening tools listed above, along with detailed articles explaining their scoring, history, and validity, all backed by research.' },
+      { text: '<a href="https://www.clara.psychol.cam.ac.uk/"><strong>The Autism Research Centre (Cambridge University)</strong></a>: The academic centre where the AQ test was developed. Their work forms the scientific foundation for many of the tools and understanding we use today.' },
+    ]
+  },
+];
+
 
 function HelpContent({ onReturn }: { onReturn: () => void }) {
   useEffect(() => {
@@ -41,94 +101,71 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
     };
   }, [onReturn]);
 
+  const linkStyles = "text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline";
+
+  const renderContent = (item, index) => {
+    const contentWithLinks = item.content?.replace(/<a href="([^"]+)">([^<]+)<\/a>/g, `<a href="$1" target="_blank" rel="noopener noreferrer" class="${linkStyles}">$2</a>`);
+
+    switch (item.type) {
+      case 'h1':
+        return <h1 key={index} className={`text-3xl font-bold mb-4 ${item.className || ''}`} dangerouslySetInnerHTML={{ __html: contentWithLinks }}></h1>;
+      case 'h2':
+        return <h2 key={index} className="text-2xl font-bold underline mb-2 mt-8" dangerouslySetInnerHTML={{ __html: contentWithLinks }}></h2>;
+      case 'p':
+        return <p key={index} className="mb-4" dangerouslySetInnerHTML={{ __html: contentWithLinks }}></p>;
+      case 'video':
+        return (
+          <div key={index} style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', marginBottom: '2rem' }}>
+            <iframe
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+              src={item.src}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen>
+            </iframe>
+          </div>
+        );
+      case 'list':
+        return (
+          <ul key={index} className={`list-disc list-outside pl-5 space-y-4 mb-4 ${item.className || ''}`}>
+            {item.items.map((li, i) => {
+              const liTextWithLinks = li.text?.replace(/<a href="([^"]+)">([^<]+)<\/a>/g, `<a href="$1" target="_blank" rel="noopener noreferrer" class="${linkStyles}">$2</a>`);
+              return (
+                <li key={i}>
+                  {li.bold ? (
+                    <>
+                      <strong>{li.bold}</strong>
+                      <p className="inline" dangerouslySetInnerHTML={{ __html: `: ${liTextWithLinks}` }}></p>
+                    </>
+                  ) : (
+                    <span dangerouslySetInnerHTML={{ __html: liTextWithLinks }}></span>
+                  )}
+                  {li.children && (
+                    <ul className="list-disc list-outside pl-5 space-y-2 mt-2">
+                      {li.children.map((child, j) => {
+                        const childTextWithLinks = child.text.replace(/<a href="([^"]+)">([^<]+)<\/a>/g, `<a href="$1" target="_blank" rel="noopener noreferrer" class="${linkStyles}">$2</a>`);
+                        return <li key={j} dangerouslySetInnerHTML={{ __html: childTextWithLinks }}></li>
+                      })}
+                    </ul>
+                  )}
+                </li>
+              )
+            })}
+          </ul>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="w-full max-w-4xl text-left">
       <div className="flex justify-center mb-8">
         <Button onClick={onReturn}>Return to app</Button>
       </div>
-
-      <h1 className="text-3xl font-bold mb-4">How to Use This Tool ⚙️</h1>
-      <p className="mb-4">To get started, watch this short video guide that walks you through creating your own spiky profile.</p>
-
-      <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', marginBottom: '2rem' }}>
-        <iframe
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-          src="https://www.youtube.com/embed/OvuTHMzbzpQ"
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen>
-        </iframe>
-      </div>
-
-      <h1 className="text-3xl font-bold mb-4">Understanding Support Needs (ASD Levels)</h1>
-      <p className="mb-4">When filling out your profile, it might be helpful to think about your support needs. The official diagnostic framework (the DSM-5) uses three "levels" to describe the varying degrees of support an autistic person might benefit from.</p>
-      <p className="mb-4">These levels are just a clinical starting point—they can't capture the full picture of who you are. Your spiky profile will show that your needs can change depending on the environment, your energy levels, or the specific task you're doing.</p>
-
-      <ul className="list-disc list-outside space-y-4 mb-4 pl-8">
-        <li>
-          <p><strong>Level 1: "Requiring Support"</strong></p>
-          <p className="ml-6">You might navigate daily life with a degree of independence but find some situations challenging. For example, you may speak in full sentences but find back-and-forth conversation tiring or difficult to initiate. Unexpected changes to your routine or switching between tasks can be stressful and require extra energy to manage.</p>
-        </li>
-        <li>
-          <p><strong>Level 2: "Requiring Substantial Support"</strong></p>
-          <p className="ml-6">You may benefit from more consistent support to navigate social situations and daily tasks. Communication might involve simpler sentences or be focused on your deep passions and interests. Sticking to a routine is often very important, and changes can be quite distressing. These support needs are likely apparent to those around you.</p>
-        </li>
-        <li>
-          <p><strong>Level 3: "Requiring Very Substantial Support"</strong></p>
-          <p className="ml-6">You likely require significant, ongoing support in most areas of life. You may communicate in ways other than spoken language (for example, using a device or gestures) or use a few words. Having a predictable structure and coping with change can be a major challenge, and a lot of support is needed to navigate the demands of daily life.</p>
-        </li>
-      </ul>
-
-      <h2 className="text-2xl font-bold underline mb-2">Learn More About Support Levels</h2>
-      <ul className="list-disc list-outside space-y-2 mb-8 pl-8">
-        <li>For a clear, empathetic explanation with examples, visit the <a href="https://www.seattlechildrens.org/clinics/autism-center/the-autism-blog/autism-levels-support/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Seattle Children's Autism Center Blog</a>.</li>
-        <li>To read the direct quotes from the DSM-5, see this page from <a href="https://www.autismspeaks.org/levels-of-autism" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Autism Speaks</a>.</li>
-      </ul>
-
-      <h1 className="text-3xl font-bold mt-12 mb-4">Further Reading & Resources 📚</h1>
-      <p className="mb-4">If you want to explore more before completing your profile, here are some excellent resources.</p>
-
-      <h2 className="text-2xl font-bold underline mb-2">Tools for Self-Exploration</h2>
-      <p className="mb-4">Please note: These are screening questionnaires, not diagnostic tools. They can't confirm if you're autistic, but they can offer insights and help you understand your own traits.</p>
-      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
-          <li>
-            <p><strong>The Autism-Spectrum Quotient (AQ)</strong>: Developed by Cambridge University, this is a widely used questionnaire to measure autistic traits.</p>
-            <ul className="list-disc list-outside space-y-2 mt-2 pl-12">
-              <li>Online Version with Analysis: <a href="https://embrace-autism.com/autism-spectrum-quotient/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Embrace Autism - AQ Test</a></li>
-              <li>Another Online Version: <a href="https://psychology-tools.com/test/autism-spectrum-quotient" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Prosper Health - AQ Test</a></li>
-            </ul>
-          </li>
-          <li>
-            <p><strong>The Ritvo Autism Asperger Diagnostic Scale–Revised (RAADS-R)</strong>: This scale was designed specifically with adults in mind, including those who may have gone undiagnosed because they have learned to "mask" their autistic traits.</p>
-            <ul className="list-disc list-outside space-y-2 mt-2 pl-12">
-              <li>Online Version: <a href="https://embrace-autism.com/raads-r/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Embrace Autism - RAADS-R Test</a></li>
-              <li>Informational Page: <a href="https://www.keyautismservices.com/resources/raads-r-test-for-autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Key Autism Services - About the RAADS-R</a></li>
-            </ul>
-          </li>
-      </ul>
-
-      <h2 className="text-2xl font-bold underline mb-2">Key UK & US Health Information</h2>
-      <p className="mb-4">These government and public health bodies provide reliable, evidence-based information on autism diagnosis and support.</p>
-      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
-        <li><a href="https://www.nhs.uk/conditions/autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The UK National Health Service (NHS)</strong></a>: The official source for understanding autism in the UK, including the steps for seeking an assessment and finding support.</li>
-        <li><a href="https://www.cdc.gov/autism/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The US Centers for Disease Control and Prevention (CDC)</strong></a>: Provides detailed summaries of official diagnostic criteria, data, and links to current research.</li>
-      </ul>
-
-      <h2 className="text-2xl font-bold underline mb-2">Community & Advocacy</h2>
-      <p className="mb-4">These organisations offer practical advice, community connection, and advocate for the autistic community.</p>
-      <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
-        <li><a href="https://www.autism.org.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The National Autistic Society (UK)</strong></a>: The UK's leading charity for autistic people and their families. Their website is a vast library of information on education, employment, mental health, and local support services.</li>
-        <li><a href="https://www.autismspeaks.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Autism Speaks (US)</strong></a>: A large US-based organisation focused on funding research and providing resources, such as toolkits for navigating life after diagnosis and transitioning to adulthood.</li>
-      </ul>
-
-      <h2 className="text-2xl font-bold underline mb-2">Other Reputable Sources</h2>
-      <ul className="list-disc list-outside space-y-2 mb-8 pl-8">
-        <li><a href="https://embrace-autism.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Embrace Autism</strong></a>: A fantastic resource hub run by a registered psychologist and an autistic advocate. It provides free online versions of the screening tools listed above, along with detailed articles explaining their scoring, history, and validity, all backed by research.</li>
-        <li><a href="https://www.clara.psychol.cam.ac.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The Autism Research Centre (Cambridge University)</strong></a>: The academic centre where the AQ test was developed. Their work forms the scientific foundation for many of the tools and understanding we use today.</li>
-      </ul>
-
-      <div className="flex justify-center mt-12 mb-8">
+      {helpContentData.map(renderContent)}
+      <div className="flex justify-center mt-12 mb-4">
         <Button onClick={onReturn}>Return to app</Button>
       </div>
     </div>
@@ -1242,7 +1279,7 @@ function CircularDiagramContent() {
               </div>
 
               <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
-                <p className="text-left text-blue-600 dark:text-blue-400">
+                <p className="text-left">
                   Click on one or two segments per slice, to indicate the typical day-to-day and under stress/elevated impact each category has on your life.
                   Click{' '}
                   <button
@@ -1818,38 +1855,34 @@ function CircularDiagramContent() {
 
             <Button
               onClick={handleEditLabels}
-              className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+              className={`h-10 text-white ${isEditingLabels ? "bg-slate-600 hover:bg-slate-700" : "bg-slate-600 hover:bg-slate-700"}`}
             >
               {isEditingLabels ? "Save categories" : "Edit categories"}
             </Button>
 
-        {!isEditingLabels && (
-          <Button
-            onClick={() => setShowHelp(true)}
-            className="h-10 bg-green-600 hover:bg-green-700 text-white"
-          >
-            <HelpCircle className="w-4 h-4" />
-            Help
-          </Button>
-        )}
+            {!isEditingLabels && (
+              <Button
+                onClick={() => setShowHelp(true)}
+                className="h-10 gap-2 bg-green-700 hover:bg-green-800 text-white"
+              >
+                <HelpCircle className="w-4 h-4" />
+                Help
+              </Button>
+            )}
 
             {isEditingLabels && (
               <>
                 <Button
                   onClick={handleRevertChanges}
-                  variant="destructive"
-                  className="h-10"
                   disabled={!hasChanges()}
-                  style={!hasChanges() ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                  className="h-10 bg-red-700 hover:bg-red-800 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Revert changes
                 </Button>
                 <Button
                   onClick={handleDefaultLabels}
-                  variant="destructive"
-                  className="h-10"
                   disabled={isAtDefaults()}
-                  style={isAtDefaults() ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                  className="h-10 bg-red-700 hover:bg-red-800 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Default categories
                 </Button>

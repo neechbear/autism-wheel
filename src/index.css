@@ -51,13 +51,13 @@
     --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --color-green-50: oklch(.982 .018 155.826);
-    --color-green-600: oklch(.627 .17 149.214);
-    --color-green-700: oklch(.527 .17 150.069);
+    --color-green-600: oklch(.627 .194 149.214);
+    --color-green-700: oklch(.527 .154 150.069);
     --color-blue-300: oklch(.809 .105 251.813);
     --color-blue-400: oklch(.707 .165 254.624);
     --color-blue-500: oklch(.623 .214 259.815);
-    --color-blue-600: oklch(.546 .21 262.881);
-    --color-blue-700: oklch(.488 .21 264.376);
+    --color-blue-600: oklch(.546 .245 262.881);
+    --color-blue-700: oklch(.488 .243 264.376);
     --color-blue-800: oklch(.424 .199 265.638);
     --color-white: #fff;
     --spacing: .25rem;
@@ -74,8 +74,6 @@
     --text-lg--line-height: calc(1.75 / 1.125);
     --text-xl: 1.25rem;
     --text-2xl: 1.5rem;
-    --text-3xl: 2.0625rem;
-    --text-3xl--line-height: calc(2.5 / 2.0625);
     --text-4xl: 2.25rem;
     --text-4xl--line-height: calc(2.5 / 2.25);
     --font-weight-normal: 400;
@@ -855,9 +853,6 @@
   .bg-blue-600 {
     background-color: var(--color-blue-600);
   }
-  .bg-green-600 {
-    background-color: var(--color-green-600);
-  }
 
   .bg-border {
     background-color: var(--border);
@@ -1004,11 +999,6 @@
   .text-xs {
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
-  }
-
-  .text-3xl {
-    font-size: var(--text-3xl);
-    line-height: var(--tw-leading, var(--text-3xl--line-height));
   }
 
   .font-bold {
@@ -1235,9 +1225,6 @@
   @media (hover: hover) {
     .hover\:bg-destructive\/10:hover {
       background-color: var(--destructive);
-    }
-    .hover\:bg-green-700:hover {
-      background-color: var(--color-green-700);
     }
 
     @supports (color: color-mix(in lab, red, red)) {
@@ -1669,12 +1656,6 @@
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 0;
   }
-  .list-disc {
-    list-style-type: disc;
-  }
-  .list-inside {
-    list-style-position: inside;
-  }
 }
 
 :root {
@@ -1693,7 +1674,7 @@
   --muted-foreground: #717182;
   --accent: #e9ebef;
   --accent-foreground: #030213;
-  --destructive: #d9534f;
+  --destructive: #d4183d;
   --destructive-foreground: #fff;
   --border: #0000001a;
   --input: transparent;
