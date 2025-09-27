@@ -73,7 +73,18 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
       </div>
 
       <h1 className="text-3xl font-bold mb-4">How to Use This Tool</h1>
-      <p className="mb-4">To get started, watch this short video guide that walks you through creating your own autistic wheel profile.</p>
+      <p className="mb-4">
+        To get started, watch this short video guide that walks you through creating your own autistic wheel profile.
+        An alternative sensory wheel is available{' '}
+        <a
+          href={`${window.location.origin}${window.location.pathname}?state=N4IgzgpgNhDGAuBLA9gOzCAXKADFg2gLoA0IAjASSAEyWkDMdIALEwKxMBsTA7JQL6kwURLAgAZAIYAjaBkz4QAZWQBXVABMABAAoAgqo2J4yAE4BPAJQhSASVTwIp1JKhalEdJKRowu%2B46myGIADj6o1qRKiADmABbwugBqiGCqrpHKALbQbjoA8lAAZpIIZlY2IAAqkmCOugDiqnXe5ZlVarBxujUIiDCZAEKukqhiyRB1iNKqUJKmQ8ga5lp6AO7znpN%2BOgAKQSGmKKHh1lTCohAAwshQZvKKAMScnLBssLCVj7AAnBrSPFYpEeRVeRR4FGBRQAHD9YICvhpYNIcEVaMDoTw3mwil8fhBpD8iowoRBodDpBRziIxLZYL4CCBALwbgCEdypMwC5O%2BzAII7gHg%2F9mAYR32YBRHcqgGhySqAPg3ABy7gFgCQACZOzAG17ssAQmT86mXAAik1gRzCKHQjIAmmpTFp1IgAI6qCBaUyTEK%2BO0mLRgNSaAB0qy0dzWbvpDq0iE0om8ky05jUWlgoy0MS2plcUBWRX6gS00lKAGsYkF1NpUMhUnbRtoTDAk%2FUIAA3JzmDSSFbugtgb16LRxWLdMCBu0OoowBB%2BCAAD3gDpybs8YGMiBrxhWOji5hCTksxC0aziTjt9KyWTQWiLJb8my0IUkIaKsy0ZjvddM2%2BgWRDMU394LTgAtJB0HOF3gJcVydDctx3IMo1ULRX3iRJIAgbM71URI7kMTcQ0cdA7RbTQ%2FFdIoIGge0IBiWZww0T1KlNVRzRkfpFy0V011MMR5xw2IXCgPwiiCLJg3%2FDQ7Sg81pCWcx219ZB%2FV7Mw7RyUY%2FCgkiRBkFNj2QJBxkwpwuJjW0%2FBEbM7TidQE1MTd4C7Uw6g%2Fc1LxDSSu3iAM5JIwc4HgPwjCKNNYFmICSPpGJUFSN8mJ3SA3U41wwE3bdRG6WNUF9CBJHLZANMSNKkFQGILQcfotBKV8wB3DRNyLRINCOVBs3C9QkDcISVxqii7Ky4MhMKopzHCiBD3CPxGqKqyIBWWR9ztZBH2fKBXzyqjSBo80xxYxBPHGZAigiu0FzSVwtzMKBKJ9P1XKDNIYgTOolOjOIyxgJjVzDNwRDg8Kyy0fb0jcWAoBQjN9yKMx4DUiSfWcns%2BxjOMFJSkCnD%2FWckEA8x4ogu1pCOODfW7Ly71E5oVkveBAnQLRzyMd0jk8XL30JztV2QZGAMXDHd0jaNYISTM7TatYUtdHTsO%2B1JfrdJAslmRA8eM4q5jK8L3oSfDMsI4jPBiSQE0o6izWnf9UcYr6HVKcImMynzCIdBwAzptszuki75LSinlKqy43RyKBuMzFDKaDKrnpCV71Jmpw5pyU6Oyhl3YZSkMjFjepEZsmc2aAjmg33Q8UrAH2%2FaMu0WJvKd7xBpZA7tFxmhyt8OpAlmM%2BNrPwM55SecSYPPfGOogjyu8NDNPx7yyJtKb6Ot1IQpCxv4tR4CWkAVsNlH50Ygi5hrEfKc0Jix3gWiIxDLnaJgxe4kk87ZKDeG7ugzwACtkBWSRvvmDbtCMCBEjWYw4iL2DGANIEAnLdnjslGCbsmYsVZq3FYMB0rhVdO%2FB0%2FdRCOG%2FhtP%2BmMYxODBqfRw45j5niDOoWQ8w1IQEbszeBG9ArPkgtGPUkg6xaEPpOaAzYJxoHyoONhu8dBgJiJ6Tcj5myh1gCse8LYFiWxIjEVIGYxpMVqI4Zeq81pOA2mMaaO0QgrlnLGP6aAwYID3uWQ%2BpC7wpREm6eqqBr7O1vnaJOYZHB%2BGBqDLcACP6020P9TSXY8qWQGixbwpDNxfSAmuUeO0TCqC6OAlyriE7QLjGnehaNNzj0cflIJVkUE61HuaFWiREldGKkRNwDlUA3igLQp02T2bt2YdBLunVe4lyvClMeE9Z5aCEhAEIF50FpCDARGpsN5qaINjpZwh1kb6MzCMPRuSI45AcNE%2BeYBSaIEOmYXRYNwjOJkjDK6N0CbKQ1m4Fo0gnpfXpGYIwLgsEpOhm5TpA4hyJCyS3Bh6NYbNHCoNQ00VYDZlQNsYqfFvbJgvnWLZXkmnNyNoCzcSDXn5VQceIi2gQbmhFlFQ8SK6ZyxwqHVAoVB73iCJClB6tpkOjInMd5%2Btz7Y16QAcmGmMXwsAUDNEphsW2MLtptOEgbMSyxgECTdJeMQZz473zPoiu0%2F8rIxjQGmbq4xTabHUqVJ%2BhgEzFTMEqyGEC0lQPHqFQidRKZeIBlkWc0KQGbhmFkKl%2BVMKZWQNIJ%2Bnk4qMxBYPEwmVpZVPvBGvGZMnqEvGMIz0oj4pHHppbTKD1TDaHvIAk6KCQkxDVplO4zcUxgW2lhaciFwrDNGYcbYx8FEJkSO%2FWQZMnBrxWfYmVEkQBUFQKoLIshTC7BZnONAWAQBiAcE4SocxZBQCUEBGA06xInUqGJAs8xzAAHUID43XbcDQlQyrSTpAyTAE5bRCFBjcF1qBp3922Ge0GWpEAOj6FOzAIAhK9kqPPCAz7zB1AGiAfgQA`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+        >
+          by clicking this link
+        </a>.
+      </p>
 
       <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', marginBottom: '2rem' }}>
         <iframe
@@ -462,7 +473,7 @@ function CircularDiagramContent() {
   const [newLabelText, setNewLabelText] = useState('');
   const [newLabelIcon, setNewLabelIcon] = useState('😀');
   const [numberPosition, setNumberPosition] = useState<'left' | 'center' | 'right' | 'hide_segment' | 'hide_all'>('center');
-  const [labelStyle, setLabelStyle] = useState<'normal' | 'bold' | 'hidden'>('normal');
+  const [labelStyle, setLabelStyle] = useState<'normal' | 'bold' | 'hidden'>('bold');
   const [boundaryWeight, setBoundaryWeight] = useState<'normal' | 'bold' | 'hidden'>('bold');
   const [showIcons, setShowIcons] = useState<boolean>(true);
   const [sortColumn, setSortColumn] = useState<'category' | 'typical' | 'stress' | null>('stress');
