@@ -641,6 +641,73 @@ be inclusive of the neurodivergent community.
   confusing for users who interpret language literally.[34]
 
 
+## Section 9: State Management and Backwards Compatibility
+
+This section outlines the critical strategy for handling user data over time,
+ensuring that shared profiles remain accessible even as the application evolves.
+
+
+### 9.1 The Principle of Perpetual Compatibility
+
+A core feature of this application is the ability for users to share their
+profile via a URL link. It is a mandatory requirement that these links remain
+functional indefinitely. As the application is updated—which may involve addin
+ new features or changing the structure of the state data—we must always
+ maintain backward compatibility to load and display profiles created with older
+ versions of the code. This is a critical user trust and data integrity issue.
+
+
+### 9.2 State Versioning
+
+To manage changes to the data structure over time, a versioning system must be
+implemented within the application state itself.
+
+* **Encode Version Number:** All ApplicationState objects that are serialized
+  for sharing (via URL) or for saving to localStorage **must** include a version
+  property (e.g., `version: 2`).
+* **Increment on Breaking Change:** This version number must be incremented
+  whenever a breaking change is made to the `ApplicationState` data structure. A
+  breaking change includes adding, removing, or renaming properties, or changing
+  a property's data type.
+
+
+### 9.3 The State Migration Module
+
+To keep the main application logic clean and focused on the current state
+structure, all logic for handling older data versions must be isolated in a
+single, discrete location.
+
+* **Dedicated Migration File:** Create a dedicated module, for example
+  `src/state/migrations.ts`, to house all state decoding and migration logic.
+* **Single Entry Point:** This module should expose a primary function, such as
+  `loadAndMigrateState(encodedState: string): ApplicationState`, which will be
+  the sole entry point for processing any external state data.
+
+
+### 9.4 Migration Logic and Handling Legacy Data
+
+The migration module will be responsible for transforming any version of the
+state data into the current ApplicationState format.
+
+* **Check for Version:** The `loadAndMigrateState` function must first decode
+  the incoming data and inspect it for a version property.
+* **Handle Legacy (Unversioned) State:** If a loaded state object is missing the
+  version property, it must be assumed to be a legacy state from the earliest
+  version of the application. The code must then apply the necessary
+  transformations to convert this legacy structure into the current
+  `ApplicationState` format.
+* **Apply Sequential Migrations:** If a version property is present but is lower
+  than the application's current state version, the function must apply a series
+  of migration functions sequentially to bring the data up to date. For example,
+  if the loaded state is `version: 1` and the current version is `3`, the
+  function must first run a `migrateV1toV2` function, followed by a
+  `migrateV2toV3` function.
+
+By isolating this logic, the rest of the application codebase remains simple and
+only ever has to interact with the latest, up-to-date `ApplicationState`
+structure, significantly reducing cognitive load and preventing bugs.
+
+
 #### Works cited
 
 1. Autism Wheel, accessed on September 27, 2025, [https://www.myautisticprofile.com/](https://www.myautisticprofile.com/)
