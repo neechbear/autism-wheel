@@ -1591,14 +1591,28 @@ function CircularDiagramContent() {
                   const shouldFlip = rotation > 90 && rotation < 270;
                   const finalRotation = shouldFlip ? rotation + 180 : rotation;
 
-                  // Split long labels into multiple lines
+                  // Wrap long labels into multiple lines
+                  const lines: string[] = [];
                   const words = label.split(' ');
-                  const maxWordsPerLine = words.length > 3 ? 2 : words.length;
-                  const lines = [];
+                  let currentLine = '';
+                  const maxLineLength = 18; // Max characters per line
 
-                  for (let i = 0; i < words.length; i += maxWordsPerLine) {
-                    lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
+                  for (const word of words) {
+                    // If adding the new word exceeds the max length, push the current line and start a new one
+                    if (currentLine.length + word.length + 1 > maxLineLength && currentLine.length > 0) {
+                      lines.push(currentLine);
+                      currentLine = word;
+                    } else {
+                      // Otherwise, add the word to the current line
+                      if (currentLine.length === 0) {
+                        currentLine = word;
+                      } else {
+                        currentLine += ` ${word}`;
+                      }
+                    }
                   }
+                  // Add the last line
+                  lines.push(currentLine);
 
                   const textOutlineProps = labelStyle === 'bold'
                     ? {
