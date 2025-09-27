@@ -1906,12 +1906,14 @@ function CircularDiagramContent() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button
-              onClick={handleEditLabels}
-              className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
-            >
-              {isEditingLabels ? "Save categories" : "Edit categories"}
-            </Button>
+            {!isLockedMode && (
+              <Button
+                onClick={handleEditLabels}
+                className={`h-10 ${isEditingLabels ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+              >
+                {isEditingLabels ? "Save categories" : "Edit categories"}
+              </Button>
+            )}
 
         {!isEditingLabels && (
           <Button
