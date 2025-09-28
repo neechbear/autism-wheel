@@ -5,7 +5,7 @@ const { chromium } = require('playwright');
 async function takeScreenshot() {
   const url = process.argv[2];
   const output = process.argv[3];
-  const view = process.argv[4]; // 'main-view', 'edit-view', or 'help-view'
+  const view = process.argv[4]; // 'main', 'edit', or 'help'
 
   if (!url || !output || !view) {
     console.error('Usage: node screenshot.js <url> <output> <view>');
@@ -24,17 +24,17 @@ async function takeScreenshot() {
     console.log('Main content loaded');
 
     // Navigate to the specified view
-    if (view === 'edit-view') {
+    if (view === 'edit') {
       console.log('Clicking Edit categories button...');
       await page.getByRole('button', { name: 'Edit categories' }).click();
       await page.waitForSelector('text=Edit Categories', { timeout: 5000 });
       console.log('Edit categories view loaded');
-    } else if (view === 'help-view') {
+    } else if (view === 'help') {
       console.log('Clicking Help button...');
       await page.getByRole('button', { name: 'Help', exact: true }).click();
       await page.waitForSelector('text=Help', { timeout: 5000 });
       console.log('Help view loaded');
-    } else if (view === 'main-view') {
+    } else if (view === 'main') {
       console.log('Taking screenshot of main view');
     }
 

@@ -1,9 +1,5 @@
-# Makefile for autism-wheel React/TypeScript project
+# Makefile for autism-wheel React/TypeScript project.
 # Using Vite as the build tool.
-
-#
-# AI agents: DO NOT ADD POINTLESS COMMENTS AND ECHO STATEMENTS TO EVERY TARGET!
-#
 
 NODE_VERSION = $(shell node --version 2>/dev/null || echo "not found")
 NPM_VERSION = $(shell npm --version 2>/dev/null || echo "not found")
@@ -18,7 +14,7 @@ DEV_HOST = localhost
 TEST_URL = http://$(DEV_HOST):$(DEV_PORT)
 TIMESTAMP = $(shell date +'%Y-%m-%d-%H%M%S')
 SCREENSHOT_DIR = $(TEST_RESULTS_DIR)/screenshots
-SCREENSHOT_FILES = $(addprefix $(SCREENSHOT_DIR)/, $(addsuffix .png, $(addsuffix -view, main edit help)))
+SCREENSHOT_FILES = $(addprefix $(SCREENSHOT_DIR)/, $(addsuffix .png, main edit help))
 
 CLOUDSDK_CORE_PROJECT = neech-sandbox
 export CLOUDSDK_CORE_PROJECT
