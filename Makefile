@@ -60,7 +60,6 @@ test-ui: install
 screenshots: $(SCREENSHOT_FILES)
 
 $(SCREENSHOT_FILES): install
-	echo $@
 	mkdir -pv $(SCREENSHOT_DIR)
 	lsof -ti:$(DEV_PORT) | xargs kill -9 2>/dev/null || true
 	VITE_PORT=$(DEV_PORT) $(PACKAGE_MANAGER) run dev -- --port $(DEV_PORT) --host $(DEV_HOST) --no-open > /dev/null 2>&1 & \

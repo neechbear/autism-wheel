@@ -59,6 +59,24 @@ make dev                      # Start development server on http://localhost:300
 | `install-browsers` | Install Playwright browsers for testing          |
 
 
+### Test Organization
+
+The project has 282 comprehensive tests organized across 9 test files:
+
+- **`app-basic.spec.ts`**: Basic application functionality and UI elements
+- **`circular-diagram.spec.ts`**: Interactive wheel/diagram functionality
+- **`configuration.spec.ts`**: Settings and configuration features
+- **`data-table.spec.ts`**: Data table display and functionality
+- **`export-share.spec.ts`**: Image export formats (PNG, JPEG, SVG) and sharing
+- **`html-export.spec.ts`**: HTML export functionality (regular and locked)
+- **`html-export-validation.spec.ts`**: Validates exported HTML files by running core tests against them with comprehensive state preservation validation
+- **`label-editing.spec.ts`**: Category and label editing features
+- **`theme-switching.spec.ts`**: Theme and visual appearance options
+- **`url-state-sharing.spec.ts`**: URL-based state sharing functionality
+
+**State Preservation Testing**: The HTML export validation tests ensure that custom categories, category colors, emojis, ordering, descriptions, view options, and pre-selected category values are preserved and represented correctly in downloaded HTML files. This includes comprehensive verification that localStorage data, UI settings, diagram selections, and custom modifications are maintained across both regular and locked HTML exports.
+
+
 ### Screenshot Commands
 
 | Target        | Description                               |
