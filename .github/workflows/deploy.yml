@@ -25,7 +25,6 @@ permissions:
 concurrency:
   group: "pages"
   cancel-in-progress: false
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -47,8 +46,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
+      # ✅ New step to cache Playwright browsers
+      - name: Cache Playwright browsers
+        id: cache-playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
       - name: Install dependencies
         run: npm ci
+
+      # ✅ Use the recommended command. It will be fast on cache hits.
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
 
       - name: Set up base path for deployment
         run: |
@@ -63,22 +76,20 @@ jobs:
         env:
           VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
 
-      # This single step replaces 'playwright install', 'serve', and 'npm test'
+      # ✅ Re-add the manual server start and test commands
+      - name: Start server for testing
+        run: |
+          npm install -g serve
+          serve -s build -l 3000 &
       - name: Run Playwright tests
-        uses: microsoft/playwright-github-action@v1
-        with:
-          # The command to run your tests
-          run: npm test
-          # The command to build your app (already done, but good practice to have)
-          build: npm run build
-          # The command to start a preview server
-          start: npm install -g serve && serve -s build -l 3000
+        run: npm test
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-artifact
           path: build/
+
 
   deploy-main:
     runs-on: ubuntu-latest
