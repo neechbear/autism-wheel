@@ -1,26 +1,5 @@
 # .github/workflows/your-workflow-name.yml
 
-name: Build, Test, and Deploy to GitHub Pages
-
-on:
-  push:
-    paths:
-      - 'src/**'
-      - '.github/**'
-      - '*.ts'
-      - '*.tsx'
-      - '*.css'
-      - '*.html'
-      - '*.json'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -33,7 +12,6 @@ jobs:
         with:
           node-version: 20
 
-      # This is the new caching step!
       - name: Cache node modules
         id: cache-npm
         uses: actions/cache@v4
@@ -44,11 +22,7 @@ jobs:
             ${{ runner.os }}-npm-
 
       - name: Install dependencies
-        # Use npm ci for faster, more reliable installs
         run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
 
       - name: Set up base path for deployment
         run: |
@@ -63,13 +37,16 @@ jobs:
         env:
           VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
 
-      - name: Start server for testing
-        run: |
-          npm install -g serve
-          serve -s build -l 3000 &
-
+      # This single step replaces 'playwright install', 'serve', and 'npm test'
       - name: Run Playwright tests
-        run: npm test
+        uses: microsoft/playwright-github-action@v1
+        with:
+          # The command to run your tests
+          run: npm test
+          # The command to build your app (already done, but good practice to have)
+          build: npm run build
+          # The command to start a preview server
+          start: npm install -g serve && serve -s build -l 3000
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

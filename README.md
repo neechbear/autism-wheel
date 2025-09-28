@@ -29,8 +29,8 @@ architectural guidance and coding standards, see our style guide in
 ### Quick Start
 
 ```console
-make setup          # Complete project initialization
-make dev            # Start development server on http://localhost:3000/
+make install-browsers install # Complete project initialization
+make dev                      # Start development server on http://localhost:3000/
 ```
 
 
@@ -41,11 +41,11 @@ make dev            # Start development server on http://localhost:3000/
 
 | Target    | Description                                               |
 |-----------|-----------------------------------------------------------|
-| `help`    | Show all available Makefile targets (default target)      |
 | `clean`   | Remove build artifacts and temporary files                |
 | `install` | Install project dependencies via `npm`                    |
 | `build`   | Build the application for production                      |
 | `dev`     | Start the development server with hot reload on port 3000 |
+| `preview` | Preview the production build locally                      |
 
 
 ### Testing Commands
@@ -53,19 +53,19 @@ make dev            # Start development server on http://localhost:3000/
 | Target             | Description                                      |
 |--------------------|--------------------------------------------------|
 | `test`             | Run all tests using Playwright                   |
-| `test-with-server` | Start dev server and run tests, then stop server |
 | `test-headed`      | Run tests in headed mode (visible browser)       |
 | `test-ui`          | Run tests in interactive UI mode                 |
 | `watch-test`       | Information about test watch mode options        |
 | `install-browsers` | Install Playwright browsers for testing          |
 
 
-### Development Server Commands
+### Screenshot Commands
 
-| Target    | Description                                                    |
-|-----------|----------------------------------------------------------------|
-| `preview` | Preview the production build locally on http://localhost:4173/ |
-| `serve`   | Alias for the preview target on http://localhost:4173/         |
+| Target        | Description                               |
+|---------------|-------------------------------------------|
+| `screenshots` | Take screenshots of all application views |
+
+Screenshots are saved to `test-results/screenshots/` with descriptive filenames.
 
 
 ### Code Quality Commands
@@ -79,75 +79,45 @@ make dev            # Start development server on http://localhost:3000/
 
 ### Dependency Management
 
-| Target           | Description                                     |
-|------------------|-------------------------------------------------|
-| `deps-check`     | Check for outdated npm dependencies             |
-| `deps-update`    | Update all dependencies to latest versions      |
-| `deps-audit`     | Audit dependencies for security vulnerabilities |
-| `security-check` | Alias for deps-audit                            |
-
-
-### Project Information
-
-| Target   | Description                             |
-|----------|-----------------------------------------|
-| `status` | Show git status and project information |
-| `info`   | Alias for status target                 |
-
-
-### Build Variations
-
-| Target             | Description                                  |
-|--------------------|----------------------------------------------|
-| `autismwheel.html` | Build application as single HTML file        |
-| `quick-build`      | Fast build without cleaning first            |
-| `dev-clean`        | Clean build artifacts then start development |
-| `prod-build`       | Full production build with clean             |
-| `dist-check`       | Inspect the built distribution files         |
-
-
-### Deployment
-
-| Target   | Description                                                |
-|----------|------------------------------------------------------------|
-| `deploy` | Build and deploy gs://www.myautisticprofile.com/index.html |
-
-
-### Workflow Helpers
-
-| Target  | Description                                         |
-|---------|-----------------------------------------------------|
-| `setup` | Complete initial project setup (install + browsers) |
+| Target        | Description                                     |
+|---------------|-------------------------------------------------|
+| `deps-check`  | Check for outdated npm dependencies             |
+| `deps-update` | Update all dependencies to latest versions      |
+| `deps-audit`  | Audit dependencies for security vulnerabilities |
 
 
 ## Usage Examples
 
 ```console
-# View all available commands
-make help
+# Setup
+make clean install-browsers
 
 # Development workflow
 make clean install    # Fresh start
 make dev              # Start development server on http://localhost:3000/
 
 # Testing workflow
-make test-with-server # Full test suite with server
+make test             # Full test suite with server
 make test-ui          # Interactive testing
+make test-headed      # Watch full tests as they happen
 
 # Production workflow
-make prod-build       # Clean production build
-make preview          # Test production build locally
+make build            # Production build
+make preview          # Preview production build locally
 
 # Code quality
 make type-check       # Verify TypeScript types
 make format lint      # Format and lint code
 
+# Screenshots
+make screenshots      # Take screenshots of all views, write to test-results/screenshots/*.png
+
 # Maintenance
 make deps-audit       # Security check
 make deps-update      # Update dependencies
 
-# Build the application
-make autismwheel.html # Builds the SPA at build/autismwheel.html
+# Deploy a clean tested SPA index.html to Google Cloud Platform
+make clean build test deploy
 ```
 
 
