@@ -772,9 +772,17 @@ function CircularDiagramContent() {
 
           // 6. Create a blob and trigger the download
           const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
+
+          // Store blob for test capture (used by html-export-validation tests)
+          (window as any).__capturedBlob = blob;
+
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.download = format === 'locked_html' ? 'autismwheel-locked.html' : 'autismwheel.html';
+
+          // Store filename for test capture
+          (window as any).__capturedFilename = link.download;
+
           link.href = url;
           document.body.appendChild(link);
           link.click();

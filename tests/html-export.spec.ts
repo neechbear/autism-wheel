@@ -67,7 +67,7 @@ test.describe('HTML File Export Generation & Validation', () => {
           hasDoctype: text.trim().startsWith('<!DOCTYPE html'),
           hasHtmlTag: text.includes('<html'),
           hasHead: text.includes('<head>'),
-          hasBody: text.includes('<body>'),
+          hasBody: text.includes('<body'),
           hasMetaTag: text.includes('meta[name="autism-wheel-state"]'),
           hasScript: text.includes('<script')
         };
@@ -262,7 +262,7 @@ test.describe('HTML File Export Generation & Validation', () => {
 
         return {
           hasValidHTML: text.trim().startsWith('<!DOCTYPE html') && text.includes('<html'),
-          hasBody: text.includes('<body>'),
+          hasBody: text.includes('<body'),
           isSubstantial: text.length > 5000, // HTML export should be substantial
           hasScript: text.includes('<script')
         };
