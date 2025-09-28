@@ -1,0 +1,65 @@
+.diagram {
+  /* Define CSS variables for diagram colors to handle theming */
+  --diagram-unselected-fill: #f0f0f0;
+  --diagram-segment-stroke: #ffffff;
+  --diagram-grid-line-color: #e5e7eb;
+  --diagram-grid-boundary-color: #9ca3af;
+  --diagram-label-color: #374151;
+  --diagram-label-stroke: #ffffff;
+}
+
+.dark .diagram {
+  --diagram-unselected-fill: rgba(255, 255, 255, 0.05);
+  --diagram-segment-stroke: #1f1f1f;
+  --diagram-grid-line-color: #374151;
+  --diagram-grid-boundary-color: #6b7280;
+  --diagram-label-color: #d1d5db;
+  --diagram-label-stroke: #1f1f1f;
+}
+
+.segment {
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.segment:hover {
+  opacity: 0.8;
+}
+
+.gridLine {
+  fill: none;
+  stroke: var(--diagram-grid-line-color);
+  stroke-width: 1px;
+  pointer-events: none;
+}
+
+.gridLineBoundary {
+  stroke: var(--diagram-grid-boundary-color);
+  stroke-width: 2px;
+}
+
+.labelText {
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--diagram-label-color);
+  stroke: var(--diagram-label-stroke);
+  stroke-width: 4px;
+  paint-order: stroke;
+  pointer-events: none;
+}
+
+.centerIcon {
+  font-family: system-ui, sans-serif;
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.selectionNumber {
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}

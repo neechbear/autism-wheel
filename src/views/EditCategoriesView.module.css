@@ -1,0 +1,222 @@
+.container {
+  width: 100%;
+  max-width: 56rem; /* 4xl */
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 2.0625rem; /* 3xl */
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: var(--muted-foreground);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeader {
+  text-align: left;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.2s;
+}
+
+.tableRow:hover {
+  background-color: var(--muted);
+}
+
+.tableCell {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.dragHandle {
+  cursor: move;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--muted-foreground);
+}
+
+.addNewButtonContainer {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+
+/* --- Form Elements --- */
+
+.input, .textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--input-background);
+  color: var(--foreground);
+  transition: border-color 0.2s;
+}
+
+.input:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--ring);
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 60px;
+    margin-top: 0.5rem;
+}
+
+.colorInput {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius);
+  background-color: transparent;
+  padding: 0.25rem;
+}
+
+
+/* --- Popover & Emoji Picker --- */
+
+.popover {
+    position: relative;
+    display: inline-block;
+}
+
+.popoverContent {
+    position: absolute;
+    z-index: 50;
+    width: 320px;
+    max-height: 384px; /* 96 */
+    overflow-y: auto;
+    padding: 1rem;
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+}
+
+.emojiTrigger {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.875rem; /* 3xl */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background-color: var(--background);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.emojiTrigger:hover {
+    background-color: var(--accent);
+}
+
+.emojiCategoryTitle {
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    position: sticky;
+    top: -1rem; /* to account for padding */
+    background-color: var(--popover);
+}
+
+.emojiGrid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0.25rem;
+}
+
+.emojiButton {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.125rem; /* text-lg */
+    border-radius: 0.25rem;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.emojiButton:hover {
+    background-color: var(--accent);
+}
+
+
+/* --- Buttons --- */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    border-radius: 0.375rem; /* rounded-md */
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    border: 1px solid transparent;
+}
+
+.button:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.button.primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+}
+.button.primary:hover {
+    background-color: oklch(from var(--primary) l c h / 0.9);
+}
+
+.button.destructive {
+    background-color: var(--destructive);
+    color: var(--destructive-foreground);
+    border-color: var(--destructive);
+}
+.button.destructive:hover {
+    background-color: oklch(from var(--destructive) l c h / 0.9);
+}
+
+.button.ghost {
+    background-color: transparent;
+    color: var(--foreground);
+}
+.button.ghost:hover {
+    background-color: var(--accent);
+}

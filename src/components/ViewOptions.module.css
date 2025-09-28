@@ -1,0 +1,14 @@
+.optionsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem; /* 12px */
+  justify-content: center;
+  align-items: center;
+}
+
+/* This will hide the view options when printing */
+@media print {
+  .optionsContainer {
+    display: none;
+  }
+}

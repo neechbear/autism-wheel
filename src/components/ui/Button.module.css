@@ -1,0 +1,106 @@
+/* Base styles for all buttons */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: var(--radius);
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* --- Sizes --- */
+.default {
+  height: 40px;
+  padding: 0 1rem;
+}
+
+.sm {
+  height: 36px;
+  padding: 0 0.75rem;
+}
+
+.lg {
+  height: 48px;
+  padding: 0 2rem;
+}
+
+.icon {
+  height: 40px;
+  width: 40px;
+}
+
+/* --- Variants --- */
+
+/* Primary: Filled button for the main action */
+.primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+.primary:hover {
+  background-color: oklch(from var(--primary) l c h / 0.9);
+}
+
+/* Secondary: Outlined button for alternative actions */
+.secondary {
+  background-color: transparent;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.secondary:hover {
+  background-color: var(--accent);
+}
+.dark .secondary {
+    color: var(--primary-foreground);
+    border-color: var(--primary-foreground);
+}
+
+/* Destructive: For actions that delete data or are irreversible */
+.destructive {
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+}
+.destructive:hover {
+  background-color: oklch(from var(--destructive) l c h / 0.9);
+}
+
+/* Ghost: For less prominent actions */
+.ghost {
+  background-color: transparent;
+  color: var(--foreground);
+}
+.ghost:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Link: A button that looks like a hyperlink */
+.link {
+  background-color: transparent;
+  color: var(--color-blue-600, #2563eb);
+  text-decoration: underline;
+  padding: 0;
+  height: auto;
+}
+.link:hover {
+  color: var(--color-blue-800, #1e40af);
+}
+.dark .link {
+    color: var(--color-blue-400, #60a5fa);
+}
+.dark .link:hover {
+    color: var(--color-blue-300, #93c5fd);
+}

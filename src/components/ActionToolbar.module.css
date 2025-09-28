@@ -1,0 +1,14 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem; /* 12px */
+  justify-content: center;
+  align-items: center;
+}
+
+/* This will hide the toolbar when printing */
+@media print {
+  .toolbar {
+    display: none;
+  }
+}

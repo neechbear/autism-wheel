@@ -1,0 +1,140 @@
+.container {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.25rem; /* xl */
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.tableHeader {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  vertical-align: top;
+}
+
+.tableHeader:hover {
+  background-color: var(--accent);
+}
+
+.sortableHeaderCell {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.sortIcons {
+  display: flex;
+  flex-direction: column;
+}
+
+.sortIcons svg {
+  width: 12px;
+  height: 12px;
+  color: var(--muted-foreground);
+}
+
+.sortIconDown {
+  margin-top: -4px;
+}
+
+.sortIconActive svg {
+  color: var(--foreground);
+}
+
+.tableCell {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:last-child .tableCell {
+  border-bottom: none;
+}
+
+.categoryCell {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  width: 50%;
+}
+
+.icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  margin-top: -4px;
+}
+
+.categoryText {
+  display: flex;
+  flex-direction: column;
+}
+
+.categoryName {
+  font-weight: 500;
+}
+
+.categoryDescription {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  margin-top: 0.25rem;
+  hyphens: auto;
+  word-wrap: break-word;
+}
+
+.impactCell {
+  text-align: center;
+  width: 25%;
+}
+
+.impactBoxContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.impactBox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+}
+
+.supportNeedsText {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+/* Ensure the table avoids breaking inside when printing */
+@media print {
+  .container {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

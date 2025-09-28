@@ -1,0 +1,61 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.intro {
+  text-align: center;
+  max-width: 48rem; /* 3xl */
+  color: var(--muted-foreground);
+}
+
+.inlineLink {
+  display: inline;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-blue-600, #2563eb);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.inlineLink:hover {
+  color: var(--color-blue-800, #1e40af);
+}
+
+.dark .inlineLink {
+  color: var(--color-blue-400, #60a5fa);
+}
+
+.dark .inlineLink:hover {
+  color: var(--color-blue-300, #93c5fd);
+}
+
+.diagramContainer {
+  position: relative;
+}
+
+.controlsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.breakdownContainer {
+  width: 100%;
+  max-width: 48rem; /* 3xl */
+}
+
+/* Temporary style for placeholder components */
+.placeholder {
+  border: 1px dashed var(--muted-foreground);
+  padding: 2rem;
+  border-radius: var(--radius);
+  text-align: center;
+  width: 100%;
+  color: var(--muted-foreground);
+}

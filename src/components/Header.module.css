@@ -1,0 +1,45 @@
+.headerContainer {
+  text-align: center;
+  width: 100%;
+  max-width: 48rem; /* 3xl */
+}
+
+.title {
+  font-size: 2.25rem; /* 4xl */
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.introText {
+  margin-bottom: 1.5rem;
+  color: var(--foreground);
+  text-align: left;
+}
+
+.introText p {
+  margin-bottom: 1rem;
+}
+
+.link {
+  color: var(--color-blue-600, #2563eb);
+  text-decoration: underline;
+}
+
+.link:hover {
+  color: var(--color-blue-800, #1e40af);
+}
+
+.dark .link {
+  color: var(--color-blue-400, #60a5fa);
+}
+
+.dark .link:hover {
+  color: var(--color-blue-300, #93c5fd);
+}
+
+/* Hide on print */
+@media print {
+  .introText {
+    display: none;
+  }
+}
