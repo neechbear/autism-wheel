@@ -2,7 +2,6 @@
 name: Build, Test, and Deploy to GitHub Pages
 
 on:
-  # Runs on pushes to any branch
   push:
     paths:
       - 'src/**'
@@ -16,15 +15,14 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: write # Needed to push to the gh-pages branch
+  # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+  contents: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -46,7 +44,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      # ✅ New step to cache Playwright browsers
       - name: Cache Playwright browsers
         id: cache-playwright
         uses: actions/cache@v4
@@ -59,7 +56,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # ✅ Use the recommended command. It will be fast on cache hits.
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
@@ -76,13 +72,10 @@ jobs:
         env:
           VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
 
-      # ✅ Re-add the manual server start and test commands
-      - name: Start server for testing
-        run: |
-          npm install -g serve
-          serve -s build -l 3000 &
       - name: Run Playwright tests
         run: npm test
+        env:
+          CI: true
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -90,11 +83,9 @@ jobs:
           name: build-artifact
           path: build/
 
-
   deploy-main:
     runs-on: ubuntu-latest
     if: github.ref_name == 'main'
-    # Now only needs the single 'build-and-test' job
     needs: [build-and-test]
     steps:
       - name: Download build artifact
@@ -115,7 +106,6 @@ jobs:
   deploy-feature:
     runs-on: ubuntu-latest
     if: github.ref_name != 'main'
-    # Now only needs the single 'build-and-test' job
     needs: [build-and-test]
     steps:
       - name: Download build artifact
