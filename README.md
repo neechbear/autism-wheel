@@ -106,6 +106,13 @@ make dev            # Start development server on http://localhost:3000/
 | `dist-check`       | Inspect the built distribution files         |
 
 
+### Deployment
+
+| Target   | Description                                                |
+|----------|------------------------------------------------------------|
+| `deploy` | Build and deploy gs://www.myautisticprofile.com/index.html |
+
+
 ### Workflow Helpers
 
 | Target  | Description                                         |

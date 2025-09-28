@@ -2,17 +2,21 @@
 # Using Vite as the build tool
 
 # Variables
-NODE_VERSION := $(shell node --version 2>/dev/null || echo "not found")
-NPM_VERSION := $(shell npm --version 2>/dev/null || echo "not found")
-PACKAGE_MANAGER := npm
-BUILD_DIR := build
-DIST_DIR := build
-SRC_DIR := src
-NODE_MODULES := node_modules
-TEST_RESULTS_DIR := test-results
-DEV_PORT := 3000
-DEV_HOST := localhost
-TEST_URL := http://$(DEV_HOST):$(DEV_PORT)
+NODE_VERSION = $(shell node --version 2>/dev/null || echo "not found")
+NPM_VERSION = $(shell npm --version 2>/dev/null || echo "not found")
+PACKAGE_MANAGER = npm
+BUILD_DIR = build
+DIST_DIR = build
+SRC_DIR = src
+NODE_MODULES = node_modules
+TEST_RESULTS_DIR = test-results
+DEV_PORT = 3000
+DEV_HOST = localhost
+TEST_URL = http://$(DEV_HOST):$(DEV_PORT)
+TIMESTAMP = $(shell date +'%Y-%m-%d-%H%M%S')
+
+CLOUDSDK_CORE_PROJECT = neech-sandbox
+export CLOUDSDK_CORE_PROJECT
 
 # Default target
 .DEFAULT_GOAL := help
@@ -142,7 +146,7 @@ info: status ## Alias for status target
 # Development workflow shortcuts
 autismwheel.html: install ## Build the application as a single HTML file
 	$(PACKAGE_MANAGER) run build
-	mv $(DIST_DIR)/index.html $(DIST_DIR)/autismwheel.html
+	cd $(DIST_DIR) && ln -sfv index.html autismwheel.html
 
 quick-build: ## Quick build without cleaning
 	$(PACKAGE_MANAGER) run build
@@ -153,7 +157,7 @@ dev-clean: ## Clean and start development
 
 prod-build: ## Full production build with clean
 	$(MAKE) clean
-	$(MAKE) build
+	$(MAKE) build autismwheel.html
 
 # File watching and validation
 watch-test: install ## Run tests in watch mode (if available)
@@ -166,7 +170,14 @@ watch-test: install ## Run tests in watch mode (if available)
 
 # Deployment helpers
 dist-check: build ## Check the distribution build
-	@ls -la $(BUILD_DIR)/ || ls -la $(DIST_DIR)/ || echo "No build directory found"
+	ls -la $(BUILD_DIR)/ || ls -la $(DIST_DIR)/ || echo "No build directory found"
+
+deploy: prod-build
+	mkdir -pv backup
+	gcloud storage cp gs://www.myautisticprofile.com/index.html backup/index-$(TIMESTAMP).html || \
+	gsutil cp gs://www.myautisticprofile.com/index.html backup/index-$(TIMESTAMP).html
+	gcloud storage cp $(BUILD_DIR)/index.html gs://www.myautisticprofile.com/index.html || \
+	gsutil cp $(BUILD_DIR)/index.html gs://www.myautisticprofile.com/index.html
 
 # Install Playwright browsers (for testing)
 install-browsers: ## Install Playwright browsers
