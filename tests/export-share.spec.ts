@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Autism Wheel - Export and Share Functionality', () => {
+test.describe('Export, Save & Share Functions', () => {
   test.beforeEach(async ({ page }) => {
     // Set up mocks before navigation to prevent print dialogs
     await page.addInitScript(() => {

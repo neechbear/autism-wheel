@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Autism Wheel - Data Table and Breakdown', () => {
+test.describe('Detailed Breakdown Table Display & Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible({ timeout: 15000 });

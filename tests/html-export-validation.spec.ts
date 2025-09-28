@@ -270,7 +270,7 @@ const testSuites: TestSuite[] = [
   }
 ];
 
-test.describe('HTML Export Functionality Testing', () => {
+test.describe('Exported HTML File Functionality Testing', () => {
   let exportPaths: { regular: string | null; locked: string | null } = { regular: null, locked: null };
   let originalState: any = null;
 

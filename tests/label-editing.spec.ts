@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Autism Wheel - Label Editing', () => {
+test.describe('Category Editing & Customization Features', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible({ timeout: 15000 });

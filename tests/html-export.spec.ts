@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('HTML Export Tests', () => {
+test.describe('HTML File Export Generation & Validation', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
