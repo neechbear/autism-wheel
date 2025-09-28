@@ -1,7 +1,7 @@
-# .github/workflows/your-workflow-name.yml
 name: Build, Test, and Deploy to GitHub Pages
 
 on:
+  # Runs on pushes to any branch
   push:
     paths:
       - 'src/**'
@@ -15,50 +15,48 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-  contents: write
+  contents: write # Needed to push to the gh-pages branch
 
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Cache node modules
-        id: cache-npm
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
-
-      - name: Cache Playwright browsers
-        id: cache-playwright
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
-
       - name: Install dependencies
-        run: npm ci
-
+        run: npm install
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
+      - name: Build for testing (with root base path)
+        run: npm run build
+      - name: Start server
+        run: |
+          npm install -g serve
+          serve -s build -l 3000 &
+      - name: Run Playwright tests
+        run: npm test
 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: Set up base path for deployment
         run: |
           if [ "${{ github.ref_name }}" = "main" ]; then
@@ -66,17 +64,12 @@ jobs:
           else
             echo "VITE_BASE_PATH=/autism-wheel/branch/${{ github.ref_name }}/" >> $GITHUB_ENV
           fi
-
-      - name: Build project
+      - name: Install dependencies
+        run: npm install
+      - name: Build for deployment
         run: npm run build
         env:
           VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
-
-      - name: Run Playwright tests
-        run: npm test
-        env:
-          CI: true
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -86,7 +79,7 @@ jobs:
   deploy-main:
     runs-on: ubuntu-latest
     if: github.ref_name == 'main'
-    needs: [build-and-test]
+    needs: [test, build]
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -98,7 +91,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
-          keep_files: true
+          keep_files: true # Do not overwrite feature branch deployments
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: 'Deploy from ${{ github.sha }}'
@@ -106,7 +99,7 @@ jobs:
   deploy-feature:
     runs-on: ubuntu-latest
     if: github.ref_name != 'main'
-    needs: [build-and-test]
+    needs: [build]
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -119,7 +112,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
           destination_dir: ./branch/${{ github.ref_name }}
-          keep_files: true
+          keep_files: true # Keep existing files for feature branches
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: 'Deploy from ${{ github.sha }}'
