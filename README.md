@@ -59,6 +59,23 @@ make dev                      # Start development server on http://localhost:300
 | `install-browsers` | Install Playwright browsers for testing          |
 
 
+### Test Organization
+
+The project has 171 comprehensive tests organized across 8 test files:
+
+- **`app-basic.spec.ts`**: Basic application functionality and UI elements
+- **`circular-diagram.spec.ts`**: Interactive wheel/diagram functionality
+- **`configuration.spec.ts`**: Settings and configuration features
+- **`data-table.spec.ts`**: Data table display and functionality
+- **`export-share.spec.ts`**: Image export formats (PNG, JPEG, SVG) and sharing
+- **`html-export.spec.ts`**: HTML export functionality (regular and locked)
+- **`label-editing.spec.ts`**: Category and label editing features
+- **`theme-switching.spec.ts`**: Theme and visual appearance options
+- **`url-state-sharing.spec.ts`**: URL-based state sharing functionality
+
+All tests include comprehensive content validation, not just UI interaction testing.
+
+
 ### Screenshot Commands
 
 | Target        | Description                               |

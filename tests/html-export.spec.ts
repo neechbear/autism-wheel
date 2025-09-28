@@ -259,7 +259,7 @@ test.describe('HTML Export Tests', () => {
         if (!blob) return null;
 
         const text = await blob.text();
-        
+
         return {
           hasValidHTML: text.trim().startsWith('<!DOCTYPE html') && text.includes('<html'),
           hasBody: text.includes('<body>'),
