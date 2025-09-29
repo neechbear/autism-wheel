@@ -3,9 +3,10 @@ import CircularDiagram from './components/CircularDiagram';
 
 export default function App() {
   useEffect(() => {
-    // Only set title if not in locked HTML mode
     const lockedMeta = document.querySelector('meta[name="autism-wheel-locked-html-mode"]');
-    if (!lockedMeta) {
+    if (lockedMeta) {
+      document.title = 'My Autism Wheel';
+    } else {
       document.title = 'Autism Wheel';
     }
   }, []);
