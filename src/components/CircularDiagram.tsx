@@ -120,11 +120,11 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
         </li>
       </ul>
 
-            <p className="mb-4">
-              For a clear, empathetic child-centric explanation with examples, visit the <a href="https://www.seattlechildrens.org/clinics/autism-center/the-autism-blog/autism-levels-support/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Seattle Children's Autism Center Blog</a>.
-        To read the direct quotes from the DSM-5, see this page from <a href="https://www.autismspeaks.org/levels-of-autism" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Autism Speaks</a>.</p>
+      <p className="mb-4">
+        For a clear, empathetic child-centric explanation with examples, visit the <a href="https://www.seattlechildrens.org/clinics/autism-center/the-autism-blog/autism-levels-support/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline">Seattle Children's Autism Center Blog</a>.
+      </p>
 
-<p>&nbsp;</p>
+      <p>&nbsp;</p>
       <h1 className="text-3xl font-bold mt-12 mb-4">Further Reading & Resources 📚</h1>
       <p className="mb-4">If you want to explore more before completing your profile, here are some excellent resources.</p>
 
@@ -146,7 +146,8 @@ function HelpContent({ onReturn }: { onReturn: () => void }) {
       <p className="mb-4">These organisations offer practical advice, community connection, and advocate for the autistic community.</p>
       <ul className="list-disc list-outside space-y-2 mb-4 pl-8">
         <li><a href="https://www.autism.org.uk/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>The National Autistic Society (UK)</strong></a>: The UK's leading charity for autistic people and their families. Their website is a vast library of information on education, employment, mental health, and local support services.</li>
-        <li><a href="https://www.autismspeaks.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Autism Speaks (US)</strong></a>: A large US-based organisation focused on funding research and providing resources, such as toolkits for navigating life after diagnosis and transitioning to adulthood.</li>
+        <li><a href="https://autisticadvocacy.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Autistic Self Advocacy Network (ASAN) (US)</strong></a>: A US-based organization run by and for autistic people, promoting self-advocacy and providing resources for the autistic community.</li>
+        <li><a href="https://autismsociety.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"><strong>Autism Society (US)</strong></a>: A US-based organization that provides information, advocacy, and support for individuals with autism and their families.</li>
       </ul>
 
       <h2 className="text-2xl font-bold underline mb-2">Key UK & US Health Information</h2>
