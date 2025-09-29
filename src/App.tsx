@@ -3,7 +3,12 @@ import CircularDiagram from './components/CircularDiagram';
 
 export default function App() {
   useEffect(() => {
-    document.title = 'Autism Wheel';
+    const lockedMeta = document.querySelector('meta[name="autism-wheel-locked-html-mode"]');
+    if (lockedMeta) {
+      document.title = 'My Autism Wheel';
+    } else {
+      document.title = 'Autism Wheel';
+    }
   }, []);
 
   return (

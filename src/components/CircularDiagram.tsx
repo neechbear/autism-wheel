@@ -704,16 +704,21 @@ function CircularDiagramContent() {
     if (format === 'html' || format === 'locked_html') {
       setTimeout(() => {
         try {
-          // 1. Clone the entire document to avoid modifying the live DOM
-          const clonedDocument = document.cloneNode(true) as Document;
+          // Instead of cloning document, serialize current HTML and then create a new document
+          // This approach is more reliable across different build environments
+          const htmlString = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
-          // 2. Clean up attributes and elements that might interfere
-          const root = clonedDocument.querySelector('#root');
-          const body = clonedDocument.body;
-          const html = clonedDocument.documentElement;
+          // Create a new document from the HTML string
+          const parser = new DOMParser();
+          const newDoc = parser.parseFromString(htmlString, 'text/html');
 
-          // Remove Radix UI temporary items, including the dropdown content
-          clonedDocument.querySelectorAll(
+          // Clean up attributes and elements that might interfere
+          const root = newDoc.querySelector('#root');
+          const body = newDoc.body;
+          const html = newDoc.documentElement;
+
+          // Remove Radix UI temporary items
+          newDoc.querySelectorAll(
             '[data-radix-focus-guard],[data-radix-scroll-area-viewport],[data-radix-popper-content-wrapper]'
           ).forEach(el => el.remove());
 
@@ -723,57 +728,61 @@ function CircularDiagramContent() {
             el.removeAttribute('data-scroll-locked');
             el.removeAttribute('data-aria-hidden');
             el.removeAttribute('aria-hidden');
-            el.style.cssText = ''; // Remove inline styles
+            if (el instanceof HTMLElement) {
+              el.style.cssText = ''; // Remove inline styles
+            }
           });
 
-          // 3. Find and remove any existing state meta tag to prevent duplicates
-          const existingMeta = clonedDocument.querySelector('meta[name="autism-wheel-state"]');
+          // Find and remove any existing state meta tag to prevent duplicates
+          const existingMeta = newDoc.querySelector('meta[name="autism-wheel-state"]');
           if (existingMeta) {
             existingMeta.remove();
           }
 
-          // 4. Inject the new state meta tag directly into the cloned DOM's head
-          const metaTag = clonedDocument.createElement('meta');
+          // Inject the new state meta tag directly into the document's head
+          const metaTag = newDoc.createElement('meta');
           metaTag.name = 'autism-wheel-state';
           metaTag.content = encodeState();
-          clonedDocument.head.appendChild(metaTag);
+          newDoc.head.appendChild(metaTag);
 
           // If saving as locked HTML, perform additional modifications
           if (format === 'locked_html') {
             // Add the locked mode meta tag
-            const lockedMetaTag = clonedDocument.createElement('meta');
+            const lockedMetaTag = newDoc.createElement('meta');
             lockedMetaTag.name = 'autism-wheel-locked-html-mode';
             lockedMetaTag.content = 'true';
-            clonedDocument.head.appendChild(lockedMetaTag);
+            newDoc.head.appendChild(lockedMetaTag);
 
-            // Change the main title
-            const titleElement = clonedDocument.querySelector('h1');
-            if (titleElement) {
-              titleElement.textContent = 'My Autism Wheel';
-            }
-            const documentTitle = clonedDocument.querySelector('title');
-            if(documentTitle) {
+            // Change both the document title AND the visible H1 title for locked mode
+            const documentTitle = newDoc.querySelector('title');
+            if (documentTitle) {
               documentTitle.textContent = 'My Autism Wheel';
             }
 
+            const titleElement = newDoc.querySelector('h1');
+            if (titleElement) {
+              titleElement.textContent = 'My Autism Wheel';
+            }
+
             // Remove introductory paragraphs
-            const introParagraphs = clonedDocument.querySelectorAll('.max-w-3xl.mx-auto');
+            const introParagraphs = newDoc.querySelectorAll('.max-w-3xl.mx-auto');
             introParagraphs.forEach(p => p.remove());
 
             // Remove the settings dropdowns and action buttons container
-            const settingsContainer = clonedDocument.querySelector('.flex.flex-wrap.gap-4.justify-center.print\\:hidden');
-            if(settingsContainer) {
+            const settingsContainer = newDoc.querySelector('.flex.flex-wrap.gap-4.justify-center.print\\:hidden');
+            if (settingsContainer) {
               settingsContainer.remove();
             }
           }
 
-          // 5. Serialize the cleaned DOM to a string
-          const finalHtml = '<!DOCTYPE html>' + clonedDocument.documentElement.outerHTML;
+          // Serialize the cleaned DOM to a string
+          const finalHtml = '<!DOCTYPE html>\n' + newDoc.documentElement.outerHTML;
 
-          // 6. Create a blob and trigger the download
+          // Create a blob and trigger the download
           const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
 
           // Store blob for test capture (used by html-export-validation tests)
+          (window as any).__capturedBlob = blob;
           (window as any).__capturedBlob = blob;
 
           const url = URL.createObjectURL(blob);
