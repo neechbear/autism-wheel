@@ -291,15 +291,31 @@ function EditCategoriesView(): JSX.Element {
 
                   {/* Reorder column - with drag handle and up/down arrows on same line */}
                   <TableCell className={styles.tableCellTopCenter}>
-                    <div className={styles.reorderColumn}>
+                    <div
+                      className={styles.reorderColumn}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '2px',
+                        padding: '0',
+                        margin: '0'
+                      }}
+                    >
                       {index > 0 && (
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleMoveUp(index)}
                           className={styles.reorderButton}
+                          style={{
+                            padding: '0',
+                            margin: '0',
+                            minWidth: '16px',
+                            width: '16px',
+                            height: '16px'
+                          }}
                         >
-                          <ChevronUp className={styles.reorderIcon} />
+                          <ChevronUp style={{ width: '12px', height: '12px' }} />
                         </Button>
                       )}
                       <div
@@ -312,8 +328,15 @@ function EditCategoriesView(): JSX.Element {
                         onDragEnd={(e) => {
                           e.currentTarget.style.opacity = '1';
                         }}
+                        style={{
+                          padding: '0',
+                          margin: '0 2px',
+                          cursor: 'grab',
+                          display: 'flex',
+                          alignItems: 'center'
+                        }}
                       >
-                        <GripVertical className={styles.dragIcon} />
+                        <GripVertical style={{ width: '12px', height: '12px' }} />
                       </div>
                       {index < draftCategories.length - 1 && (
                         <Button
@@ -321,8 +344,15 @@ function EditCategoriesView(): JSX.Element {
                           size="sm"
                           onClick={() => handleMoveDown(index)}
                           className={styles.reorderButton}
+                          style={{
+                            padding: '0',
+                            margin: '0',
+                            minWidth: '16px',
+                            width: '16px',
+                            height: '16px'
+                          }}
                         >
-                          <ChevronDown className={styles.reorderIcon} />
+                          <ChevronDown style={{ width: '12px', height: '12px' }} />
                         </Button>
                       )}
                     </div>

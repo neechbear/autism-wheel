@@ -228,10 +228,20 @@
 
 /* Reorder column styles */
 .reorderColumn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-xs);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.125rem !important;
+  --reorder-spacing: 0.125rem;
+}
+
+.reorderColumn > * {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.reorderColumn > *:not(:last-child) {
+  margin-right: var(--reorder-spacing) !important;
 }
 
 .reorderButton .buttonIcon {
@@ -268,13 +278,14 @@
 }
 
 .dragHandle {
-  cursor: grab;
-  padding: var(--spacing-xs);
-  border-radius: var(--radius);
-  transition: background-color var(--transition-fast);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  cursor: grab !important;
+  padding: 0.125rem !important;
+  margin: 0 !important;
+  border-radius: var(--radius) !important;
+  transition: background-color var(--transition-fast) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .dragHandle:hover {
