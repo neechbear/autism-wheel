@@ -295,7 +295,7 @@ function EditCategoriesView(): JSX.Element {
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '2px',
+                        gap: '1px',
                         padding: '0',
                         margin: '0'
                       }}
@@ -329,7 +329,7 @@ function EditCategoriesView(): JSX.Element {
                         }}
                         style={{
                           padding: '0',
-                          margin: '0 2px',
+                          margin: '0 1px',
                           cursor: 'grab',
                           display: 'flex',
                           alignItems: 'center'
