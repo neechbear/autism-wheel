@@ -3,9 +3,6 @@
 .title {
   padding-top: var(--spacing-sm);
   margin-bottom: var(--spacing-sm);
-  color: var(--color-text-primary);
-  text-align: center;
-  /* Font size, weight, and line-height inherited from global h1 styles */
 }
 
 .buttonContainer {
@@ -42,7 +39,7 @@
   font-size: var(--font-size-base);
   line-height: 1.6;
   color: var(--color-text-primary);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
 }
 
 .link {
@@ -68,6 +65,7 @@
   max-width: 48rem; /* 768px - same as intro paragraph width */
   margin: 0 auto;
   width: 100%;
+  padding-top: var(--spacing-md);
   padding-bottom: var(--spacing-xl);
 }
 
@@ -137,6 +135,7 @@
 .supportLevel {
   margin-bottom: var(--spacing-lg);
   display: list-item;
+  margin-bottom: var(--spacing-sm);
 }
 
 .levelTitle {
@@ -153,14 +152,13 @@
   line-height: 1.6;
   margin-left: 0; /* Align with the title */
   display: block;
-  margin-top: var(--spacing-sm); /* Add spacing between title and description */
 }
 
 /* Regular unordered lists for resources */
 .resourcesList {
   list-style: disc;
   padding-left: var(--spacing-lg);
-  margin: var(--spacing-md) 0;
+  margin: var(--spacing-sm) 0;
 }
 
 .resourcesList li {
