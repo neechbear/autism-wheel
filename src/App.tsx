@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { AppProvider, useAppContext } from './state/AppContext';
 import MainView from './views/MainView';
 import HelpView from './views/HelpView';
+import EditCategoriesView from './views/EditCategoriesView';
 
 // Main app component that renders the appropriate view
 function AppContent() {
@@ -39,6 +40,8 @@ function AppContent() {
   switch (state.currentView) {
     case 'help':
       return <HelpView />;
+    case 'edit':
+      return <EditCategoriesView />;
     case 'main':
     default:
       return <MainView />;

@@ -13,6 +13,7 @@
 
 .introContainer {
   text-align: center;
+  margin-bottom: var(--spacing-md);
 }
 
 .introSection {

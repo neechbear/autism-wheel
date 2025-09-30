@@ -5,7 +5,7 @@ import { Printer, Download, ChevronDown, Link, HelpCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { useAppContext, appActions } from '../state/AppContext';
-import { encodeState } from '../state/migrations';
+import { encodeState } from '../state/MigrateState';
 import styles from './ActionToolbar.module.css';
 
 function ActionToolbar(): JSX.Element {

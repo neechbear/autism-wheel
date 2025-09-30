@@ -678,7 +678,7 @@ structure, all logic for handling older data versions must be isolated in a
 single, discrete location.
 
 * **Dedicated Migration File:** Create a dedicated module, for example
-  `src/state/migrations.ts`, to house all state decoding and migration logic.
+  `src/state/MigrateState.ts`, to house all state decoding and migration logic.
 * **Single Entry Point:** This module should expose a primary function, such as
   `loadAndMigrateState(encodedState: string): ApplicationState`, which will be
   the sole entry point for processing any external state data.

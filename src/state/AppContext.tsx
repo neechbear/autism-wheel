@@ -21,7 +21,7 @@ import {
   DEFAULT_SLICE_ICONS,
   DEFAULT_SLICE_COLORS,
 } from '../constants/defaults';
-import { loadAndMigrateState } from './migrations';
+import { loadAndMigrateState } from './MigrateState';
 
 // Action types for state updates
 export type AppAction =

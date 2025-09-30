@@ -1,0 +1,335 @@
+/* EditCategoriesView.module.css - CSS Module for EditCategoriesView component */
+
+.title {
+  padding-top: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  color: var(--foreground);
+  text-align: center;
+  /* Font size, weight, and line-height inherited from global h1 styles */
+}
+
+.textSection {
+  max-width: 48rem; /* 768px - same as help view intro paragraph width */
+  margin: 0 auto 0 auto;
+  text-align: left;
+}
+
+.introText {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--foreground);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Button row styles */
+.buttonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+
+.blueButton {
+  height: 2.5rem;
+  background-color: var(--color-blue-600);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0 var(--spacing-lg);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.blueButton:hover:not(:disabled) {
+  background-color: var(--color-blue-700);
+}
+
+.blueButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--muted);
+}
+
+.redButton {
+  height: 2.5rem;
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0 var(--spacing-lg);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-normal);
+}
+
+.redButton:hover {
+  opacity: 0.9;
+}
+
+.deleteButton {
+  height: 2.5rem;
+  width: 2.5rem;
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deleteButton:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.deleteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+}
+
+.buttonIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Edit categories table section */
+.editCategoriesSection {
+  width: 100%;
+  max-width: 48rem; /* Match detailed breakdown table width */
+  margin: 0 auto var(--spacing-lg) auto; /* Center horizontally and add bottom margin */
+  overflow-x: auto; /* Allow horizontal scroll if needed */
+}
+
+/* Table styles */
+.tableHeadCenter {
+  text-align: center;
+}
+
+.tableRowHover {
+  transition: background-color var(--transition-fast);
+}
+
+.tableRowHover:hover {
+  background-color: var(--accent);
+}
+
+.tableCellTop {
+  vertical-align: top;
+  padding: var(--spacing-md);
+}
+
+.tableCellTopCenter {
+  vertical-align: top;
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+/* Icon column styles */
+.iconColumn {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 3rem;
+}
+
+/* Match emoji size to breakdown table */
+.iconColumn button {
+  font-size: 2.7rem !important;
+  line-height: 1;
+  width: 4rem !important;
+  height: 4rem !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+}
+
+/* Name and description column styles */
+.nameDescriptionColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.inputWrapper {
+  width: 100%;
+}
+
+.textInput {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium); /* Match category name weight */
+  background-color: var(--input-background);
+  color: var(--foreground);
+  font-family: inherit;
+  margin-bottom: var(--spacing-xs); /* Match gap from breakdown table */
+}
+
+.textInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-blue-500);
+  border-color: var(--color-blue-500);
+}
+
+.textArea {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: var(--font-size-sm); /* Match description font size */
+  line-height: 1.4; /* Match description line height */
+  color: var(--muted-foreground); /* Match description color */
+  background-color: var(--input-background);
+  resize: vertical;
+  min-height: 4rem;
+  font-family: inherit;
+}
+
+.textArea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-blue-500);
+  border-color: var(--color-blue-500);
+  color: var(--foreground); /* Use normal foreground when focused */
+}
+
+/* Color column styles */
+.colorColumn {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.colorInput {
+  width: 3rem;
+  height: 2rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: 2px solid var(--border);
+}
+
+.colorInput:hover {
+  border-color: var(--color-blue-500);
+}
+
+/* Reorder column styles */
+.reorderColumn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.reorderButton .buttonIcon {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+}
+
+.reorderIcon {
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  min-width: 1.75rem !important;
+  min-height: 1.75rem !important;
+  flex-shrink: 0 !important;
+  color: var(--muted-foreground) !important;
+}
+
+/* Also target the button to ensure proper sizing */
+.reorderButton {
+  height: 3rem !important;
+  width: 3rem !important;
+  padding: 0 !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: opacity var(--transition-fast);
+}
+
+.reorderButton:hover {
+  opacity: 0.7 !important;
+}
+
+.dragHandle {
+  cursor: grab;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius);
+  transition: background-color var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dragHandle:hover {
+  background-color: var(--muted);
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.dragIcon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--muted-foreground);
+}
+
+/* Bottom button container */
+.bottomButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--border);
+}
+
+.returnButton {
+  height: 2.5rem;
+  padding: 0 var(--spacing-lg);
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.returnButton:hover {
+  background-color: var(--accent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .buttonRow {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .editCategoriesSection {
+    overflow-x: auto;
+  }
+
+  .textInput,
+  .textArea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
