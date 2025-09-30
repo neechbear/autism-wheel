@@ -269,7 +269,9 @@ function EditCategoriesView(): JSX.Element {
                           outline: 'none',
                           WebkitAppearance: 'none',
                           MozAppearance: 'none',
-                          appearance: 'none'
+                          appearance: 'none',
+                          padding: 0,
+                          margin: 0
                         }}
                       />
                     </div>

@@ -241,6 +241,27 @@
   border-radius: var(--radius);
   cursor: pointer;
   border: 2px solid var(--border);
+  padding: 0;
+  margin: 0;
+}
+
+/* Browser-specific styles to hide internal color picker outlines */
+.colorInput::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border: none;
+  border-radius: var(--radius);
+}
+
+.colorInput::-webkit-color-swatch {
+  border: none;
+  border-radius: var(--radius);
+  padding: 0;
+  margin: 0;
+}
+
+.colorInput::-moz-color-swatch {
+  border: none;
+  border-radius: var(--radius);
 }
 
 .colorInput:hover {
