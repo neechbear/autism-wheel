@@ -30,6 +30,12 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+  --color-green-50: #f0fdf4;
+  --color-green-600: #16a34a;
+  --color-green-700: #15803d;
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -227,53 +233,62 @@ html {
     margin: 1in;
     size: A4;
   }
-  
+
   body {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
-  
+
   /* Ensure proper page breaks */
   .print-break-avoid {
     break-inside: avoid;
     page-break-inside: avoid;
   }
-  
+
   /* Ensure SVG prints properly */
   svg {
     max-width: 100% !important;
     height: auto !important;
   }
-  
+
   /* Adjust font sizes for print */
   h1 {
     font-size: 24px !important;
   }
-  
+
   h2 {
     font-size: 20px !important;
   }
-  
+
   h3 {
     font-size: 18px !important;
   }
-  
+
   /* Ensure table content prints properly */
   table {
     break-inside: auto;
   }
-  
+
   tr {
     break-inside: avoid;
     break-after: auto;
   }
-  
+
   thead {
     display: table-header-group;
   }
-  
+
   /* Ensure explanation section starts on new page if needed */
   .print-page-break {
     page-break-before: always;
   }
+}
+
+/* Enhanced text wrapping for better layout */
+.break-words {
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
 }

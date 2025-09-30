@@ -1,0 +1,117 @@
+// Category editor row component following Single Responsibility Principle
+// Handles editing of a single category with all its properties
+
+import React from 'react';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Button } from './ui/button';
+import { Trash2, GripVertical } from 'lucide-react';
+import EmojiPicker from './EmojiPicker';
+import type { ProfileCategory } from '../types';
+
+type CategoryEditorRowProps = {
+  category: ProfileCategory;
+  onUpdate: (id: string, updates: Partial<ProfileCategory>) => void;
+  onDelete: (id: string) => void;
+  dragHandleProps?: any; // For drag and drop functionality
+};
+
+function CategoryEditorRow({
+  category,
+  onUpdate,
+  onDelete,
+  dragHandleProps
+}: CategoryEditorRowProps): JSX.Element {
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onUpdate(category.id, { name: e.target.value });
+  };
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onUpdate(category.id, { description: e.target.value });
+  };
+
+  const handleIconChange = (newIcon: string) => {
+    onUpdate(category.id, { icon: newIcon });
+  };
+
+  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onUpdate(category.id, { color: e.target.value });
+  };
+
+  const handleDelete = () => {
+    onDelete(category.id);
+  };
+
+  return (
+    <div className="border rounded-lg p-4 space-y-4 bg-card">
+      {/* Force recompile with layout changes */}
+      <div className="flex items-start gap-4">
+        {/* Drag handle */}
+        <div {...dragHandleProps} className="cursor-grab active:cursor-grabbing pt-2">
+          <GripVertical className="w-5 h-5 text-muted-foreground" />
+        </div>
+
+        {/* Icon picker - top aligned with clear label */}
+        <div className="flex flex-col items-start gap-2 min-w-[80px]">
+          <label className="text-sm font-medium text-foreground">Icon</label>
+          <EmojiPicker
+            selectedEmoji={category.icon}
+            onEmojiSelect={handleIconChange}
+          />
+        </div>
+
+        {/* Name and Description column - vertically stacked */}
+        <div className="flex-1 flex flex-col gap-3">
+          <div className="w-full">
+            <label className="text-sm font-medium text-foreground block mb-1">Category Name & Description</label>
+            <Input
+              value={category.name}
+              onChange={handleNameChange}
+              placeholder="Category name"
+              className="w-full"
+            />
+          </div>
+          <div className="w-full">
+            <Textarea
+              value={category.description}
+              onChange={handleDescriptionChange}
+              placeholder="Category description"
+              rows={3}
+              className="w-full resize-none"
+            />
+          </div>
+        </div>
+
+        {/* Color picker with label */}
+        <div className="flex flex-col items-center gap-2 min-w-[80px]">
+          <label className="text-sm font-medium text-foreground">Color</label>
+          <div
+            className="w-8 h-8 rounded border border-border"
+            style={{ backgroundColor: category.color }}
+          />
+          <Input
+            type="color"
+            value={category.color}
+            onChange={handleColorChange}
+            className="w-16 h-8 p-1 border rounded cursor-pointer"
+          />
+        </div>
+
+        {/* Delete button */}
+        <div className="pt-7">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDelete}
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default CategoryEditorRow;
