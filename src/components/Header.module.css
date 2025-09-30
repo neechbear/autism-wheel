@@ -1,0 +1,83 @@
+/* Header Component Styles - Following CSS Modules pattern */
+
+.container {
+  text-align: center;
+}
+
+.title {
+  margin-bottom: var(--spacing-sm);
+  font-size: 2.25rem; /* text-4xl equivalent */
+  font-weight: var(--font-weight-bold);
+  line-height: 1.1;
+  color: var(--color-text-primary);
+}
+
+.introContainer {
+  text-align: center;
+}
+
+.introSection {
+  margin-bottom: var(--spacing-lg);
+  max-width: 48rem; /* max-w-3xl equivalent */
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.introText {
+  text-align: left;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+.link {
+  color: var(--color-primary);
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.link:hover {
+  color: var(--color-primary-hover);
+}
+
+.instructionsSection {
+  color: var(--color-text-secondary);
+  max-width: 48rem; /* max-w-3xl equivalent */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.instructionsText {
+  text-align: left;
+  color: var(--color-primary);
+}
+
+.helpLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-primary);
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.helpLink:hover {
+  color: var(--color-primary-hover);
+}
+
+.helpIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Print-specific styles */
+@media print {
+  .introSection,
+  .instructionsSection {
+    display: none !important;
+  }
+}
+
+/* Dark theme adjustments are handled by CSS custom properties */

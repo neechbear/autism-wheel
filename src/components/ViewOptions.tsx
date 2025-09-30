@@ -1,23 +1,23 @@
 // View options component following Single Responsibility Principle
 // Handles display settings like numbers, labels, icons, and theme
 
-import React from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Settings, ChevronDown } from 'lucide-react';
 import { useAppContext, appActions } from '../state/AppContext';
+import styles from './ViewOptions.module.css';
 
 function ViewOptions(): JSX.Element {
   const { state, dispatch } = useAppContext();
   const { settings } = state;
 
   return (
-    <div className="flex flex-wrap gap-4 justify-center print:hidden">
+    <div className={styles.container}>
       {/* Numbers Options */}
       <DropdownMenu>
-        <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-          <Settings className="w-4 h-4" />
+        <DropdownMenuTrigger className={styles.optionButton}>
+          <Settings className={styles.buttonIcon} />
           Numbers
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className={styles.chevronIcon} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem
@@ -55,10 +55,10 @@ function ViewOptions(): JSX.Element {
 
       {/* Labels Options */}
       <DropdownMenu>
-        <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-          <Settings className="w-4 h-4" />
+        <DropdownMenuTrigger className={styles.optionButton}>
+          <Settings className={styles.buttonIcon} />
           Labels
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className={styles.chevronIcon} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem
@@ -84,10 +84,10 @@ function ViewOptions(): JSX.Element {
 
       {/* Icons Options */}
       <DropdownMenu>
-        <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-          <Settings className="w-4 h-4" />
+        <DropdownMenuTrigger className={styles.optionButton}>
+          <Settings className={styles.buttonIcon} />
           Icons
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className={styles.chevronIcon} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem
@@ -107,10 +107,10 @@ function ViewOptions(): JSX.Element {
 
       {/* Theme Options */}
       <DropdownMenu>
-        <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">
-          <Settings className="w-4 h-4" />
+        <DropdownMenuTrigger className={styles.optionButton}>
+          <Settings className={styles.buttonIcon} />
           Theme
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className={styles.chevronIcon} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem

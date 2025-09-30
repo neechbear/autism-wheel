@@ -1,7 +1,8 @@
 // Header component following Single Responsibility Principle
 // Displays application title and disclaimer information
 
-import React from 'react';
+import { HelpCircle } from 'lucide-react';
+import styles from './Header.module.css';
 
 type HeaderProps = {
   isLockedMode: boolean;
@@ -11,21 +12,21 @@ type HeaderProps = {
 
 function Header({ isLockedMode, hideIntro, onHelp }: HeaderProps): JSX.Element {
   return (
-    <div className="text-center">
-      <h1 className="mb-2 text-4xl font-bold">
+    <div className={styles.container}>
+      <h1 className={styles.title}>
         {isLockedMode ? "My Autism Wheel" : "Autism Wheel"}
       </h1>
 
       {!isLockedMode && !hideIntro && (
-        <div className="text-center">
-          <div className="mb-6 max-w-3xl mx-auto space-y-4 print:hidden">
-            <p className="text-left">
+        <div className={styles.introContainer}>
+          <div className={styles.introSection}>
+            <p className={styles.introText}>
               Thank you for using{' '}
               <a
                 href="https://www.myautisticprofile.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                className={styles.link}
               >
                 my Autism Wheel
               </a>
@@ -37,7 +38,7 @@ function Header({ isLockedMode, hideIntro, onHelp }: HeaderProps): JSX.Element {
                 href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                className={styles.link}
               >
                 feedback@myautisticprofile.com
               </a>
@@ -45,15 +46,16 @@ function Header({ isLockedMode, hideIntro, onHelp }: HeaderProps): JSX.Element {
             </p>
           </div>
 
-          <div className="text-muted-foreground print:hidden max-w-3xl mx-auto">
-            <p className="text-left text-blue-600 dark:text-blue-400">
+          <div className={styles.instructionsSection}>
+            <p className={styles.instructionsText}>
               Click on one or two segments per slice, to indicate the typical day-to-day and under
               stress/elevated impact each category has on your life. Click{' '}
               <button
                 onClick={onHelp}
-                className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
+                className={styles.helpLink}
               >
                 the help button
+                <HelpCircle className={styles.helpIcon} />
               </button>
               {' '}for additional guidance.
             </p>

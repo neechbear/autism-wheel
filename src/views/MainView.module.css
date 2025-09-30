@@ -1,0 +1,368 @@
+/* MainView.module.css - CSS Module for MainView component */
+
+.container {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.innerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.diagramContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.actionToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+}
+
+.printHidden {
+  /* Class for elements that should be hidden when printing */
+  /* Default display behavior for screen */
+  display: flex;
+}
+
+@media print {
+  .printHidden {
+    display: none !important;
+  }
+}
+
+/* Button styles for MainView */
+.button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  border-radius: var(--radius) !important;
+  font-size: var(--font-size-sm) !important;
+  font-weight: var(--font-weight-medium) !important;
+  transition: all var(--transition-fast) !important;
+  height: 2.5rem !important;
+  padding: 0 var(--spacing-md) !important;
+  gap: var(--spacing-sm) !important;
+  border: 1px solid var(--color-border) !important;
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.button:hover {
+  background-color: var(--color-surface-hover) !important;
+  color: var(--color-text-hover) !important;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-ring) !important;
+  outline-offset: 2px !important;
+}
+
+.button:disabled {
+  pointer-events: none !important;
+  opacity: 0.5 !important;
+}
+
+.primaryButton {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+}
+
+.primaryButton:hover {
+  background-color: var(--color-blue-700) !important;
+  color: var(--color-white) !important;
+}
+
+.secondaryButton {
+  background-color: var(--secondary) !important;
+  color: var(--secondary-foreground) !important;
+  border-color: var(--secondary) !important;
+}
+
+.secondaryButton:hover {
+  background-color: var(--color-blue-300) !important;
+  color: var(--primary) !important;
+}
+
+.greenButton {
+  background-color: var(--color-green-600) !important;
+  color: var(--color-white) !important;
+  border-color: var(--color-green-600) !important;
+}
+
+.greenButton:hover {
+  background-color: var(--color-green-700) !important;
+  color: var(--color-white) !important;
+}
+
+.blueButton {
+  background-color: var(--color-blue-600) !important;
+  color: var(--color-white) !important;
+  border-color: var(--color-blue-600) !important;
+}
+
+.blueButton:hover {
+  background-color: var(--color-blue-700) !important;
+  color: var(--color-white) !important;
+}
+
+.redButton {
+  background-color: var(--destructive) !important;
+  color: var(--destructive-foreground) !important;
+  border-color: var(--destructive) !important;
+}
+
+.redButton:hover {
+  background-color: #b91c1c !important;
+  color: var(--color-white) !important;
+}
+
+.buttonWithIcon {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: var(--spacing-sm) !important;
+}
+
+.buttonIcon {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+.editButton {
+  height: 2.5rem;
+  background-color: var(--color-blue-600);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0 var(--spacing-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-normal);
+}
+
+.editButton:hover {
+  background-color: var(--color-blue-700);
+}
+
+.editButtonsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.revertButton {
+  height: 2.5rem;
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0 var(--spacing-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: opacity var(--transition-normal);
+}
+
+.revertButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.addButton {
+  height: 2.5rem;
+  background-color: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 var(--spacing-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.addButton:hover {
+  background-color: var(--muted);
+}
+
+.editCategoriesSection {
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.editCategoriesTitle {
+  margin-bottom: var(--spacing-md);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+}
+
+.editTable {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.editTableHeader {
+  background-color: var(--muted);
+}
+
+.editTableHeaderCell {
+  padding: var(--spacing-md);
+  text-align: center;
+  font-weight: var(--font-weight-semibold);
+  border-bottom: 1px solid var(--border);
+}
+
+.editTableRow {
+  transition: background-color var(--transition-fast);
+}
+
+.editTableRow:hover {
+  background-color: var(--accent);
+}
+
+.editTableCell {
+  padding: var(--spacing-md);
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+
+.editTableCellCenter {
+  text-align: center;
+}
+
+.categoryInputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.categoryInput {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: var(--font-size-base);
+  background-color: var(--input-background);
+  color: var(--foreground);
+}
+
+.categoryInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-blue-500);
+  border-color: var(--color-blue-500);
+}
+
+.categoryTextarea {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: var(--font-size-base);
+  background-color: var(--input-background);
+  color: var(--foreground);
+  resize: none;
+  min-height: 4.5rem;
+}
+
+.categoryTextarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-blue-500);
+  border-color: var(--color-blue-500);
+}
+
+.colorPicker {
+  width: 4rem;
+  height: 2rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.deleteButton {
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+  border: none;
+  border-radius: var(--radius);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.reorderControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.reorderButton {
+  height: 1.5rem;
+  width: 1.5rem;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reorderButton:hover {
+  background-color: var(--muted);
+}
+
+.dragHandle {
+  cursor: grab;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius);
+  transition: background-color var(--transition-fast);
+}
+
+.dragHandle:hover {
+  background-color: var(--muted);
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.breakdownSection {
+  margin-top: var(--spacing-xl);
+}
+
+.breakdownTitle {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+/* Print styles */
+@media print {
+  .hiddenInPrint {
+    display: none !important;
+  }
+}

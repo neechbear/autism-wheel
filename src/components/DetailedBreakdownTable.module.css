@@ -1,0 +1,181 @@
+/* DetailedBreakdownTable Component Styles - Following CSS Modules pattern */
+
+.container {
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl); /* Add bottom spacing under the table */
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+  color: var(--color-text-primary);
+}
+
+.tableContainer {
+  width: 100%;
+  max-width: 48rem; /* Match intro paragraph width */
+  margin: 0 auto;
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.tableHeader {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.5); /* 50% grey horizontal dividing line */
+}
+
+.tableRow {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.5); /* 50% grey horizontal dividing line */
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:last-child {
+  border-bottom: none; /* Remove border from last row */
+}
+
+.tableRow:hover {
+  background-color: rgba(128, 128, 128, 0.08); /* Faint grey highlight for light theme */
+}
+
+/* Dark theme hover effect */
+.dark .tableRow:hover {
+  background-color: rgba(255, 255, 255, 0.05); /* Faint light highlight for dark theme */
+}
+
+.tableCell {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  vertical-align: top;
+}
+
+.tableHead {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  background-color: var(--color-surface);
+}
+
+.tableCellCenter {
+  text-align: center;
+  vertical-align: top;
+}
+
+/* Icon cell with larger emoji size */
+.iconCell {
+  font-size: 2.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Category container and layout */
+.categoryContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.categoryRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.categoryContent {
+  min-width: 0;
+  flex: 1;
+}
+
+/* Impact value container */
+.impactContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.categoryName {
+  font-weight: var(--font-weight-medium);
+  color: var(--foreground);
+}
+
+.categoryDescription {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  margin-top: var(--spacing-xs);
+}
+
+.impactCell {
+  text-align: center;
+  vertical-align: top;
+  padding: var(--spacing-sm);
+  min-width: 10rem; /* Reduced width since "Needs" is on separate line */
+}
+
+.impactCell > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.impactValue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  color: white; /* White text for visibility on colored backgrounds */
+  margin-bottom: 0.25rem;
+}
+
+.emptyImpactValue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+}
+
+.selectionValue {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.emptyState {
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+/* Print-specific styles */
+@media print {
+  .container {
+    margin-top: var(--spacing-md);
+    break-inside: avoid;
+  }
+
+  .title {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .tableRow:hover {
+    background-color: transparent;
+  }
+}

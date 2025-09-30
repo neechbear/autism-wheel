@@ -1,7 +1,9 @@
 // Main view component following Single Responsibility Principle
 // Composes all main interface components into the primary application view
 
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
+import clsx from 'clsx';
+import styles from './MainView.module.css';
 import Header from '../components/Header';
 import RadialDiagram from '../components/RadialDiagram';
 import ViewOptions from '../components/ViewOptions';
@@ -12,7 +14,7 @@ import { useAppContext, appActions } from '../state/AppContext';
 import { createDefaultCategories } from '../constants/defaults';
 import { Button } from '../components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Plus, RotateCcw, RefreshCw, GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
+import { Plus, GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
 import type { ProfileCategory } from '../types';
 
 function MainView(): JSX.Element {
@@ -161,13 +163,13 @@ function MainView(): JSX.Element {
   const hasChanges = JSON.stringify(draftCategories) !== JSON.stringify(state.categories);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="container mx-auto p-4 space-y-8">
+    <div className={styles.container}>
+      <div className={styles.mainContent}>
         {/* Header section */}
         <Header isLockedMode={false} hideIntro={false} onHelp={handleHelp} />
 
         {/* Main diagram section */}
-        <div className="flex justify-center">
+        <div className={styles.diagramContainer}>
           <RadialDiagram onSegmentClick={handleSegmentClick} />
         </div>
 
@@ -177,14 +179,14 @@ function MainView(): JSX.Element {
         {/* Action toolbar */}
         <div
           ref={editButtonsRef}
-          className="flex flex-wrap gap-4 justify-center print:hidden"
+          className={clsx(styles.actionToolbar, styles.printHidden)}
           style={{ marginTop: !isEditingLabels ? '0.625rem' : '0' }}
         >
           {!isEditingLabels && <ActionToolbar />}
 
           <Button
             onClick={handleEditLabels}
-            className="h-10 bg-blue-600 hover:bg-blue-700 text-white"
+            className={clsx(styles.button, styles.blueButton)}
           >
             {isEditingLabels ? "Save categories" : "Edit categories"}
           </Button>
@@ -194,7 +196,7 @@ function MainView(): JSX.Element {
               <Button
                 onClick={handleRevertChanges}
                 variant="destructive"
-                className="h-10"
+                className={clsx(styles.button, styles.redButton)}
                 disabled={!hasChanges}
               >
                 Revert changes
@@ -202,12 +204,16 @@ function MainView(): JSX.Element {
               <Button
                 onClick={handleDefaultCategories}
                 variant="destructive"
-                className="h-10"
+                className={clsx(styles.button, styles.redButton)}
               >
                 Default categories
               </Button>
-              <Button onClick={handleAddCategory} variant="outline" className="h-10 gap-2">
-                <Plus className="w-4 h-4" />
+              <Button
+                onClick={handleAddCategory}
+                variant="outline"
+                className={clsx(styles.button, styles.secondaryButton, styles.buttonWithIcon)}
+              >
+                <Plus className={styles.buttonIcon} />
                 Add Category
               </Button>
             </>
@@ -216,16 +222,16 @@ function MainView(): JSX.Element {
 
         {/* Edit Categories Table */}
         {isEditingLabels && (
-          <div className="w-full max-w-4xl mx-auto">
-            <h3 className="mb-4 font-semibold">Edit Categories</h3>
+          <div className={styles.editCategoriesSection}>
+            <h3 className={styles.editCategoriesHeading}>Edit Categories</h3>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-center">Icon</TableHead>
+                  <TableHead className={styles.tableHeadCenter}>Icon</TableHead>
                   <TableHead>Category Name & Description</TableHead>
-                  <TableHead className="text-center">Colour</TableHead>
-                  <TableHead className="text-center">Delete</TableHead>
-                  <TableHead className="text-center">Reorder</TableHead>
+                  <TableHead className={styles.tableHeadCenter}>Colour</TableHead>
+                  <TableHead className={styles.tableHeadCenter}>Delete</TableHead>
+                  <TableHead className={styles.tableHeadCenter}>Reorder</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -240,11 +246,11 @@ function MainView(): JSX.Element {
                         handleDragAndDrop(dragIndex, index);
                       }
                     }}
-                    className="hover:bg-gray-50"
+                    className={styles.tableRowHover}
                   >
                     {/* Icon column - top aligned with emoji picker */}
-                    <TableCell className="align-top text-center">
-                      <div className="flex flex-col items-center gap-2">
+                    <TableCell className={styles.tableCellTopCenter}>
+                      <div className={styles.iconColumn}>
                         <EmojiPicker
                           selectedEmoji={category.icon}
                           onEmojiSelect={(newIcon) => handleUpdateCategory(category.id, { icon: newIcon })}
@@ -252,22 +258,22 @@ function MainView(): JSX.Element {
                       </div>
                     </TableCell>
                     {/* Name and Description column - properly stacked */}
-                    <TableCell className="align-top">
-                      <div className="flex flex-col gap-3 w-full">
-                        <div className="w-full">
+                    <TableCell className={styles.tableCellTop}>
+                      <div className={styles.nameDescriptionColumn}>
+                        <div className={styles.inputWrapper}>
                           <input
                             type="text"
                             value={category.name}
                             onChange={(e) => handleUpdateCategory(category.id, { name: e.target.value })}
-                            className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className={styles.textInput}
                             placeholder="Category name"
                           />
                         </div>
-                        <div className="w-full">
+                        <div className={styles.inputWrapper}>
                           <textarea
                             value={category.description}
                             onChange={(e) => handleUpdateCategory(category.id, { description: e.target.value })}
-                            className="w-full p-2 border border-gray-300 rounded resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className={styles.textArea}
                             rows={3}
                             placeholder="Category description"
                           />
@@ -275,13 +281,13 @@ function MainView(): JSX.Element {
                       </div>
                     </TableCell>
                     {/* Colour column - single rounded rectangle */}
-                    <TableCell className="align-top text-center">
-                      <div className="flex flex-col items-center gap-2">
+                    <TableCell className={styles.tableCellTopCenter}>
+                      <div className={styles.colorColumn}>
                         <input
                           type="color"
                           value={category.color}
                           onChange={(e) => handleUpdateCategory(category.id, { color: e.target.value })}
-                          className="w-16 h-8 rounded cursor-pointer"
+                          className={styles.colorInput}
                           style={{
                             backgroundColor: category.color,
                             border: 'none',
@@ -294,7 +300,7 @@ function MainView(): JSX.Element {
                       </div>
                     </TableCell>
                     {/* Delete column */}
-                    <TableCell className="align-top text-center">
+                    <TableCell className={styles.tableCellTopCenter}>
                       <Button
                         onClick={() => handleDeleteCategory(category.id)}
                         variant="destructive"
@@ -304,20 +310,20 @@ function MainView(): JSX.Element {
                       </Button>
                     </TableCell>
                     {/* Reorder column - with drag handle and up/down arrows on same line */}
-                    <TableCell className="align-top text-center">
-                      <div className="flex items-center justify-center gap-1">
+                    <TableCell className={styles.tableCellTopCenter}>
+                      <div className={styles.reorderColumn}>
                         {index > 0 && (
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleMoveUp(index)}
-                            className="h-6 w-6 p-0"
+                            className={styles.reorderButton}
                           >
-                            <ChevronUp className="w-4 h-4" />
+                            <ChevronUp className={styles.buttonIcon} />
                           </Button>
                         )}
                         <div
-                          className="cursor-grab hover:cursor-grabbing p-1 rounded hover:bg-gray-100"
+                          className={styles.dragHandle}
                           draggable
                           onDragStart={(e) => {
                             e.dataTransfer.setData('text/plain', index.toString());
@@ -327,16 +333,16 @@ function MainView(): JSX.Element {
                             e.currentTarget.style.opacity = '1';
                           }}
                         >
-                          <GripVertical className="w-5 h-5 text-muted-foreground" />
+                          <GripVertical className={styles.dragIcon} />
                         </div>
                         {index < draftCategories.length - 1 && (
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleMoveDown(index)}
-                            className="h-6 w-6 p-0"
+                            className={styles.reorderButton}
                           >
-                            <ChevronDown className="w-4 h-4" />
+                            <ChevronDown className={styles.buttonIcon} />
                           </Button>
                         )}
                       </div>
@@ -350,8 +356,8 @@ function MainView(): JSX.Element {
 
         {/* Detailed breakdown table */}
         {!isEditingLabels && (
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold mb-4 text-center">Detailed Breakdown</h2>
+          <div className={styles.detailedBreakdownSection}>
+            <h2 className={styles.sectionHeading}>Detailed Breakdown</h2>
             <DetailedBreakdownTable />
           </div>
         )}

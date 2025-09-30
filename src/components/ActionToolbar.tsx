@@ -1,12 +1,12 @@
 // Action toolbar component following Single Responsibility Principle
 // Handles primary action buttons like print, copy link, save
 
-import React from 'react';
-import { Copy, Printer, Download, ChevronDown, Link, HelpCircle } from 'lucide-react';
+import { Printer, Download, ChevronDown, Link, HelpCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { useAppContext, appActions } from '../state/AppContext';
 import { encodeState } from '../state/migrations';
+import styles from './ActionToolbar.module.css';
 
 function ActionToolbar(): JSX.Element {
   const { state, dispatch } = useAppContext();
@@ -182,27 +182,27 @@ function ActionToolbar(): JSX.Element {
   };
 
   return (
-    <>
+    <div className={styles.container}>
       <Button
         onClick={handleCopyLink}
-        className="h-10 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+        className={`${styles.button} ${styles.primaryButton}`}
       >
-        <Link className="w-4 h-4" />
+        <Link className={styles.buttonIcon} />
         Copy link
       </Button>
 
       <Button
         onClick={handlePrint}
-        className="h-10 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+        className={`${styles.button} ${styles.primaryButton}`}
       >
-        <Printer className="w-4 h-4" />
+        <Printer className={styles.buttonIcon} />
         Print
       </Button>
 
       <DropdownMenu>
-        <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2">
+        <DropdownMenuTrigger className={`${styles.button} ${styles.primaryButton}`}>
           Save diagram
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className={styles.chevronIcon} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => handleSaveDiagram('png')}>
@@ -226,13 +226,13 @@ function ActionToolbar(): JSX.Element {
       {state.currentView !== 'help' && (
         <Button
           onClick={handleHelp}
-          className="h-10 gap-2 bg-green-600 hover:bg-green-700 text-white"
+          className={`${styles.button} ${styles.greenButton}`}
         >
-          <HelpCircle className="w-4 h-4" />
+          <HelpCircle className={styles.buttonIcon} />
           Help
         </Button>
       )}
-    </>
+    </div>
   );
 }
 
