@@ -1,0 +1,61 @@
+/* =============================================================================
+   DARK THEME - ACTIVE COLOR VARIABLES
+   =============================================================================
+
+   Purpose: Contains ALL color variables for the dark theme
+
+   This file defines the color scheme when the app is in dark mode.
+   All color-related CSS variables are defined here.
+
+   ============================================================================= */
+
+.dark {
+  /* === CORE APPLICATION COLORS === */
+  --background: #1f1f1f;                /* Main page background - dark gray */
+  --foreground: oklch(0.985 0 0);       /* Primary text color - very light gray/white */
+
+  /* === CARD/CONTAINER COLORS === */
+  --card: oklch(0.145 0 0);             /* Card backgrounds - very dark gray */
+  --card-foreground: oklch(0.985 0 0);  /* Text on cards - very light gray/white */
+
+  /* === POPOVER/DROPDOWN COLORS === */
+  --popover: oklch(0.145 0 0);          /* Popover background - very dark gray */
+  --popover-foreground: oklch(0.985 0 0); /* Text in popovers - very light gray/white */
+
+  /* === BUTTON COLORS === */
+  --primary: oklch(0.985 0 0);          /* Primary button background - very light gray/white */
+  --primary-foreground: oklch(0.205 0 0); /* Text on primary buttons - dark gray */
+  --secondary: oklch(0.269 0 0);        /* Secondary button background - medium dark gray */
+  --secondary-foreground: oklch(0.985 0 0); /* Text on secondary buttons - very light gray/white */
+
+  /* === MUTED/SUBTLE COLORS === */
+  --muted: oklch(0.269 0 0);            /* Muted backgrounds - medium dark gray */
+  --muted-foreground: oklch(0.708 0 0); /* Muted text - medium light gray */
+
+  /* === ACCENT/HIGHLIGHT COLORS === */
+  --accent: oklch(0.269 0 0);           /* Accent backgrounds - medium dark gray */
+  --accent-foreground: oklch(0.985 0 0); /* Text on accent backgrounds - very light gray/white */
+
+  /* === DESTRUCTIVE/ERROR COLORS === */
+  --destructive: oklch(0.396 0.141 25.723); /* Delete/error button background - dark red */
+  --destructive-foreground: oklch(0.637 0.237 25.331); /* Text on destructive buttons - light red */
+
+  /* === BORDER/INPUT COLORS === */
+  --border: oklch(0.269 0 0);           /* Borders - medium dark gray */
+  --input: oklch(0.269 0 0);            /* Input field background - medium dark gray */
+  --ring: oklch(0.439 0 0);             /* Focus ring color - medium gray */
+
+  /* === SIDEBAR COLORS (currently unused) === */
+  /* TODO: Remove these sidebar variables if sidebar component is never used in main application.
+     Investigation shows sidebar.tsx exists but is not imported anywhere in the app.
+     The autism wheel app uses a simple single-page layout without sidebar navigation. */
+
+  /* --sidebar: oklch(0.205 0 0);          Sidebar background - dark gray */
+  /* --sidebar-foreground: oklch(0.985 0 0); Sidebar text - very light gray/white */
+  /* --sidebar-primary: oklch(0.488 0.243 264.376); Sidebar primary elements - purple/violet */
+  /* --sidebar-primary-foreground: oklch(0.985 0 0); Text on sidebar primary - very light gray/white */
+  /* --sidebar-accent: oklch(0.269 0 0);   Sidebar accent backgrounds - medium dark gray */
+  /* --sidebar-accent-foreground: oklch(0.985 0 0); Text on sidebar accents - very light gray/white */
+  /* --sidebar-border: oklch(0.269 0 0);   Sidebar borders - medium dark gray */
+  /* --sidebar-ring: oklch(0.439 0 0);     Sidebar focus rings - medium gray */
+}
