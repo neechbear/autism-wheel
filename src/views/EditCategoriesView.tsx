@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import styles from './EditCategoriesView.module.css';
 import { Button } from '../components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Plus, GripVertical, ChevronUp, ChevronDown, Trash2, Save } from 'lucide-react';
+import { GripVertical, ChevronUp, ChevronDown, Trash2, Save } from 'lucide-react';
 import EmojiPicker from '../components/EmojiPicker';
 import { useAppContext, appActions } from '../state/AppContext';
 import { createDefaultCategories } from '../constants/defaults';
@@ -181,7 +181,6 @@ function EditCategoriesView(): JSX.Element {
             disabled={draftCategories.length >= 10}
             className={styles.blueButton}
           >
-            <Plus className={styles.buttonIcon} />
             Add category
           </Button>
 

@@ -31,7 +31,7 @@ function EmojiPicker({ selectedEmoji, onEmojiSelect }: EmojiPickerProps): JSX.El
                 className={styles.grid}
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(8, 36px)',
+                  gridTemplateColumns: 'repeat(8, 2.25rem)',
                   gap: '2px',
                   width: 'fit-content'
                 }}
@@ -43,20 +43,6 @@ function EmojiPicker({ selectedEmoji, onEmojiSelect }: EmojiPickerProps): JSX.El
                     onClick={() => {
                       onEmojiSelect(emoji);
                       setIsOpen(false);
-                    }}
-                    style={{
-                      width: '36px',
-                      height: '36px',
-                      padding: '2px',
-                      margin: '0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '21px',
-                      border: 'none',
-                      background: 'transparent',
-                      cursor: 'pointer',
-                      borderRadius: '4px'
                     }}
                   >
                     {emoji}
