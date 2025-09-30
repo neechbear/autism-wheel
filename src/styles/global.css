@@ -363,6 +363,12 @@ button[class*="blueButton"]:hover,
   color: white !important;
 }
 
+/* === BUTTON BORDER RADIUS STANDARDIZATION === */
+/* Ensure all buttons use the same border radius as dropdowns and view options */
+button {
+  border-radius: var(--radius) !important;
+}
+
 /* === UI COMPONENT REPLACEMENTS FOR REMOVED TAILWIND CLASSES === */
 /* Background and foreground colors */
 .bg-popover {
