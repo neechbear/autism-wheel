@@ -164,7 +164,7 @@ function MainView(): JSX.Element {
 
   return (
     <div className={styles.container}>
-      <div className={styles.mainContent}>
+      <div className={styles.innerContainer}>
         {/* Header section */}
         <Header isLockedMode={false} hideIntro={false} onHelp={handleHelp} />
 

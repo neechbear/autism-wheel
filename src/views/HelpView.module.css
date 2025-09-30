@@ -12,7 +12,6 @@
   padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md); /* Reduced from xl to md to decrease vertical spacing */
 }
 
 .title {
