@@ -195,9 +195,8 @@ function EditCategoriesView(): JSX.Element {
         </div>
 
         {/* Edit Categories Table */}
-        <div className={styles.textSection}>
-          <div className={styles.editCategoriesSection}>
-            <Table>
+        <div className={styles.editCategoriesSection}>
+          <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead className={styles.tableHeadCenter}>Icon</TableHead>
@@ -362,7 +361,6 @@ function EditCategoriesView(): JSX.Element {
               ))}
             </TableBody>
           </Table>
-        </div>
         </div>
       </div>
     </div>
