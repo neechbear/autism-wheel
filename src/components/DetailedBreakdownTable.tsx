@@ -145,7 +145,7 @@ function DetailedBreakdownTable(): JSX.Element {
                 className={`${styles.tableHead} ${styles.sortableHeader}`}
                 onClick={() => handleSort('category')}
               >
-                <div className={styles.headerContent}>
+                <div className={styles.headerContentCenter}>
                   <span>Category</span>
                   {renderSortIcon('category')}
                 </div>
@@ -155,7 +155,7 @@ function DetailedBreakdownTable(): JSX.Element {
                   className={`${styles.tableHead} ${styles.tableCellCenter} ${styles.sortableHeader}`}
                   onClick={() => handleSort('typical')}
                 >
-                  <div className={styles.headerContent}>
+                  <div className={styles.headerContentCenter}>
                     <span className={styles.multiLineHeader}>
                       Typical<br />Impact
                     </span>
@@ -168,7 +168,7 @@ function DetailedBreakdownTable(): JSX.Element {
                   className={`${styles.tableHead} ${styles.tableCellCenter} ${styles.sortableHeader}`}
                   onClick={() => handleSort('stressed')}
                 >
-                  <div className={styles.headerContent}>
+                  <div className={styles.headerContentCenter}>
                     <span className={styles.multiLineHeader}>
                       Under Stress<br />Impact
                     </span>

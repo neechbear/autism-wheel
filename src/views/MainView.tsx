@@ -168,19 +168,11 @@ function MainView(): JSX.Element {
         {/* Header section */}
         <Header isLockedMode={false} hideIntro={false} onHelp={handleHelp} />
 
-        {/* Main diagram section */}
-        <div className={styles.diagramContainer}>
-          <RadialDiagram onSegmentClick={handleSegmentClick} />
-        </div>
-
-        {/* View options */}
-        {!isEditingLabels && <ViewOptions />}
-
         {/* Action toolbar */}
         <div
           ref={editButtonsRef}
           className={clsx(styles.actionToolbar, styles.printHidden)}
-          style={{ marginTop: !isEditingLabels ? '0.625rem' : '0' }}
+          style={{ marginBottom: !isEditingLabels ? '0.625rem' : '0' }}
         >
           {!isEditingLabels && <ActionToolbar />}
 
@@ -218,6 +210,14 @@ function MainView(): JSX.Element {
               </Button>
             </>
           )}
+        </div>
+
+        {/* View options */}
+        {!isEditingLabels && <ViewOptions />}
+
+        {/* Main diagram section */}
+        <div className={styles.diagramContainer}>
+          <RadialDiagram onSegmentClick={handleSegmentClick} />
         </div>
 
         {/* Edit Categories Table */}

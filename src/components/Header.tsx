@@ -19,33 +19,6 @@ function Header({ isLockedMode, hideIntro, onHelp }: HeaderProps): JSX.Element {
 
       {!isLockedMode && !hideIntro && (
         <div className={styles.introContainer}>
-          <div className={styles.introSection}>
-            <p className={styles.introText}>
-              Thank you for using{' '}
-              <a
-                href="https://www.myautisticprofile.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-              >
-                my Autism Wheel
-              </a>
-              . I developed this tool as a personal project to help myself and others visualize and better
-              communicate their own unique autistic profiles. I am not a medical professional, and this tool
-              is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
-              Your feedback to improve this tool is welcomed at{' '}
-              <a
-                href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-              >
-                feedback@myautisticprofile.com
-              </a>
-              .
-            </p>
-          </div>
-
           <div className={styles.instructionsSection}>
             <p className={styles.instructionsText}>
               Click on one or two segments per slice, to indicate the typical day-to-day and under

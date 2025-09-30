@@ -1,16 +1,15 @@
 /* DetailedBreakdownTable Component Styles - Following CSS Modules pattern */
 
 .container {
-  margin-top: var(--spacing-lg);
   margin-bottom: var(--spacing-xl); /* Add bottom spacing under the table */
 }
 
 .title {
   font-size: 1.5rem;
   font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-md);
   text-align: center;
   color: var(--color-text-primary);
+  margin-bottom: 0; /* Override global h2 margin-bottom */
 }
 
 .tableContainer {
@@ -77,6 +76,24 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  gap: var(--spacing-sm);
+  min-height: 2.5rem;
+}
+
+.headerContentCategory {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  min-height: 2.5rem;
+  /* Align with category content - icon size (2.5rem) + gap (0.5rem) */
+  padding-left: 3rem;
+}
+
+.headerContentCenter {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   gap: var(--spacing-sm);
   min-height: 2.5rem;
 }

@@ -65,6 +65,34 @@ function HelpContent(): JSX.Element {
         </p>
       </div>
 
+      {/* Introduction */}
+      <div className="max-w-3xl mx-auto">
+        <p className="text-base leading-relaxed">
+          Thank you for using{' '}
+          <a
+            href="https://www.myautisticprofile.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            my Autism Wheel
+          </a>
+          . I developed this tool as a personal project to help myself and others visualize and better
+          communicate their own unique autistic profiles. I am not a medical professional, and this tool
+          is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
+          Your feedback to improve this tool is welcomed at{' '}
+          <a
+            href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            feedback@myautisticprofile.com
+          </a>
+          .
+        </p>
+      </div>
+
       {/* Important Note */}
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-6">
         <h2 className="text-xl font-semibold text-yellow-800 dark:text-yellow-200 mb-2">Important Note</h2>
