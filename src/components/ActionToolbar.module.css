@@ -9,79 +9,77 @@
 }
 
 .button {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  white-space: nowrap !important;
-  border-radius: var(--radius) !important;
-  font-size: var(--font-size-sm) !important;
-  font-weight: var(--font-weight-medium) !important;
-  transition: all var(--transition-fast) !important;
-  height: 2.5rem !important;
-  padding: 0 var(--spacing-md) !important;
-  gap: var(--spacing-sm) !important;
-  border: 1px solid var(--color-border) !important;
-  background-color: var(--color-surface) !important;
-  color: var(--color-text-primary) !important;
-}
-
-.button:hover {
-  background-color: var(--color-surface-hover) !important;
-  color: var(--color-text-hover) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: var(--radius);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+  height: 2.5rem;
+  padding: 0 var(--spacing-md);
+  gap: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
 }
 
 .button:focus-visible {
-  outline: 2px solid var(--color-ring) !important;
-  outline-offset: 2px !important;
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
 }
 
 .button:disabled {
-  pointer-events: none !important;
-  opacity: 0.5 !important;
+  pointer-events: none;
+  opacity: 0.5;
 }
 
-.primaryButton {
-  background-color: var(--primary) !important;
-  color: var(--primary-foreground) !important;
-  border-color: var(--primary) !important;
+/* Black button (theme-aware) - Copy link, Print, Save diagram */
+.blackButton {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
 }
 
-.primaryButton:hover {
-  background-color: var(--color-blue-700) !important;
-  color: var(--color-white) !important;
+.blackButton:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
 }
 
+/* Green button - Help */
 .greenButton {
-  background-color: var(--color-green-600) !important;
-  color: var(--color-white) !important;
-  border-color: var(--color-green-600) !important;
+  background-color: var(--color-green-600);
+  color: white;
+  border-color: var(--color-green-600);
 }
 
 .greenButton:hover {
-  background-color: var(--color-green-700) !important;
-  color: var(--color-white) !important;
+  background-color: var(--color-green-600);
+  color: white;
 }
 
+/* Blue button - Edit categories, Save categories */
 .blueButton {
-  background-color: var(--color-blue-600) !important;
-  color: var(--color-white) !important;
-  border-color: var(--color-blue-600) !important;
+  background-color: var(--color-blue-600);
+  color: white;
+  border-color: var(--color-blue-600);
 }
 
 .blueButton:hover {
-  background-color: var(--color-blue-700) !important;
-  color: var(--color-white) !important;
+  background-color: var(--color-blue-600);
+  color: white;
 }
 
+/* Red button - Delete, Revert actions */
 .redButton {
-  background-color: var(--destructive) !important;
-  color: var(--destructive-foreground) !important;
-  border-color: var(--destructive) !important;
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+  border-color: var(--destructive);
 }
 
 .redButton:hover {
-  background-color: #b91c1c !important;
-  color: var(--color-white) !important;
+  background-color: #b91c1c;
+  color: white;
 }
 
 .buttonIcon {

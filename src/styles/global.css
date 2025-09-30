@@ -334,6 +334,35 @@ input, textarea, select {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
 }
 
+/* === BUTTON COLOR OVERRIDES === */
+/* Ensure our custom button colors override Radix UI Button component styles */
+/* Target CSS Module class names with attribute selectors */
+button[class*="greenButton"],
+[class*="greenButton"] {
+  background-color: var(--color-green-600) !important;
+  color: white !important;
+  border-color: var(--color-green-600) !important;
+}
+
+button[class*="greenButton"]:hover,
+[class*="greenButton"]:hover {
+  background-color: var(--color-green-600) !important;
+  color: white !important;
+}
+
+button[class*="blueButton"],
+[class*="blueButton"] {
+  background-color: var(--color-blue-600) !important;
+  color: white !important;
+  border-color: var(--color-blue-600) !important;
+}
+
+button[class*="blueButton"]:hover,
+[class*="blueButton"]:hover {
+  background-color: var(--color-blue-600) !important;
+  color: white !important;
+}
+
 /* === UI COMPONENT REPLACEMENTS FOR REMOVED TAILWIND CLASSES === */
 /* Background and foreground colors */
 .bg-popover {
@@ -471,4 +500,179 @@ input, textarea, select {
 
 .overflow-y-auto {
   overflow-y: auto !important;
+}
+
+/* =============================================================================
+   TOOLTIP STYLES - For Radix UI Tooltip components
+   ============================================================================= */
+
+/* Tooltip content styling */
+.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+.text-primary-foreground {
+  color: var(--primary-foreground) !important;
+}
+
+.fill-primary {
+  fill: var(--primary) !important;
+}
+
+/* Tooltip sizing and positioning */
+.z-50 {
+  z-index: 50 !important;
+}
+
+.w-fit {
+  width: fit-content !important;
+}
+
+.rounded-md {
+  border-radius: 0.375rem !important;
+}
+
+.px-3 {
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
+
+.py-1\.5 {
+  padding-top: 0.375rem !important;
+  padding-bottom: 0.375rem !important;
+}
+
+.text-xs {
+  font-size: 0.75rem !important;
+  line-height: 1rem !important;
+}
+
+.text-balance {
+  text-wrap: balance !important;
+}
+
+.size-2\.5 {
+  width: 0.625rem !important;
+  height: 0.625rem !important;
+}
+
+.rotate-45 {
+  transform: rotate(45deg) !important;
+}
+
+/* Animation classes for tooltips */
+.animate-in {
+  animation-name: fadeIn, zoomIn !important;
+  animation-duration: 0.15s !important;
+  animation-timing-function: ease-out !important;
+}
+
+.fade-in-0 {
+  animation-name: fadeIn !important;
+}
+
+.zoom-in-95 {
+  animation-name: zoomIn !important;
+}
+
+.data-\[state\=closed\]\:animate-out[data-state="closed"] {
+  animation-name: fadeOut, zoomOut !important;
+  animation-duration: 0.15s !important;
+  animation-timing-function: ease-in !important;
+}
+
+.data-\[state\=closed\]\:fade-out-0[data-state="closed"] {
+  animation-name: fadeOut !important;
+}
+
+.data-\[state\=closed\]\:zoom-out-95[data-state="closed"] {
+  animation-name: zoomOut !important;
+}
+
+/* Slide-in animations based on tooltip side */
+.data-\[side\=bottom\]\:slide-in-from-top-2[data-side="bottom"] {
+  animation-name: slideInFromTop !important;
+}
+
+.data-\[side\=left\]\:slide-in-from-right-2[data-side="left"] {
+  animation-name: slideInFromRight !important;
+}
+
+.data-\[side\=right\]\:slide-in-from-left-2[data-side="right"] {
+  animation-name: slideInFromLeft !important;
+}
+
+.data-\[side\=top\]\:slide-in-from-bottom-2[data-side="top"] {
+  animation-name: slideInFromBottom !important;
+}
+
+/* Keyframe animations for tooltips */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.95); }
+  to { transform: scale(1); }
+}
+
+@keyframes zoomOut {
+  from { transform: scale(1); }
+  to { transform: scale(0.95); }
+}
+
+@keyframes slideInFromTop {
+  from { transform: translateY(-0.5rem); }
+  to { transform: translateY(0); }
+}
+
+@keyframes slideInFromBottom {
+  from { transform: translateY(0.5rem); }
+  to { transform: translateY(0); }
+}
+
+@keyframes slideInFromLeft {
+  from { transform: translateX(-0.5rem); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideInFromRight {
+  from { transform: translateX(0.5rem); }
+  to { transform: translateX(0); }
+}
+
+/* Max-width utilities for tooltips */
+.max-w-xs {
+  max-width: 20rem !important;
+}
+
+/* Tooltip max-width for diagram (1/2 of diagram width: 750px / 2 = 375px) */
+.max-w-diagram-half {
+  max-width: 375px !important;
+}
+
+/* Tooltip content styling classes */
+.space-y-1 > * + * {
+  margin-top: 0.25rem !important;
+}
+
+.font-medium {
+  font-weight: 500 !important;
+  font-size: 0.875rem !important; /* Same as text-sm */
+  line-height: 1.25rem !important; /* Same as text-sm */
+}
+
+.text-sm {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+}
+
+.text-muted-foreground {
+  color: var(--muted-foreground) !important;
 }

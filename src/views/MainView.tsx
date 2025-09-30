@@ -211,7 +211,7 @@ function MainView(): JSX.Element {
               <Button
                 onClick={handleAddCategory}
                 variant="outline"
-                className={clsx(styles.button, styles.secondaryButton, styles.buttonWithIcon)}
+                className={clsx(styles.button, styles.blueButton)}
               >
                 <Plus className={styles.buttonIcon} />
                 Add Category
@@ -357,7 +357,6 @@ function MainView(): JSX.Element {
         {/* Detailed breakdown table */}
         {!isEditingLabels && (
           <div className={styles.detailedBreakdownSection}>
-            <h2 className={styles.sectionHeading}>Detailed Breakdown</h2>
             <DetailedBreakdownTable />
           </div>
         )}

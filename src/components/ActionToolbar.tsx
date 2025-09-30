@@ -185,7 +185,7 @@ function ActionToolbar(): JSX.Element {
     <div className={styles.container}>
       <Button
         onClick={handleCopyLink}
-        className={`${styles.button} ${styles.primaryButton}`}
+        className={`${styles.button} ${styles.blackButton}`}
       >
         <Link className={styles.buttonIcon} />
         Copy link
@@ -193,14 +193,14 @@ function ActionToolbar(): JSX.Element {
 
       <Button
         onClick={handlePrint}
-        className={`${styles.button} ${styles.primaryButton}`}
+        className={`${styles.button} ${styles.blackButton}`}
       >
         <Printer className={styles.buttonIcon} />
         Print
       </Button>
 
       <DropdownMenu>
-        <DropdownMenuTrigger className={`${styles.button} ${styles.primaryButton}`}>
+        <DropdownMenuTrigger className={`${styles.button} ${styles.blackButton}`}>
           Save diagram
           <ChevronDown className={styles.chevronIcon} />
         </DropdownMenuTrigger>

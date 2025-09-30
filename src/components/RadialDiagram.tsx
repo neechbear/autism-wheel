@@ -20,7 +20,7 @@ function ConditionalTooltip({ children, content, disabled = false, delayDuration
         <TooltipTrigger asChild>
           {children}
         </TooltipTrigger>
-        <TooltipContent side="top" className="max-w-xs">
+        <TooltipContent side="top" className="max-w-diagram-half">
           {content}
         </TooltipContent>
       </Tooltip>
