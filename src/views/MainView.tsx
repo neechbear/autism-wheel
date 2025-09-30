@@ -163,8 +163,8 @@ function MainView(): JSX.Element {
   const hasChanges = JSON.stringify(draftCategories) !== JSON.stringify(state.categories);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.innerContainer}>
+    <div className="view-container">
+      <div className="view-content">
         {/* Header section */}
         <Header isLockedMode={false} hideIntro={false} onHelp={handleHelp} />
 

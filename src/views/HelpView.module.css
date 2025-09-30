@@ -1,19 +1,5 @@
 /* HelpView.module.css - CSS Module for HelpView component */
 
-.container {
-  min-height: 100vh;
-  background-color: var(--background);
-  color: var(--foreground);
-}
-
-.content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-md);
-  display: flex;
-  flex-direction: column;
-}
-
 .title {
   padding-top: var(--spacing-sm);
   margin-bottom: var(--spacing-sm);
@@ -82,6 +68,7 @@
   max-width: 48rem; /* 768px - same as intro paragraph width */
   margin: 0 auto;
   width: 100%;
+  padding-bottom: var(--spacing-xl);
 }
 
 .videoWrapper {
@@ -138,23 +125,6 @@
     max-width: none;
     padding: 0;
   }
-}
-
-/* Secondary headings */
-.secondaryTitle {
-  color: var(--color-text-primary);
-  text-align: center;
-  margin: var(--spacing-lg) 0 var(--spacing-md) 0;
-  /* Font size, weight, and line-height inherited from global h2 styles */
-}
-
-/* Tertiary headings - bold, underlined, left-aligned, same size as paragraph text */
-.tertiaryTitle {
-  color: var(--color-text-primary);
-  text-align: left;
-  text-decoration: underline;
-  margin: var(--spacing-lg) 0 var(--spacing-md) 0;
-  /* Font size, weight, and line-height inherited from global h3 styles */
 }
 
 /* Support levels styling */
