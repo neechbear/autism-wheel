@@ -140,6 +140,223 @@ function HelpView(): JSX.Element {
               </span>
             </li>
           </ul>
+
+          <p className={styles.introText}>
+            For a clear, empathetic child-centric explanation with examples, visit the{' '}
+            <a
+              href="https://www.seattlechildrens.org/clinics/autism-center/the-autism-blog/autism-levels-support/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.link}
+            >
+              Seattle Children's Autism Center Blog
+            </a>
+            .
+          </p>
+        </div>
+
+        {/* Further Reading section */}
+        <h2 className={styles.secondaryTitle}>Further Reading & Resources 📚</h2>
+
+        <div className={styles.textSection}>
+          <p className={styles.introText}>
+            If you want to explore more before completing your profile, here are some excellent resources.
+          </p>
+
+          <h3 className={styles.tertiaryTitle}>Tools for Self-Exploration</h3>
+
+          <p className={styles.introText}>
+            These are screening questionnaires, not diagnostic tools. They can't confirm if you're autistic, but they can offer insights and help you understand your own traits.
+          </p>
+
+          <p className={styles.introText}>
+            <span className={styles.boldText}>The Autism-Spectrum Quotient (AQ):</span> Developed by Cambridge University, this is a widely used questionnaire to measure autistic traits.
+          </p>
+
+          <ul className={styles.resourcesList}>
+            <li>
+              Online Version with Analysis:{' '}
+              <a
+                href="https://embrace-autism.com/autism-spectrum-quotient/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                Embrace Autism - AQ Test
+              </a>
+            </li>
+            <li>
+              Another Online Version:{' '}
+              <a
+                href="https://psychology-tools.com/test/autism-spectrum-quotient"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                Prosper Health - AQ Test
+              </a>
+            </li>
+          </ul>
+
+          <p className={styles.introText}>
+            <span className={styles.boldText}>The Ritvo Autism Asperger Diagnostic Scale–Revised (RAADS-R):</span> This scale was designed specifically with adults in mind, including those who may have gone undiagnosed because they have learned to "mask" their autistic traits.
+          </p>
+
+          <ul className={styles.resourcesList}>
+            <li>
+              Online Version:{' '}
+              <a
+                href="https://embrace-autism.com/raads-r/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                Embrace Autism - RAADS-R Test
+              </a>
+            </li>
+            <li>
+              Informational Page:{' '}
+              <a
+                href="https://www.keyautismservices.com/resources/raads-r-test-for-autism/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                Key Autism Services - About the RAADS-R
+              </a>
+            </li>
+          </ul>
+
+          <h3 className={styles.tertiaryTitle}>Community & Advocacy</h3>
+
+          <p className={styles.introText}>
+            These organisations offer practical advice, community connection, and advocate for the autistic community.
+          </p>
+
+          <ul className={styles.resourcesList}>
+            <li>
+              <a
+                href="https://www.autism.org.uk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                <span className={styles.boldText}>The National Autistic Society (UK)</span>
+              </a>
+              <span className={styles.boldText}>:</span>{' '}
+              The UK's most established and largest charity dedicated to autism. It functions as a comprehensive resource hub for autistic people, their families, and professionals. Its strengths lie in providing a vast library of practical information, guidance on navigating systems (like education and health), and connecting people to local services.
+            </li>
+            <li>
+              <a
+                href="https://www.s4nd.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                <span className={styles.boldText}>The Society for Neurodiversity (S4Nd) (UK)</span>
+              </a>
+              <span className={styles.boldText}>:</span>{' '}
+              This UK organisation is distinguished by being run by and for a wide range of neurodivergent people (not limited to autism). Its primary focus is on building a supportive peer-led community, offering connection and resources grounded in shared lived experience.
+            </li>
+            <li>
+              <a
+                href="https://autisticadvocacy.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                <span className={styles.boldText}>Autistic Self Advocacy Network (ASAN) (US)</span>
+              </a>
+              <span className={styles.boldText}>:</span>{' '}
+              A US-based non-profit run by and for autistic people. ASAN's core mission is political and rights-based advocacy, centered on the principle of "Nothing About Us Without Us." They focus on influencing public policy and ensuring autistic voices are central to conversations about disability rights.
+            </li>
+            <li>
+              <a
+                href="https://autismsociety.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                <span className={styles.boldText}>Autism Society (US)</span>
+              </a>
+              <span className={styles.boldText}>:</span>{' '}
+              As one of the oldest and largest US autism organisations, its key differentiator is its extensive network of local affiliates. It provides on-the-ground support, information, and services directly to autistic individuals and their families within their own communities.
+            </li>
+            <li>
+              <a
+                href="https://awnnetwork.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                <span className={styles.boldText}>Autistic Women & Nonbinary Network (AWN) (US)</span>
+              </a>
+              <span className={styles.boldText}>:</span>{' '}
+              A US-based organization with focusing is on creating a supportive community specifically for autistic women, girls, nonbinary people, and other marginalised genders. It addresses the distinct experiences of this demographic, such as late diagnosis, social masking, and the intersection of autism with gender identity.
+            </li>
+          </ul>
+
+          <h3 className={styles.tertiaryTitle}>Key UK & US Health Information</h3>
+
+          <p className={styles.introText}>
+            These government and public health bodies provide reliable, evidence-based information on autism diagnosis and support.
+          </p>
+
+          <ul className={styles.resourcesList}>
+            <li>
+              <a
+                href="https://www.nhs.uk/conditions/autism/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                <span className={styles.boldText}>The UK National Health Service (NHS)</span>
+              </a>
+              <span className={styles.boldText}>:</span>{' '}
+              The official source for understanding autism in the UK, including the steps for seeking an assessment and finding support.
+            </li>
+            <li>
+              <a
+                href="https://www.cdc.gov/autism/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                <span className={styles.boldText}>The US Centers for Disease Control and Prevention (CDC)</span>
+              </a>
+              <span className={styles.boldText}>:</span>{' '}
+              Provides detailed summaries of official diagnostic criteria, data, and links to current research.
+            </li>
+          </ul>
+
+          <h3 className={styles.tertiaryTitle}>Other Reputable Sources</h3>
+
+          <ul className={styles.resourcesList}>
+            <li>
+              <a
+                href="https://embrace-autism.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                <span className={styles.boldText}>Embrace Autism</span>
+              </a>
+              <span className={styles.boldText}>:</span>{' '}
+              A fantastic resource hub run by a registered psychologist and an autistic advocate. It provides free online versions of the screening tools listed above, along with detailed articles explaining their scoring, history, and validity, all backed by research.
+            </li>
+            <li>
+              <a
+                href="https://www.clara.psychol.cam.ac.uk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                <span className={styles.boldText}>The Autism Research Centre (Cambridge University)</span>
+              </a>
+              <span className={styles.boldText}>:</span>{' '}
+              The academic centre where the AQ test was developed. Their work forms the scientific foundation for many of the tools and understanding we use today.
+            </li>
+          </ul>
         </div>
 
         {/* Bottom return button */}

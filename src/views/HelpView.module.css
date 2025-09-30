@@ -18,11 +18,9 @@
 .title {
   padding-top: var(--spacing-sm);
   margin-bottom: var(--spacing-sm);
-  font-size: 2.25rem; /* text-4xl equivalent */
-  font-weight: var(--font-weight-bold);
-  line-height: 1.1;
   color: var(--color-text-primary);
   text-align: center;
+  /* Font size, weight, and line-height inherited from global h1 styles */
 }
 
 .buttonContainer {
@@ -145,11 +143,19 @@
 
 /* Secondary headings */
 .secondaryTitle {
-  font-size: 1.5rem;
-  font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   text-align: center;
   margin: var(--spacing-lg) 0 var(--spacing-md) 0;
+  /* Font size, weight, and line-height inherited from global h2 styles */
+}
+
+/* Tertiary headings - bold, underlined, left-aligned, same size as paragraph text */
+.tertiaryTitle {
+  color: var(--color-text-primary);
+  text-align: left;
+  text-decoration: underline;
+  margin: var(--spacing-lg) 0 var(--spacing-md) 0;
+  /* Font size, weight, and line-height inherited from global h3 styles */
 }
 
 /* Support levels styling */
@@ -161,9 +167,7 @@
 
 .supportLevel {
   margin-bottom: var(--spacing-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
+  display: list-item;
 }
 
 .levelTitle {
@@ -179,4 +183,23 @@
   font-size: var(--font-size-base);
   line-height: 1.6;
   margin-left: 0; /* Align with the title */
+  display: block;
+  margin-top: var(--spacing-sm); /* Add spacing between title and description */
+}
+
+/* Regular unordered lists for resources */
+.resourcesList {
+  list-style: disc;
+  padding-left: var(--spacing-lg);
+  margin: var(--spacing-md) 0;
+}
+
+.resourcesList li {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.6;
+}
+
+/* Bold text styling */
+.boldText {
+  font-weight: var(--font-weight-bold);
 }

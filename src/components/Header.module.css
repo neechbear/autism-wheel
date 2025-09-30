@@ -7,10 +7,8 @@
 .title {
   padding-top: var(--spacing-sm);
   margin-bottom: var(--spacing-sm);
-  font-size: 2.25rem; /* text-4xl equivalent */
-  font-weight: var(--font-weight-bold);
-  line-height: 1.1;
   color: var(--color-text-primary);
+  /* Font size, weight, and line-height inherited from global h1 styles */
 }
 
 .introContainer {
