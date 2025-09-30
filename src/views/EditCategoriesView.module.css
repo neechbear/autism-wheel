@@ -109,20 +109,41 @@
   width: 100%;
   max-width: 48rem; /* Match detailed breakdown table width */
   margin: 0 auto var(--spacing-lg) auto; /* Center horizontally and add bottom margin */
-  overflow-x: auto; /* Allow horizontal scroll if needed */
+  overflow: auto;
+}
+
+/* Table styles to match DetailedBreakdownTable */
+.editCategoriesSection table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.editCategoriesSection thead tr {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.5); /* 50% grey horizontal dividing line */
+}
+
+.editCategoriesSection tbody tr {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.5); /* 50% grey horizontal dividing line */
+  transition: background-color 0.2s ease;
+}
+
+.editCategoriesSection tbody tr:last-child {
+  border-bottom: none; /* Remove border from last row */
+}
+
+.editCategoriesSection tbody tr:hover {
+  background-color: rgba(128, 128, 128, 0.08) !important; /* Faint grey highlight for light theme */
+}
+
+/* Dark theme hover effect */
+.dark .editCategoriesSection tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important; /* Faint light highlight for dark theme */
 }
 
 /* Table styles */
 .tableHeadCenter {
   text-align: center;
-}
-
-.tableRowHover {
-  transition: background-color var(--transition-fast);
-}
-
-.tableRowHover:hover {
-  background-color: var(--accent);
 }
 
 .tableCellTop {
