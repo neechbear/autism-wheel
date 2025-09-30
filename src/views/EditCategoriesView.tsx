@@ -314,7 +314,7 @@ function EditCategoriesView(): JSX.Element {
                             height: '16px'
                           }}
                         >
-                          <ChevronUp style={{ width: '12px', height: '12px' }} />
+                          <ChevronUp style={{ width: '27px', height: '27px' }} />
                         </Button>
                       )}
                       <div
@@ -335,7 +335,7 @@ function EditCategoriesView(): JSX.Element {
                           alignItems: 'center'
                         }}
                       >
-                        <GripVertical style={{ width: '12px', height: '12px' }} />
+                        <GripVertical style={{ width: '27px', height: '27px' }} />
                       </div>
                       {index < draftCategories.length - 1 && (
                         <Button
@@ -351,7 +351,7 @@ function EditCategoriesView(): JSX.Element {
                             height: '16px'
                           }}
                         >
-                          <ChevronDown style={{ width: '12px', height: '12px' }} />
+                          <ChevronDown style={{ width: '27px', height: '27px' }} />
                         </Button>
                       )}
                     </div>
