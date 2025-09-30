@@ -60,6 +60,43 @@
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
   background-color: var(--color-surface);
+  vertical-align: bottom;
+}
+
+.sortableHeader {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.sortableHeader:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.headerContent {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  min-height: 2.5rem;
+}
+
+.multiLineHeader {
+  text-align: center;
+  line-height: 1.2;
+}
+
+.sortIcon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.sortIconPlaceholder {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
 }
 
 .tableCellCenter {

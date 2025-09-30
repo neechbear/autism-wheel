@@ -1,8 +1,10 @@
 // Detailed breakdown table component following Single Responsibility Principle
 // Displays all categories with their data in a structured table format
 
+import { useState, useMemo } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { useAppContext } from '../state/AppContext';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 import styles from './DetailedBreakdownTable.module.css';
 
 // Helper function to darken a hex color (matches CircularDiagram logic)
@@ -25,9 +27,84 @@ const darkenColor = (hexColor: string, amount: number = 0.3): string => {
   return `#${((darkenedR << 16) | (darkenedG << 8) | darkenedB).toString(16).padStart(6, '0')}`;
 };
 
+// Sorting types and state
+type SortColumn = 'category' | 'typical' | 'stressed';
+type SortDirection = 'asc' | 'desc';
+
 function DetailedBreakdownTable(): JSX.Element {
   const { state } = useAppContext();
   const { categories, profile, settings } = state;
+
+  // Sorting state - default to Under Stress Impact descending
+  const [sortColumn, setSortColumn] = useState<SortColumn>('stressed');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+
+  // Handle column header clicks for sorting
+  const handleSort = (column: SortColumn) => {
+    if (sortColumn === column) {
+      // Same column, toggle direction
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Different column, set new column with appropriate default direction
+      setSortColumn(column);
+      setSortDirection(column === 'category' ? 'asc' : 'desc');
+    }
+  };
+
+  // Prepare data with sorting values
+  const tableData = useMemo(() => {
+    return categories.map((category, index) => {
+      const selectionValues = profile.selections[index] || [];
+      const typicalImpact = selectionValues.length > 0 ? selectionValues[0] : 0;
+      const stressedImpact = selectionValues.length > 1 ? selectionValues[1] : 0;
+
+      // For sorting purposes, use typical impact when stressed impact is missing
+      const stressedImpactForSorting = stressedImpact > 0 ? stressedImpact : typicalImpact;
+
+      return {
+        category,
+        index,
+        typicalImpact,
+        stressedImpact,
+        stressedImpactForSorting
+      };
+    });
+  }, [categories, profile.selections]);
+
+  // Apply sorting
+  const sortedData = useMemo(() => {
+    const sorted = [...tableData].sort((a, b) => {
+      let compareValue = 0;
+
+      switch (sortColumn) {
+        case 'category':
+          compareValue = a.category.name.localeCompare(b.category.name);
+          break;
+        case 'typical':
+          compareValue = a.typicalImpact - b.typicalImpact;
+          break;
+        case 'stressed':
+          // Use the sorting value that includes typical impact fallback
+          compareValue = a.stressedImpactForSorting - b.stressedImpactForSorting;
+          break;
+      }
+
+      return sortDirection === 'asc' ? compareValue : -compareValue;
+    });
+
+    return sorted;
+  }, [tableData, sortColumn, sortDirection]);
+
+  // Render sort icon for column headers
+  const renderSortIcon = (column: SortColumn) => {
+    if (sortColumn !== column) {
+      return <span className={styles.sortIconPlaceholder}></span>;
+    }
+
+    return sortDirection === 'asc' ?
+      <ChevronUp className={styles.sortIcon} /> :
+      <ChevronDown className={styles.sortIcon} />;
+  };
 
   const getASDLevel = (value: number): JSX.Element | null => {
     if (value >= 1 && value <= 4) {
@@ -64,17 +141,46 @@ function DetailedBreakdownTable(): JSX.Element {
         <Table className={styles.table}>
           <TableHeader className={styles.tableHeader}>
             <TableRow>
-              <TableHead className={styles.tableHead}>Category</TableHead>
-              {shouldShowNumbers && <TableHead className={`${styles.tableHead} ${styles.tableCellCenter}`}>Typical Impact</TableHead>}
-              {shouldShowNumbers && <TableHead className={`${styles.tableHead} ${styles.tableCellCenter}`}>Under Stress Impact</TableHead>}
+              <TableHead
+                className={`${styles.tableHead} ${styles.sortableHeader}`}
+                onClick={() => handleSort('category')}
+              >
+                <div className={styles.headerContent}>
+                  <span>Category</span>
+                  {renderSortIcon('category')}
+                </div>
+              </TableHead>
+              {shouldShowNumbers && (
+                <TableHead
+                  className={`${styles.tableHead} ${styles.tableCellCenter} ${styles.sortableHeader}`}
+                  onClick={() => handleSort('typical')}
+                >
+                  <div className={styles.headerContent}>
+                    <span className={styles.multiLineHeader}>
+                      Typical<br />Impact
+                    </span>
+                    {renderSortIcon('typical')}
+                  </div>
+                </TableHead>
+              )}
+              {shouldShowNumbers && (
+                <TableHead
+                  className={`${styles.tableHead} ${styles.tableCellCenter} ${styles.sortableHeader}`}
+                  onClick={() => handleSort('stressed')}
+                >
+                  <div className={styles.headerContent}>
+                    <span className={styles.multiLineHeader}>
+                      Under Stress<br />Impact
+                    </span>
+                    {renderSortIcon('stressed')}
+                  </div>
+                </TableHead>
+              )}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {categories.map((category, index) => {
-              const selectionValues = profile.selections[index] || [];
-              // For the table, we show the selection range or individual values
-              const typicalImpact = selectionValues.length > 0 ? selectionValues[0] : 0;
-              const stressedImpact = selectionValues.length > 1 ? selectionValues[1] : 0;
+            {sortedData.map((item) => {
+              const { category, typicalImpact, stressedImpact } = item;
 
               return (
                 <TableRow key={category.id} className={styles.tableRow}>
