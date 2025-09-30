@@ -322,6 +322,53 @@ This `global.css` file should be imported only once at the top level of the
 application, typically in `main.tsx` or `App.tsx`.
 
 
+### 4.4 CSS Best Practices and Conventions
+
+To ensure our CSS is maintainable, scalable, and bug-free, the following
+conventions must be strictly followed.
+
+* **No Inline Styles**: It is crucial that bare `style=""` attributes are
+  **never** used in JSX. All styling must be handled through the appropriate
+  global (`global.css`) or component-level (`*.module.css`) files. This enforces
+  a strict separation of concerns.
+* **Restricted Use of `!important`**: The `!important` declaration is forbidden
+  except in the most extreme cases, such as overriding a third-party library's
+  inline style. AI must:
+  1. Explicitly explain the reason for its use and get permission from you.
+  2. Add a clear comment in the CSS file explaining precisely why it was
+     unavoidable (e.g.,
+     `/* !important required to override inline style from LibraryX */`).
+* **Global vs. Scoped Styles**: A thoughtful balance must be struck between
+  global and module-level styles.
+  * **Prefer Global Base Styles**: To maintain a consistent look and feel, apply
+    global styles to base HTML tags like `h1`, `h2`, `h3`, `p`, and button in
+    `global.css`. Avoid creating highly specific utility classes (e.g.,
+    `.h1-with-margin`) that are then applied to almost every instance of a tag.
+  * **Scope Component-Specific Styles**: If a style is genuinely unique to one
+    component, it belongs in that component's CSS Module file.
+* **Consistent Whitespace**: To ensure a predictable visual rhythm, avoid adding
+  custom `margin` or `padding` directly to `h1`, `h2`, `h3`, and `p` tags at the
+  component level. The default whitespace for these elements should be set
+  globally. If a component requires different spacing between elements, apply
+  the margin or padding to a parent `<div>` or container. Using Flexbox `gap` or
+  Grid `gap` on the container is often the best approach.
+* **Code Hygiene**: Unused CSS selectors **must be removed** from all CSS files
+  to prevent code bloat and confusion during maintenance.
+* **Use Logical Properties**: For properties like `margin`, `padding`, and
+  `text-align`, prefer logical properties (e.g., `margin-inline-start`,
+  `padding-block-end`, `text-align: start`) over physical ones (e.g.,
+  `margin-left`, `padding-bottom`, `text-align: left`). This ensures the layout
+  adapts correctly for `right-to-left` languages without extra CSS.
+* **Property Order**: For readability, CSS properties within a rule should be
+  ordered logically. A good convention is:
+  1. Positioning (`position`, `top`, `z-index`)
+  2. Box Model (`display`, `flex`, `grid`, `width`, `height`, `margin`,
+     `padding`)
+  3. Typography (`font-family`, `font-size`, `color`, `line-height`)
+  4. Visual (`background`, `border`, `box-shadow`)
+  5. Animation (`transition`, `animation`)
+
+
 ## Section 5: Radix UI Primitives: Integration and Best Practices
 
 The application uses Radix UI Primitives for its underlying UI components. It is
@@ -706,6 +753,34 @@ state data into the current ApplicationState format.
 By isolating this logic, the rest of the application codebase remains simple and
 only ever has to interact with the latest, up-to-date `ApplicationState`
 structure, significantly reducing cognitive load and preventing bugs.
+
+
+### **9.5 State Loading Order of Precedence**
+
+The application must be able to load state from multiple sources. To ensure
+predictable behavior, state will be loaded according to a strict order of
+descending priority. The application will attempt to load state from the first
+source in the list; if that source is not present or is invalid, it will proceed
+to the next.
+
+The authoritative order of precedence is:
+
+1. **URL Query String**: State encoded into the URL's query parameters (e.g.,
+   `?state=...`). This is the highest priority and is used for sharing specific
+   profiles.
+2. **Meta Tag (Offline Context)**: If the application is loaded from a `file://`
+   URL scheme, the state encoded in the
+   `<meta name="autism-wheel-state" content="...">` tag is used. This allows a
+   saved HTML file to contain its own state and takes precedence over local
+   storage.
+3. **Local Browser Storage**: The ApplicationState object saved in the browser's
+   localStorage from a previous session.
+4. **Meta Tag (Web Context)**: If the application is loaded from any URL scheme
+   other than `file://` (e.g., `http://`, `https://`), the state encoded in the
+   `<meta name="autism-wheel-state" content="...">` tag is checked.
+5. **Default State**: If none of the above sources provide a valid state, the
+   application will initialize with its hard-coded default categories and an
+   empty user profile.
 
 
 #### Works cited

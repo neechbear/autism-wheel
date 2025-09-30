@@ -1,11 +1,22 @@
 /* EditCategoriesView.module.css - CSS Module for EditCategoriesView component */
 
 .title {
-  padding-top: var(--spacing-sm);
-  margin-bottom: var(--spacing-sm);
   color: var(--foreground);
   text-align: center;
   /* Font size, weight, and line-height inherited from global h1 styles */
+  padding-top: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.tableCell {
+  vertical-align: top;
+  padding: var(--spacing-md);
+}
+
+.tableCellTopCenter {
+  vertical-align: top;
+  text-align: center;
+  padding: var(--spacing-md);
 }
 
 .textSection {
