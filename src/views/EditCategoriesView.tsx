@@ -297,28 +297,29 @@ function EditCategoriesView(): JSX.Element {
                       style={{
                         display: 'flex',
                         alignItems: 'center',
+                        justifyContent: 'space-between',
                         gap: '1px',
                         padding: '0',
-                        margin: '0'
+                        margin: '0',
+                        width: '60px'
                       }}
                     >
-                      {index > 0 && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleMoveUp(index)}
-                          className={styles.reorderButton}
-                          style={{
-                            padding: '0',
-                            margin: '0',
-                            minWidth: '16px',
-                            width: '16px',
-                            height: '16px'
-                          }}
-                        >
-                          <ChevronUp style={{ width: '27px', height: '27px' }} />
-                        </Button>
-                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleMoveUp(index)}
+                        className={styles.reorderButton}
+                        style={{
+                          padding: '0',
+                          margin: '0',
+                          minWidth: '16px',
+                          width: '16px',
+                          height: '16px',
+                          visibility: index > 0 ? 'visible' : 'hidden'
+                        }}
+                      >
+                        <ChevronUp style={{ width: '27px', height: '27px' }} />
+                      </Button>
                       <div
                         className={styles.dragHandle}
                         draggable
@@ -339,23 +340,22 @@ function EditCategoriesView(): JSX.Element {
                       >
                         <GripVertical style={{ width: '27px', height: '27px' }} />
                       </div>
-                      {index < draftCategories.length - 1 && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleMoveDown(index)}
-                          className={styles.reorderButton}
-                          style={{
-                            padding: '0',
-                            margin: '0',
-                            minWidth: '16px',
-                            width: '16px',
-                            height: '16px'
-                          }}
-                        >
-                          <ChevronDown style={{ width: '27px', height: '27px' }} />
-                        </Button>
-                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleMoveDown(index)}
+                        className={styles.reorderButton}
+                        style={{
+                          padding: '0',
+                          margin: '0',
+                          minWidth: '16px',
+                          width: '16px',
+                          height: '16px',
+                          visibility: index < draftCategories.length - 1 ? 'visible' : 'hidden'
+                        }}
+                      >
+                        <ChevronDown style={{ width: '27px', height: '27px' }} />
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
