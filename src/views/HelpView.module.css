@@ -1,0 +1,182 @@
+/* HelpView.module.css - CSS Module for HelpView component */
+
+.container {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md); /* Reduced from xl to md to decrease vertical spacing */
+}
+
+.title {
+  padding-top: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  font-size: 2.25rem; /* text-4xl equivalent */
+  font-weight: var(--font-weight-bold);
+  line-height: 1.1;
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin: var(--spacing-md) 0;
+}
+
+.returnButton {
+  height: 2.5rem; /* Match main view button height */
+  padding: 0 var(--spacing-lg);
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: var(--radius);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.returnButton:hover {
+  background-color: var(--primary);
+  opacity: 0.9;
+}
+
+.textSection {
+  max-width: 48rem; /* 768px - same as intro paragraph width */
+  margin: 0 auto;
+  text-align: left;
+}
+
+.introText {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.link {
+  color: var(--color-blue-600);
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.link:hover {
+  color: var(--color-blue-700);
+}
+
+/* Dark mode link colors */
+[data-theme="dark"] .link {
+  color: var(--color-blue-400);
+}
+
+[data-theme="dark"] .link:hover {
+  color: var(--color-blue-300);
+}
+
+.videoContainer {
+  max-width: 48rem; /* 768px - same as intro paragraph width */
+  margin: 0 auto;
+  width: 100%;
+}
+
+.videoWrapper {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: var(--radius);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .content {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-lg);
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .returnButton {
+    height: 2.25rem; /* Slightly smaller on mobile but still matching proportion */
+    padding: 0 var(--spacing-md);
+    font-size: var(--font-size-sm);
+  }
+
+  .secondaryTitle {
+    font-size: 1.25rem;
+  }
+}
+
+@media print {
+  .buttonContainer {
+    display: none;
+  }
+
+  .container {
+    min-height: auto;
+  }
+
+  .content {
+    max-width: none;
+    padding: 0;
+  }
+}
+
+/* Secondary headings */
+.secondaryTitle {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  text-align: center;
+  margin: var(--spacing-lg) 0 var(--spacing-md) 0;
+}
+
+/* Support levels styling */
+.supportLevelsList {
+  list-style: disc;
+  padding-left: var(--spacing-lg);
+  margin: 0;
+}
+
+.supportLevel {
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.levelTitle {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+
+.levelDescription {
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  margin-left: 0; /* Align with the title */
+}

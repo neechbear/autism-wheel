@@ -2,27 +2,11 @@
 // Contains all help content, tutorial video, and return functionality
 
 import React, { useEffect } from 'react';
+import styles from './HelpView.module.css';
 import { Button } from '../components/ui/button';
 import { useAppContext, appActions } from '../state/AppContext';
 
-// YouTube icon component
-function YouTubeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className={className}
-      fill="currentColor"
-    >
-      <path
-        fill="#FF0000"
-        d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"
-      />
-      <path fill="#FFFFFF" d="M9.545 15.568 15.818 12 9.545 8.432v7.136z" />
-    </svg>
-  );
-}
-
-function HelpContent(): JSX.Element {
+function HelpView(): JSX.Element {
   const { dispatch } = useAppContext();
 
   const handleReturn = () => {
@@ -45,304 +29,131 @@ function HelpContent(): JSX.Element {
     };
   }, []);
 
+  // Get current URL without query parameters for the sensory wheel link
+  const getCurrentUrl = () => {
+    return `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+  };
+
+  const sensoryWheelUrl = `${getCurrentUrl()}?state=N4IgzgpgNhDGAuBLA9gOzCAXKADFg2gLoA0IAjASSAEyWkDMdIALEwKxMBsTA7JQL6kwURLAgAZAIYAjaBkz4QAZWQBXVABMABAAoAgqo2J4yAE4BPAJQhSASVTwIp1JKhalEdJKRowu%2B46myGIADj6o1qRKiADmABbwugBqiGCqrpHKALbQbjoA8lAAZpIIZlY2IAAqkmCOugDiqnXe5ZlVarBxujUIiDCZAEKukqhiyRB1iNKqUJKmQ8ga5lp6AO7znpN%2BOgAKQSGmKKHh1lTCohAAwshQZvKKAMScnLBssLCVj7AAnBrSPFYpEeRVeRR4FGBRQAHD9YICvhpYNIcEVaMDoTw3mwil8fhBpD8iowoRBodDpBRziIxLZYL4CCBALwbgCEdypMwC5O%2BzAII7gHg%2F9mAYR32YBRHcqgGhySqAPg3ABy7gFgCQACZOzAG17ssAQmT86mXAAik1gRzCKHQjIAmmpTFp1IgAI6qCBaUyTEK%2BO0mLRgNSaAB0qy0dzWbvpDq0iE0om8ky05jUWlgoy0MS2plcUBWRX6gS00lKAGsYkF1NpUMhUnbRtoTDAk%2FUIAA3JzmDSSFbugtgb16LRxWLdMCBu0OoowBB%2BCAAD3gDpybs8YGMiBrxhWOji5hCTksxC0aziTjt9KyWTQWiLJb8my0IUkIaKsy0ZjvddM2%2BgWRDMU394LTgAtJB0HOF3gJcVydDctx3IMo1ULRX3iRJIAgbM71URI7kMTcQ0cdA7RbTQ%2FFdIoIGge0IBiWZww0T1KlNVRzRkfpFy0V011MMR5xw2IXCgPwiiCLJg3%2FDQ7Sg81pCWcx219ZB%2FV7Mw7RyUY%2FCgkiRBkFNj2QJBxkwpwuJjW0%2FBEbM7TidQE1MTd4C7Uw6g%2Fc1LxDSSu3iAM5JIwc4HgPwjCKNNYFmICSPpGJUFSN8mJ3SA3U41wwE3bdRG6WNUF9CBJHLZANMSNKkFQGILQcfotBKV8wB3DRNyLRINCOVBs3C9QkDcISVxqii7Ky4MhMKopzHCiBD3CPxGqKqyIBWWR9ztZBH2fKBXzyqjSBo80xxYxBPHGZAigiu0FzSVwtzMKBKJ9P1XKDNIYgTOolOjOIyxgJjVzDNwRDg8Kyy0fb0jcWAoBQjN9yKMx4DUiSfWcns%2BxjOMFJSkCnD%2FWckEA8x4ogu1pCOODfW7Ly71E5oVkveBAnQLRzyMd0jk8XL30JztV2QZGAMXDHd0jaNYISTM7TatYUtdHTsO%2B1JfrdJAslmRA8eM4q5jK8L3oSfDMsI4jPBiSQE0o6izWnf9UcYr6HVKcImMynzCIdBwAzptszuki75LSinlKqy43RyKBuMzFDKaDKrnpCV71Jmpw5pyU6Oyhl3YZSkMjFjepEZsmc2aAjmg33Q8UrAH2%2FaMu0WJvKd7xBpZA7tFxmhyt8OpAlmM%2BNrPwM55SecSYPPfGOogjyu8NDNPx7yyJtKb6Ot1IQpCxv4tR4CWkAVsNlH50Ygi5hrEfKc0Jix3gWiIxDLnaJgxe4kk87ZKDeG7ugzwACtkBWSRvvmDbtCMCBEjWYw4iL2DGANIEAnLdnjslGCbsmYsVZq3FYMB0rhVdO%2FB0%2FdRCOG%2FhtP%2BmMYxODBqfRw45j5niDOoWQ8w1IQEbszeBG9ArPkgtGPUkg6xaEPpOaAzYJxoHyoONhu8dBgJiJ6Tcj5myh1gCse8LYFiWxIjEVIGYxpMVqI4Zeq81pOA2mMaaO0QgrlnLGP6aAwYID3uWQ%2BpC7wpREm6eqqBr7O1vnaJOYZHB%2BGBqDLcACP6020P9TSXY8qWQGixbwpDNxfSAmuUeO0TCqC6OAlyriE7QLjGnehaNNzj0cflIJVkUE61HuaFWiREldGKkRNwDlUA3igLQp02T2bt2YdBLunVe4lyvClMeE9Z5aCEhAEIF50FpCDARGpsN5qaINjpZwh1kb6MzCMPRuSI45AcNE%2BeYBSaIEOmYXRYNwjOJkjDK6N0CbKQ1m4Fo0gnpfXpGYIwLgsEpOhm5TpA4hyJCyS3Bh6NYbNHCoNQ00VYDZlQNsYqfFvbJgvnWLZXkmnNyNoCzcSDXn5VQceIi2gQbmhFlFQ8SK6ZyxwqHVAoVB73iCJClB6tpkOjInMd5%2Btz7Y16QAcmGmMXwsAUDNEphsW2MLtptOEgbMSyxgECTdJeMQZz473zPoiu0%2F8rIxjQGmbq4xTabHUqVJ%2BhgEzFTMEqyGEC0lQPHqFQidRKZeIBlkWc0KQGbhmFkKl%2BVMKZWQNIJ%2Bnk4qMxBYPEwmVpZVPvBGvGZMnqEvGMIz0oj4pHHppbTKD1TDaHvIAk6KCQkxDVplO4zcUxgW2lhaciFwrDNGYcbYx8FEJkSO%2FWQZMnBrxWfYmVEkQBUFQKoLIshTC7BZnONAWAQBiAcE4SocxZBQCUEBGA06xInUqGJAs8xzAAHUID43XbcDQlQyrSTpAyTAE5bRCFBjcF1qBp3922Ge0GWpEAOj6FOzAIAhK9kqPPCAz7zB1AGiAfgQA`;
+
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 space-y-8">
-      {/* Return Button */}
-      <div className="flex justify-center mb-8">
-        <Button
-          onClick={handleReturn}
-          className="h-12 px-8 bg-primary text-primary-foreground hover:bg-primary/90"
-        >
-          Return to Main Page
-        </Button>
-      </div>
+    <div className={styles.container}>
+      <div className={styles.content}>
+        {/* Main title - same as main page */}
+        <h1 className={styles.title}>Autism Wheel</h1>
 
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold">Using the Autism Wheel</h1>
-        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-          The Autism Wheel is a visual tool designed to help autistic individuals create, visualize, and share their unique autism profile.
-        </p>
-      </div>
-
-      {/* Introduction */}
-      <div className="max-w-3xl mx-auto">
-        <p className="text-base leading-relaxed">
-          Thank you for using{' '}
-          <a
-            href="https://www.myautisticprofile.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 dark:text-blue-400 hover:underline"
+        {/* Top return button */}
+        <div className={styles.buttonContainer}>
+          <Button
+            onClick={handleReturn}
+            className={styles.returnButton}
           >
-            my Autism Wheel
-          </a>
-          . I developed this tool as a personal project to help myself and others visualize and better
-          communicate their own unique autistic profiles. I am not a medical professional, and this tool
-          is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
-          Your feedback to improve this tool is welcomed at{' '}
-          <a
-            href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 dark:text-blue-400 hover:underline"
+            Return to app
+          </Button>
+        </div>
+
+        {/* Secondary heading */}
+        <h2 className={styles.secondaryTitle}>How to Use This Tool</h2>
+
+        {/* Introduction text */}
+        <div className={styles.textSection}>
+          <p className={styles.introText}>
+            Thank you for using{' '}
+            <a
+              href="https://www.myautisticprofile.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.link}
+            >
+              my Autism Wheel
+            </a>
+            . I developed this tool as a personal project to help myself and others visualize and better
+            communicate their own unique autistic profiles. I am not a medical professional, and this tool
+            is not intended for diagnosis, treatment, or as a replacement for professional medical advice.
+            Your feedback to improve this tool is welcomed at{' '}
+            <a
+              href="mailto:feedback@myautisticprofile.com?subject=Feedback%20on%20Autism%20Wheel"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.link}
+            >
+              feedback@myautisticprofile.com
+            </a>
+            .
+          </p>
+        </div>
+
+        {/* Getting started text */}
+        <div className={styles.textSection}>
+          <p className={styles.introText}>
+            To get started, watch this short video guide that walks you through creating your own autistic wheel profile. An alternative sensory wheel is available by{' '}
+            <a
+              href={sensoryWheelUrl}
+              className={styles.link}
+            >
+              clicking this link
+            </a>
+            .
+          </p>
+        </div>
+
+        {/* YouTube video embed */}
+        <div className={styles.videoContainer}>
+          <div className={styles.videoWrapper}>
+            <iframe
+              src="https://www.youtube.com/embed/q6GuRmvEKZw"
+              title="How to Use the Autism Wheel - Tutorial Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              className={styles.video}
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Support Needs section */}
+        <h2 className={styles.secondaryTitle}>Understanding Support Needs (ASD Levels)</h2>
+
+        <div className={styles.textSection}>
+          <p className={styles.introText}>
+            When filling out your profile, it might be helpful to think about your support needs. The official diagnostic framework (the DSM-5) uses three "levels" to describe the varying degrees of support an autistic person might benefit from. These levels are just a clinical starting point—they can't capture the full picture of who you are. Your autistic wheel profile will show that your needs can change depending on the environment, your energy levels, or the specific task you're doing.
+          </p>
+
+          <ul className={styles.supportLevelsList}>
+            <li className={styles.supportLevel}>
+              <strong className={styles.levelTitle}>Level 1: "Requiring Support"</strong>
+              <span className={styles.levelDescription}>
+                You might navigate daily life with a degree of independence but find some situations challenging. For example, you may speak in full sentences but find back-and-forth conversation tiring or difficult to initiate. Unexpected changes to your routine or switching between tasks can be stressful and require extra energy to manage.
+              </span>
+            </li>
+            <li className={styles.supportLevel}>
+              <strong className={styles.levelTitle}>Level 2: "Requiring Substantial Support"</strong>
+              <span className={styles.levelDescription}>
+                You may benefit from more consistent support to navigate social situations and daily tasks. Communication might involve simpler sentences or be focused on your deep passions and interests. Sticking to a routine is often very important, and changes can be quite distressing. These support needs are likely apparent to those around you.
+              </span>
+            </li>
+            <li className={styles.supportLevel}>
+              <strong className={styles.levelTitle}>Level 3: "Requiring Very Substantial Support"</strong>
+              <span className={styles.levelDescription}>
+                You likely require significant, ongoing support in most areas of life. You may communicate in ways other than spoken language (for example, using a device or gestures) or use a few words. Having a predictable structure and coping with change can be a major challenge, and a lot of support is needed to navigate the demands of daily life.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        {/* Bottom return button */}
+        <div className={styles.buttonContainer}>
+          <Button
+            onClick={handleReturn}
+            className={styles.returnButton}
           >
-            feedback@myautisticprofile.com
-          </a>
-          .
-        </p>
-      </div>
-
-      {/* Important Note */}
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-6">
-        <h2 className="text-xl font-semibold text-yellow-800 dark:text-yellow-200 mb-2">Important Note</h2>
-        <p className="text-yellow-700 dark:text-yellow-300">
-          This tool is for personal reflection and communication only. It is not a diagnostic tool and should not be used for medical or clinical purposes.
-        </p>
-      </div>
-
-      {/* Tutorial Video */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Video Tutorial</h2>
-        <div className="aspect-video w-full max-w-3xl mx-auto">
-          <iframe
-            src="https://www.youtube.com/embed/hF2lR28tJFo"
-            title="Autism Wheel Tutorial Video"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-            className="w-full h-full rounded-lg"
-          ></iframe>
+            Return to app
+          </Button>
         </div>
-        <div className="flex justify-center">
-          <a
-            href="https://www.youtube.com/watch?v=hF2lR28tJFo"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-          >
-            <YouTubeIcon className="w-6 h-6" />
-            Watch on YouTube
-          </a>
-        </div>
-      </div>
-
-      {/* How to Use */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-semibold">How to Use the Autism Wheel</h2>
-
-        <div className="space-y-4">
-          <div className="border rounded-lg p-6 space-y-3">
-            <h3 className="text-xl font-medium">1. Understanding the Wheel</h3>
-            <p>The wheel is divided into different categories representing various aspects of autism. Click on the segments to indicate how much each area impacts your daily life on a scale from 1-10.</p>
-          </div>
-
-          <div className="border rounded-lg p-6 space-y-3">
-            <h3 className="text-xl font-medium">2. Making Your Selections</h3>
-            <p>For each category, you can make two types of selections:</p>
-            <ul className="list-disc list-inside space-y-2 ml-4">
-              <li><strong>Typical Impact:</strong> How this area affects you in your day-to-day life</li>
-              <li><strong>Stressed Impact:</strong> How this area affects you when you're under stress or overwhelmed</li>
-            </ul>
-            <p className="text-sm text-muted-foreground">Click once for typical impact, twice for stressed impact, and three times to clear your selection.</p>
-          </div>
-
-          <div className="border rounded-lg p-6 space-y-3">
-            <h3 className="text-xl font-medium">3. Customizing Categories</h3>
-            <p>Use the "Edit Categories" button to personalize your wheel:</p>
-            <ul className="list-disc list-inside space-y-2 ml-4">
-              <li>Change category names and descriptions</li>
-              <li>Modify colors and icons</li>
-              <li>Reorder categories by dragging</li>
-              <li>Add new categories or remove existing ones</li>
-            </ul>
-          </div>
-
-          <div className="border rounded-lg p-6 space-y-3">
-            <h3 className="text-xl font-medium">4. Sharing Your Profile</h3>
-            <p>Use the "Copy Link" button to generate a shareable URL containing your complete profile. This link preserves all your selections and customizations.</p>
-          </div>
-
-          <div className="border rounded-lg p-6 space-y-3">
-            <h3 className="text-xl font-medium">5. Saving and Exporting</h3>
-            <p>The "Save Diagram" menu offers multiple export options:</p>
-            <ul className="list-disc list-inside space-y-2 ml-4">
-              <li><strong>PNG:</strong> High-quality image for social media or documents</li>
-              <li><strong>SVG:</strong> Scalable vector graphic for professional printing</li>
-              <li><strong>HTML:</strong> Complete interactive file for offline use</li>
-              <li><strong>Locked HTML:</strong> Non-editable version for sharing</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* Understanding Autism Levels */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-semibold">Understanding Autism Support Levels</h2>
-        <p className="text-muted-foreground">
-          The DSM-5 describes three levels of support needs for autistic individuals. These levels reflect the amount of support a person may need, not their abilities or worth.
-        </p>
-
-        <div className="space-y-4">
-          <div className="border border-green-200 dark:border-green-700 rounded-lg p-6 space-y-3">
-            <h3 className="text-xl font-medium text-green-800 dark:text-green-200">Level 1: Requiring Support</h3>
-            <p className="text-green-700 dark:text-green-300">
-              Individuals who need some support for social communication and may have difficulty initiating social interactions. They might struggle with organization, planning, and may be inflexible about routines. Many people at this level can live independently with occasional support.
-            </p>
-          </div>
-
-          <div className="border border-yellow-200 dark:border-yellow-700 rounded-lg p-6 space-y-3">
-            <h3 className="text-xl font-medium text-yellow-800 dark:text-yellow-200">Level 2: Requiring Substantial Support</h3>
-            <p className="text-yellow-700 dark:text-yellow-300">
-              Individuals who need more substantial support for social communication and behavior. They may have limited ability to initiate social interactions and may have difficulty coping with change. Daily living skills may require ongoing support.
-            </p>
-          </div>
-
-          <div className="border border-red-200 dark:border-red-700 rounded-lg p-6 space-y-3">
-            <h3 className="text-xl font-medium text-red-800 dark:text-red-200">Level 3: Requiring Very Substantial Support</h3>
-            <p className="text-red-700 dark:text-red-300">
-              Individuals who need very substantial support across all areas. They may have severe challenges with social communication and may exhibit very inflexible behavior that significantly interferes with daily functioning. Extensive support is needed for daily living skills.
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-6">
-          <p className="text-blue-800 dark:text-blue-200">
-            <strong>Remember:</strong> Support needs can vary by situation and can change over time. These levels are meant to describe support needs, not define a person's potential or value. Many autistic individuals have areas of both strength and challenge.
-          </p>
-        </div>
-      </div>
-
-      {/* Resources */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-semibold">Helpful Resources</h2>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="border rounded-lg p-6 space-y-3">
-            <h3 className="text-lg font-medium">Autism Organizations</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="https://autisticadvocacy.org/" target="_blank" rel="noopener noreferrer"
-                   className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Autistic Self Advocacy Network (ASAN)
-                </a>
-              </li>
-              <li>
-                <a href="https://www.autism.org.uk/" target="_blank" rel="noopener noreferrer"
-                   className="text-blue-600 dark:text-blue-400 hover:underline">
-                  National Autistic Society (UK)
-                </a>
-              </li>
-              <li>
-                <a href="https://www.autismcanada.org/" target="_blank" rel="noopener noreferrer"
-                   className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Autism Canada
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="border rounded-lg p-6 space-y-3">
-            <h3 className="text-lg font-medium">Research & Information</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="https://www.autismresearchcentre.com/" target="_blank" rel="noopener noreferrer"
-                   className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Autism Research Centre (Cambridge)
-                </a>
-              </li>
-              <li>
-                <a href="https://www.ncbi.nlm.nih.gov/books/NBK532562/" target="_blank" rel="noopener noreferrer"
-                   className="text-blue-600 dark:text-blue-400 hover:underline">
-                  NIMH Autism Spectrum Disorder Information
-                </a>
-              </li>
-              <li>
-                <a href="https://www.cdc.gov/autism/" target="_blank" rel="noopener noreferrer"
-                   className="text-blue-600 dark:text-blue-400 hover:underline">
-                  CDC Autism Information
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="border rounded-lg p-6 space-y-3">
-            <h3 className="text-lg font-medium">Support Communities</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="https://www.reddit.com/r/autism/" target="_blank" rel="noopener noreferrer"
-                   className="text-blue-600 dark:text-blue-400 hover:underline">
-                  r/autism (Reddit Community)
-                </a>
-              </li>
-              <li>
-                <a href="https://www.reddit.com/r/aspergirls/" target="_blank" rel="noopener noreferrer"
-                   className="text-blue-600 dark:text-blue-400 hover:underline">
-                  r/aspergirls (Reddit Community)
-                </a>
-              </li>
-              <li>
-                <a href="https://autisticnotweird.com/" target="_blank" rel="noopener noreferrer"
-                   className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Autistic Not Weird
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="border rounded-lg p-6 space-y-3">
-            <h3 className="text-lg font-medium">Professional Support</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="https://www.psychologytoday.com/us/therapists/autism" target="_blank" rel="noopener noreferrer"
-                   className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Find Autism-Informed Therapists
-                </a>
-              </li>
-              <li>
-                <a href="https://www.autismspecialistgroup.com/" target="_blank" rel="noopener noreferrer"
-                   className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Autism Specialist Group
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* About This Tool */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">About This Tool</h2>
-        <div className="border rounded-lg p-6 space-y-3">
-          <p>
-            The Autism Wheel was created as a personal tool to help autistic individuals visualize and communicate their unique profiles.
-            It's inspired by the understanding that autism presents differently in each person.
-          </p>
-          <p>
-            This tool respects the principles of neurodiversity and aims to provide a non-pathologizing way to explore and share your autistic experience.
-            Remember, there is no "right" or "wrong" way to be autistic.
-          </p>
-          <p>
-            <strong>Privacy:</strong> All data is stored locally in your browser. No personal information is collected or transmitted to external servers.
-          </p>
-        </div>
-      </div>
-
-      {/* Return Button */}
-      <div className="flex justify-center pt-8">
-        <Button
-          onClick={handleReturn}
-          className="h-12 px-8 bg-primary text-primary-foreground hover:bg-primary/90"
-        >
-          Return to Main Page
-        </Button>
       </div>
     </div>
   );
 }
 
-// Main export for the view
-export default function HelpView(): JSX.Element {
-  return <HelpContent />;
-}
+export default HelpView;

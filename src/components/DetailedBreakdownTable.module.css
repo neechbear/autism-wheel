@@ -86,8 +86,8 @@
   justify-content: space-between;
   gap: var(--spacing-sm);
   min-height: 2.5rem;
-  /* Align with category content - icon size (2.5rem) + gap (0.5rem) */
-  padding-left: 3rem;
+  /* Align with category content - icon size (5rem) + gap (0.5rem) */
+  padding-left: 5.5rem;
 }
 
 .headerContentCenter {
@@ -123,7 +123,7 @@
 
 /* Icon cell with larger emoji size */
 .iconCell {
-  font-size: 2.5rem;
+  font-size: 5rem;
   line-height: 1;
   flex-shrink: 0;
 }
