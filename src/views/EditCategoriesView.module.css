@@ -287,15 +287,24 @@
 }
 
 .reorderButton .buttonIcon {
-  width: 1.8rem !important;
-  height: 1.8rem !important;
+  width: 1.6875rem !important;
+  height: 1.6875rem !important;
+}
+
+/* Target SVG icons directly within reorder buttons */
+.reorderButton svg {
+  width: 1.6875rem !important;
+  height: 1.6875rem !important;
+  min-width: 1.6875rem !important;
+  min-height: 1.6875rem !important;
+  color: var(--muted-foreground) !important;
 }
 
 .reorderIcon {
-  width: 1.75rem !important;
-  height: 1.75rem !important;
-  min-width: 1.75rem !important;
-  min-height: 1.75rem !important;
+  width: 1.6875rem !important;
+  height: 1.6875rem !important;
+  min-width: 1.6875rem !important;
+  min-height: 1.6875rem !important;
   flex-shrink: 0 !important;
   color: var(--muted-foreground) !important;
 }
@@ -321,17 +330,12 @@
 
 .dragHandle {
   cursor: grab !important;
-  padding: 0 !important;
+  padding: 0 0.84375rem !important;
   margin: 0 -0.25rem !important;
   border-radius: var(--radius) !important;
-  transition: background-color var(--transition-fast) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-}
-
-.dragHandle:hover {
-  background-color: var(--muted);
 }
 
 .dragHandle:active {

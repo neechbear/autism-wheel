@@ -331,7 +331,7 @@ function EditCategoriesView(): JSX.Element {
                           e.currentTarget.style.opacity = '1';
                         }}
                         style={{
-                          padding: '0',
+                          padding: '0 0 0 30px',
                           margin: '0 1px',
                           cursor: 'grab',
                           display: 'flex',

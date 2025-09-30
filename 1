@@ -1,0 +1,72 @@
+reorder
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch refactor1
+# Your branch is ahead of 'origin/refactor1' by 9 commits.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	modified:   src/views/EditCategoriesView.module.css
+#	modified:   src/views/EditCategoriesView.tsx
+#
+# ------------------------ >8 ------------------------
+# Do not modify or remove the line above.
+# Everything below it will be ignored.
+diff --git a/src/views/EditCategoriesView.module.css b/src/views/EditCategoriesView.module.css
+index 804c1fd..8192157 100644
+--- a/src/views/EditCategoriesView.module.css
++++ b/src/views/EditCategoriesView.module.css
+@@ -287,15 +287,24 @@
+ }
+ 
+ .reorderButton .buttonIcon {
+-  width: 1.8rem !important;
+-  height: 1.8rem !important;
++  width: 1.6875rem !important;
++  height: 1.6875rem !important;
++}
++
++/* Target SVG icons directly within reorder buttons */
++.reorderButton svg {
++  width: 1.6875rem !important;
++  height: 1.6875rem !important;
++  min-width: 1.6875rem !important;
++  min-height: 1.6875rem !important;
++  color: var(--muted-foreground) !important;
+ }
+ 
+ .reorderIcon {
+-  width: 1.75rem !important;
+-  height: 1.75rem !important;
+-  min-width: 1.75rem !important;
+-  min-height: 1.75rem !important;
++  width: 1.6875rem !important;
++  height: 1.6875rem !important;
++  min-width: 1.6875rem !important;
++  min-height: 1.6875rem !important;
+   flex-shrink: 0 !important;
+   color: var(--muted-foreground) !important;
+ }
+@@ -321,7 +330,7 @@
+ 
+ .dragHandle {
+   cursor: grab !important;
+-  padding: 0 !important;
++  padding: 0 0.84375rem !important;
+   margin: 0 -0.25rem !important;
+   border-radius: var(--radius) !important;
+   transition: background-color var(--transition-fast) !important;
+diff --git a/src/views/EditCategoriesView.tsx b/src/views/EditCategoriesView.tsx
+index 5d0c0a4..7389d7c 100644
+--- a/src/views/EditCategoriesView.tsx
++++ b/src/views/EditCategoriesView.tsx
+@@ -331,7 +331,7 @@ function EditCategoriesView(): JSX.Element {
+                           e.currentTarget.style.opacity = '1';
+                         }}
+                         style={{
+-                          padding: '0',
++                          padding: '0 0 0 30px',
+                           margin: '0 1px',
+                           cursor: 'grab',
+                           display: 'flex',
