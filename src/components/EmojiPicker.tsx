@@ -16,11 +16,11 @@
 // Emoji picker component following Single Responsibility Principle
 // Handles emoji selection interface with categorized emoji display
 
-import React, { useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Smile } from 'lucide-react';
 import type { EmojiPickerProps } from '../types';
 import { EMOJI_CATEGORIES } from '../constants/defaults';
+import { useState } from 'react';
 import styles from './EmojiPicker.module.css';
 
 function EmojiPicker({ selectedEmoji, onEmojiSelect }: EmojiPickerProps): JSX.Element {
