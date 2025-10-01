@@ -18,13 +18,11 @@ The application consists of three primary views:
 - **Help View**: Static page with guidance, tutorial video, and external
                  resources
 
-
 ## Development Setup
 
 The project uses a comprehensive Makefile-based build system. For detailed
 architectural guidance and coding standards, see our style guide in
 [.github/copilot-instructions.md](.github/copilot-instructions.md).
-
 
 ### Quick Start
 
@@ -33,9 +31,7 @@ make install-browsers install # Complete project initialization
 make dev                      # Start development server on http://localhost:3000/
 ```
 
-
 ## Available Makefile Targets
-
 
 ### Core Build Commands
 
@@ -47,7 +43,6 @@ make dev                      # Start development server on http://localhost:300
 | `dev`     | Start the development server with hot reload on port 3000 |
 | `preview` | Preview the production build locally                      |
 
-
 ### Testing Commands
 
 | Target             | Description                                      |
@@ -57,7 +52,6 @@ make dev                      # Start development server on http://localhost:300
 | `test-ui`          | Run tests in interactive UI mode                 |
 | `watch-test`       | Information about test watch mode options        |
 | `install-browsers` | Install Playwright browsers for testing          |
-
 
 ### Test Organization
 
@@ -76,7 +70,6 @@ The project has 282 comprehensive tests organized across 9 test files:
 
 **State Preservation Testing**: The HTML export validation tests ensure that custom categories, category colors, emojis, ordering, descriptions, view options, and pre-selected category values are preserved and represented correctly in downloaded HTML files. This includes comprehensive verification that localStorage data, UI settings, diagram selections, and custom modifications are maintained across both regular and locked HTML exports.
 
-
 ### Screenshot Commands
 
 | Target        | Description                               |
@@ -84,7 +77,6 @@ The project has 282 comprehensive tests organized across 9 test files:
 | `screenshots` | Take screenshots of all application views |
 
 Screenshots are saved to `test-results/screenshots/` with descriptive filenames.
-
 
 ### Code Quality Commands
 
@@ -94,7 +86,6 @@ Screenshots are saved to `test-results/screenshots/` with descriptive filenames.
 | `format`     | Format code using Prettier (if available)           |
 | `lint`       | Run ESLint on source files (if available)           |
 
-
 ### Dependency Management
 
 | Target        | Description                                     |
@@ -102,7 +93,6 @@ Screenshots are saved to `test-results/screenshots/` with descriptive filenames.
 | `deps-check`  | Check for outdated npm dependencies             |
 | `deps-update` | Update all dependencies to latest versions      |
 | `deps-audit`  | Audit dependencies for security vulnerabilities |
-
 
 ## Usage Examples
 
@@ -137,7 +127,6 @@ make deps-update      # Update dependencies
 # Deploy a clean tested SPA index.html to Google Cloud Platform
 make clean build test deploy
 ```
-
 
 ## Architecture
 
