@@ -1,3 +1,18 @@
+/*
+ * ⚠️  IMPORTANT CSS RULES FOR AI AGENTS ⚠️
+ *
+ * 1. NEVER use CSS !important declarations except for:
+ *    - Completely hiding elements (display: none !important)
+ *    - Print media styles (for paper printing)
+ *
+ * 2. NEVER use inline style="" attributes on HTML elements
+ *    - All styling MUST be via dedicated CSS files
+ *    - Use CSS Modules for component-specific styles
+ *    - Use global.css for shared design tokens
+ *
+ * Violation of these rules is STRICTLY FORBIDDEN.
+ */
+
 /* EmojiPicker Component Styles - Following CSS Modules pattern */
 
 .container {
@@ -71,36 +86,36 @@
 }
 
 .grid {
-  display: grid !important;
-  grid-template-columns: repeat(8, 1fr) !important;
-  gap: var(--emoji-spacing) !important;
-  column-gap: var(--emoji-spacing) !important;
-  row-gap: var(--emoji-spacing) !important;
-  grid-gap: var(--emoji-spacing) !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: var(--emoji-spacing);
+  column-gap: var(--emoji-spacing);
+  row-gap: var(--emoji-spacing);
+  grid-gap: var(--emoji-spacing);
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .grid > * {
-  margin: 0 !important;
-  padding: 0.25rem !important;
+  margin: 0;
+  padding: 0.25rem;
 }
 
 .emojiButton {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 2.25rem !important;
-  height: 2.25rem !important;
-  border: none !important;
-  background: transparent !important;
-  border-radius: var(--radius-sm) !important;
-  cursor: pointer !important;
-  font-size: 1.25rem !important;
-  transition: background-color var(--transition-fast) !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: background-color var(--transition-fast);
+  margin: 0;
+  padding: 0;
 }
 
 .emojiButton:hover {

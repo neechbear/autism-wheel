@@ -1,3 +1,18 @@
+/*
+ * ⚠️  IMPORTANT CSS RULES FOR AI AGENTS ⚠️
+ *
+ * 1. NEVER use CSS !important declarations except for:
+ *    - Completely hiding elements (display: none !important)
+ *    - Print media styles (for paper printing)
+ *
+ * 2. NEVER use inline style="" attributes on HTML elements
+ *    - All styling MUST be via dedicated CSS files
+ *    - Use CSS Modules for component-specific styles
+ *    - Use global.css for shared design tokens
+ *
+ * Violation of these rules is STRICTLY FORBIDDEN.
+ */
+
 /* EditCategoriesView.module.css - CSS Module for EditCategoriesView component */
 
 .title {
@@ -159,12 +174,12 @@
 }
 
 .editCategoriesSection tbody tr:hover {
-  background-color: rgba(128, 128, 128, 0.08) !important; /* Faint grey highlight for light theme */
+  background-color: rgba(128, 128, 128, 0.08); /* Faint grey highlight for light theme */
 }
 
 /* Dark theme hover effect */
 .dark .editCategoriesSection tbody tr:hover {
-  background-color: rgba(255, 255, 255, 0.05) !important; /* Faint light highlight for dark theme */
+  background-color: rgba(255, 255, 255, 0.05); /* Faint light highlight for dark theme */
 }
 
 /* Table styles */
@@ -213,15 +228,15 @@
 
 /* Match emoji size to breakdown table */
 .iconColumn button {
-  font-size: 2.7rem !important;
+  font-size: 2.7rem;
   line-height: 1;
-  width: 4rem !important;
-  height: 4rem !important;
-  padding: 0 !important; /* Remove all padding from emoji buttons */
-  margin: 0 !important; /* Remove all margin from emoji buttons */
-  border: none !important;
-  border-radius: 0 !important;
-  background-color: transparent !important;
+  width: 4rem;
+  height: 4rem;
+  padding: 0; /* Remove all padding from emoji buttons */
+  margin: 0; /* Remove all margin from emoji buttons */
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
 }
 
 /* Name and description column styles */
@@ -327,72 +342,72 @@ textarea.textArea:focus {
 
 /* Reorder column styles */
 .reorderColumn {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
   --reorder-spacing: 0;
 }
 
 .reorderColumn > * {
-  margin: 0 !important;
-  padding: 0 !important;
+  margin: 0;
+  padding: 0;
 }
 
 .reorderColumn > *:not(:last-child) {
-  margin-right: -0.5rem !important;
+  margin-right: -0.5rem;
 }
 
 .reorderButton .buttonIcon {
-  width: 1.6875rem !important;
-  height: 1.6875rem !important;
+  width: 1.6875rem;
+  height: 1.6875rem;
 }
 
 /* Target SVG icons directly within reorder buttons */
 .reorderButton svg {
-  width: 1.6875rem !important;
-  height: 1.6875rem !important;
-  min-width: 1.6875rem !important;
-  min-height: 1.6875rem !important;
-  color: var(--muted-foreground) !important;
+  width: 1.6875rem;
+  height: 1.6875rem;
+  min-width: 1.6875rem;
+  min-height: 1.6875rem;
+  color: var(--muted-foreground);
 }
 
 .reorderIcon {
-  width: 1.6875rem !important;
-  height: 1.6875rem !important;
-  min-width: 1.6875rem !important;
-  min-height: 1.6875rem !important;
-  flex-shrink: 0 !important;
-  color: var(--muted-foreground) !important;
+  width: 1.6875rem;
+  height: 1.6875rem;
+  min-width: 1.6875rem;
+  min-height: 1.6875rem;
+  flex-shrink: 0;
+  color: var(--muted-foreground);
 }
 
 /* Also target the button to ensure proper sizing */
 .reorderButton {
-  height: 3rem !important;
-  width: 3rem !important;
-  padding: 0 !important;
-  background-color: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
+  height: 3rem;
+  width: 3rem;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
   cursor: pointer;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: opacity var(--transition-fast);
 }
 
 .reorderButton:hover {
-  opacity: 0.7 !important;
+  opacity: 0.7;
 }
 
 .dragHandle {
-  cursor: grab !important;
-  padding: 0 0.65625rem 0 0.84375rem !important;
-  margin: 0 -0.25rem !important;
-  border-radius: var(--radius) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  cursor: grab;
+  padding: 0 0.65625rem 0 0.84375rem;
+  margin: 0 -0.25rem;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dragHandle:active {

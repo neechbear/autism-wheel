@@ -1,3 +1,18 @@
+/*
+ * ⚠️  IMPORTANT CSS RULES FOR AI AGENTS ⚠️
+ *
+ * 1. NEVER use CSS !important declarations except for:
+ *    - Completely hiding elements (display: none !important)
+ *    - Print media styles (for paper printing)
+ *
+ * 2. NEVER use inline style="" attributes on HTML elements
+ *    - All styling MUST be via dedicated CSS files
+ *    - Use CSS Modules for component-specific styles
+ *    - Use global.css for shared design tokens
+ *
+ * Violation of these rules is STRICTLY FORBIDDEN.
+ */
+
 // Main view component following Single Responsibility Principle
 // Composes all main interface components into the primary application view
 
@@ -70,7 +85,7 @@ function MainView(): JSX.Element {
         {/* Action toolbar */}
         <div className={clsx(styles.actionToolbar, styles.printHidden)}>
           <ActionToolbar />
-          
+
           <Button
             onClick={handleEditCategories}
             className={clsx(styles.button, styles.blueButton)}
