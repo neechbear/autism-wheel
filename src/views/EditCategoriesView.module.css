@@ -91,12 +91,15 @@
   border: none;
   border-radius: var(--radius);
   padding: 0;
+  margin: 0;
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: background-color var(--transition-normal);
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .deleteButton:hover:not(:disabled) {
@@ -113,6 +116,10 @@
 .buttonIcon {
   width: 1rem;
   height: 1rem;
+  margin: 0;
+  padding: 0;
+  display: block;
+  flex-shrink: 0;
 }
 
 /* Edit categories table section */
@@ -286,8 +293,8 @@ textarea.textArea:focus {
 }
 
 .colorInput {
-  width: 3rem;
-  height: 2rem;
+  width: 2.5rem; /* Match delete button dimensions */
+  height: 2.5rem; /* Match delete button dimensions */
   border-radius: var(--radius);
   cursor: pointer;
   border: 2px solid var(--border);

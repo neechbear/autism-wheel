@@ -222,7 +222,7 @@ function EditCategoriesView(): JSX.Element {
               <TableHeader>
                 <TableRow>
                   <TableHead className={styles.tableHeadCenter}>Icon</TableHead>
-                  <TableHead>Category Name & Description</TableHead>
+                  <TableHead className={styles.tableHeadCenter}>Category Name & Description</TableHead>
                   <TableHead className={styles.tableHeadCenter}>Colour</TableHead>
                   <TableHead className={styles.tableHeadCenter}>Delete</TableHead>
                   <TableHead className={styles.tableHeadCenter}>Reorder</TableHead>
