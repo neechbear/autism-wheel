@@ -16,7 +16,7 @@
 // Action toolbar component following Single Responsibility Principle
 // Handles primary action buttons like print, copy link, save
 
-import { Printer, Download, ChevronDown, Link, HelpCircle } from 'lucide-react';
+import { Printer, ChevronDown, Link, HelpCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { useAppContext, appActions } from '../state/AppContext';
@@ -48,9 +48,40 @@ function ActionToolbar(): JSX.Element {
   };
 
   const handleSaveDiagram = (format: string) => {
-    const svgElement = document.querySelector('svg');
+    // Look for the main radial diagram SVG - it should be the largest one or have specific attributes
+    const svgElements = document.querySelectorAll('svg');
+    let svgElement: SVGElement | null = null;
+
+    // Find the radial diagram SVG by looking for the one with the correct dimensions or viewBox
+    for (const svg of svgElements) {
+      const viewBox = svg.getAttribute('viewBox');
+      const width = svg.getAttribute('width');
+      const height = svg.getAttribute('height');
+
+      // Look for the main diagram SVG (750x750 or similar large dimensions)
+      if ((viewBox && viewBox.includes('750')) ||
+          (width === '750' && height === '750') ||
+          (width && height && parseInt(width) >= 400 && parseInt(height) >= 400)) {
+        svgElement = svg;
+        break;
+      }
+    }
+
+    // Fallback: if no large SVG found, get the largest one by area
+    if (!svgElement && svgElements.length > 0) {
+      let maxArea = 0;
+      for (const svg of svgElements) {
+        const bbox = svg.getBoundingClientRect();
+        const area = bbox.width * bbox.height;
+        if (area > maxArea) {
+          maxArea = area;
+          svgElement = svg;
+        }
+      }
+    }
+
     if (!svgElement) {
-      alert('Unable to find diagram. Please try again.');
+      alert('Unable to find the radial diagram. Please try again.');
       return;
     }
 
@@ -58,15 +89,26 @@ function ActionToolbar(): JSX.Element {
       // Clone and enhance the SVG for better export quality
       const svgClone = svgElement.cloneNode(true) as SVGElement;
 
-      // Get current theme background color
-      const currentBackgroundColor = getComputedStyle(document.documentElement)
-        .getPropertyValue('--background').trim();
+      // Determine background color based on theme mode
+      const rootStyles = getComputedStyle(document.documentElement);
+      const isDarkMode = document.documentElement.classList.contains('dark') ||
+                        document.documentElement.getAttribute('data-theme') === 'dark' ||
+                        rootStyles.getPropertyValue('--color-scheme')?.trim() === 'dark';
+
+      const backgroundColorForExport = isDarkMode ? '#000000' : '#ffffff';
+
+      // Ensure proper SVG dimensions and viewBox
+      svgClone.setAttribute('width', '750');
+      svgClone.setAttribute('height', '750');
+      svgClone.setAttribute('viewBox', '0 0 750 750');
 
       // Add background rect to SVG for themed exports
       const backgroundRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      backgroundRect.setAttribute('width', '100%');
-      backgroundRect.setAttribute('height', '100%');
-      backgroundRect.setAttribute('fill', currentBackgroundColor || '#F9F9F9');
+      backgroundRect.setAttribute('x', '0');
+      backgroundRect.setAttribute('y', '0');
+      backgroundRect.setAttribute('width', '750');
+      backgroundRect.setAttribute('height', '750');
+      backgroundRect.setAttribute('fill', backgroundColorForExport);
       svgClone.insertBefore(backgroundRect, svgClone.firstChild);
 
       // Add font definitions for better rendering in external applications
@@ -74,7 +116,7 @@ function ActionToolbar(): JSX.Element {
       const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
       style.textContent = `
         text {
-          font-family: "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif !important;
+          font-family: "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
         }
       `;
       defs.appendChild(style);
@@ -94,7 +136,7 @@ function ActionToolbar(): JSX.Element {
         const url = URL.createObjectURL(svgBlob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'autism-wheel.svg';
+        link.download = 'autismwheel.svg';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -140,45 +182,54 @@ function ActionToolbar(): JSX.Element {
       // For PNG and JPEG, convert SVG to canvas with high resolution
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        throw new Error('Unable to get canvas context');
+      }
+
       const img = new Image();
 
-      // Increase resolution for better quality (2x scale)
-      const scale = 2;
+      // High resolution settings for crisp images (3x scale for extra quality)
+      const scale = 3;
       const baseSize = 750;
+      const finalSize = baseSize * scale;
 
       img.onload = () => {
-        canvas.width = baseSize * scale;
-        canvas.height = baseSize * scale;
-
-        // Scale the context to maintain high resolution
-        ctx!.scale(scale, scale);
-
-        // Use theme-appropriate background color
-        const bgColor = currentBackgroundColor || (format === 'jpeg' ? '#ffffff' : '#F9F9F9');
-        ctx!.fillStyle = bgColor;
-        ctx!.fillRect(0, 0, baseSize, baseSize);
+        canvas.width = finalSize;
+        canvas.height = finalSize;
 
         // Enable high-quality rendering
-        ctx!.imageSmoothingEnabled = true;
-        ctx!.imageSmoothingQuality = 'high';
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
 
-        ctx!.drawImage(img, 0, 0, baseSize, baseSize);
+        // Fill background with theme color
+        ctx.fillStyle = backgroundColorForExport;
+        ctx.fillRect(0, 0, finalSize, finalSize);
+
+        // Draw the SVG image at high resolution
+        ctx.drawImage(img, 0, 0, finalSize, finalSize);
 
         const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
         const quality = format === 'jpeg' ? 0.95 : undefined; // High quality for JPEG
+        const filename = format === 'png' ? 'autismwheel.png' : 'autismwheel.jpg';
 
         canvas.toBlob((blob) => {
           if (blob) {
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `autism-wheel.${format}`;
+            link.download = filename;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
+          } else {
+            throw new Error('Failed to create image blob');
           }
         }, mimeType, quality);
+      };
+
+      img.onerror = () => {
+        throw new Error('Failed to load SVG image');
       };
 
       const svgUrl = URL.createObjectURL(svgBlob);
