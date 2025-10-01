@@ -10,13 +10,13 @@
 
 .tableCell {
   vertical-align: top;
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
 }
 
 .tableCellTopCenter {
   vertical-align: top;
   text-align: center;
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
 }
 
 .textSection {
@@ -128,7 +128,15 @@
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
+  table-layout: fixed; /* Enable fixed table layout for consistent column widths */
 }
+
+/* Table column widths */
+.editCategoriesSection table colgroup col:nth-child(1) { width: 10%; }   /* Icon column */
+.editCategoriesSection table colgroup col:nth-child(2) { width: 61.67%; } /* Name & Description column - reduced by ~5% */
+.editCategoriesSection table colgroup col:nth-child(3) { width: 10%; }   /* Colour column */
+.editCategoriesSection table colgroup col:nth-child(4) { width: 9%; }    /* Delete column */
+.editCategoriesSection table colgroup col:nth-child(5) { width: 9.33%; } /* Reorder column */
 
 .editCategoriesSection thead tr {
   border-bottom: 1px solid rgba(128, 128, 128, 0.5); /* 50% grey horizontal dividing line */
@@ -174,13 +182,13 @@
 
 .tableCellTop {
   vertical-align: top;
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
 }
 
 .tableCellTopCenter {
   vertical-align: top;
   text-align: center;
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
 }
 
 /* Icon column styles */
@@ -191,12 +199,19 @@
   min-height: 3rem;
 }
 
+/* Reduce padding specifically for icon column table cells */
+.tableCellTopCenter.iconTableCell {
+  padding: 0; /* Remove padding from icon column table cell */
+}
+
 /* Match emoji size to breakdown table */
 .iconColumn button {
   font-size: 2.7rem !important;
   line-height: 1;
   width: 4rem !important;
   height: 4rem !important;
+  padding: 0 !important; /* Remove all padding from emoji buttons */
+  margin: 0 !important; /* Remove all margin from emoji buttons */
   border: none !important;
   border-radius: 0 !important;
   background-color: transparent !important;
@@ -214,27 +229,32 @@
   width: 100%;
 }
 
-.textInput {
-  width: 100%;
+.textInput,
+input.textInput {
+  width: 100%; /* Full width of the column (which is 60% of table) */
   padding: var(--spacing-sm);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium); /* Match category name weight */
   background-color: var(--input-background);
   color: var(--foreground);
   font-family: inherit;
   margin-bottom: var(--spacing-xs); /* Match gap from breakdown table */
+  outline: none;
+  outline-color: transparent;
 }
 
-.textInput:focus {
+.textInput:focus,
+input.textInput:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-blue-500);
+  outline-color: transparent;
   border-color: var(--color-blue-500);
 }
 
-.textArea {
-  width: 100%;
+.textArea,
+textarea.textArea {
+  width: 100%; /* Full width of the column (which is 60% of table) */
   padding: var(--spacing-sm);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -242,14 +262,18 @@
   line-height: 1.4; /* Match description line height */
   color: var(--muted-foreground); /* Match description color */
   background-color: var(--input-background);
-  resize: vertical;
-  min-height: 4rem;
+  resize: none; /* Disable manual resizing */
+  min-height: auto; /* Remove fixed min-height for auto-expansion */
   font-family: inherit;
+  outline: none;
+  outline-color: transparent;
+  overflow: hidden; /* Hide scrollbars */
 }
 
-.textArea:focus {
+.textArea:focus,
+textarea.textArea:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-blue-500);
+  outline-color: transparent;
   border-color: var(--color-blue-500);
   color: var(--foreground); /* Use normal foreground when focused */
 }

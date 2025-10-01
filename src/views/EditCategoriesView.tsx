@@ -1,7 +1,7 @@
 // Edit Categories view component following Single Responsibility Principle
 // Dedicated interface for users to customize categories displayed on the wheel
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './EditCategoriesView.module.css';
 import { Button } from '../components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
@@ -27,6 +27,15 @@ function EditCategoriesView(): JSX.Element {
     const changes = JSON.stringify(draftCategories) !== JSON.stringify(state.categories);
     setHasChanges(changes);
   }, [draftCategories, state.categories]);
+
+  // Auto-resize textareas when categories change
+  useEffect(() => {
+    const textareas = document.querySelectorAll(`.${styles.textArea}`) as NodeListOf<HTMLTextAreaElement>;
+    textareas.forEach(textarea => {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    });
+  }, [draftCategories]);
 
   // Add escape key listener to return to main view with unsaved changes check
   useEffect(() => {
@@ -141,6 +150,12 @@ function EditCategoriesView(): JSX.Element {
     setDraftCategories(newCategories);
   };
 
+  // Auto-resize textarea function
+  const autoResizeTextarea = (textarea: HTMLTextAreaElement) => {
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  };
+
   return (
     <div className="view-container">
       <div className="view-content">
@@ -197,6 +212,13 @@ function EditCategoriesView(): JSX.Element {
         {/* Edit Categories Table */}
         <div className={styles.editCategoriesSection}>
           <Table>
+            <colgroup>
+              <col /> {/* Icon column - 10% */}
+              <col /> {/* Name & Description column - 60% */}
+              <col /> {/* Colour column - 10% */}
+              <col /> {/* Delete column - 10% */}
+              <col /> {/* Reorder column - 10% */}
+            </colgroup>
               <TableHeader>
                 <TableRow>
                   <TableHead className={styles.tableHeadCenter}>Icon</TableHead>
@@ -221,7 +243,7 @@ function EditCategoriesView(): JSX.Element {
                   className={styles.tableRowHover}
                 >
                   {/* Icon column - top aligned with emoji picker */}
-                  <TableCell className={styles.tableCellTopCenter}>
+                  <TableCell className={`${styles.tableCellTopCenter} ${styles.iconTableCell}`}>
                     <div className={styles.iconColumn}>
                       <EmojiPicker
                         selectedEmoji={category.icon}
@@ -245,9 +267,13 @@ function EditCategoriesView(): JSX.Element {
                       <div className={styles.inputWrapper}>
                         <textarea
                           value={category.description}
-                          onChange={(e) => handleUpdateCategory(category.id, { description: e.target.value })}
+                          onChange={(e) => {
+                            handleUpdateCategory(category.id, { description: e.target.value });
+                            autoResizeTextarea(e.target);
+                          }}
+                          onInput={(e) => autoResizeTextarea(e.target as HTMLTextAreaElement)}
                           className={styles.textArea}
-                          rows={3}
+                          rows={1}
                           placeholder="Category description"
                         />
                       </div>

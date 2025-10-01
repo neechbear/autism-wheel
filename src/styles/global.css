@@ -134,6 +134,7 @@
 
   --border: oklch(0.269 0 0);           /* Borders - medium dark gray */
   --input: oklch(0.269 0 0);            /* Input field background - medium dark gray */
+  --input-background: oklch(0.269 0 0); /* Input field background fallback - medium dark gray */
   --ring: oklch(0.439 0 0);             /* Focus ring color - medium gray */
 
   /* === COMPONENT COLORS - DARK THEME === */
@@ -705,4 +706,57 @@ button {
 
 .text-muted-foreground {
   color: var(--muted-foreground) !important;
+}
+
+/* =============================================================================
+   PRINT STYLES
+   =============================================================================
+
+   Ensures clean print output with white backgrounds, regardless of theme.
+   Removes webpage background colors (grey/dark grey) from printed output.
+   ============================================================================= */
+
+@media print {
+  /* Force white backgrounds for all elements in print */
+  *,
+  *::before,
+  *::after {
+    background-color: white !important;
+    background-image: none !important;
+  }
+
+  /* Ensure root elements have white background */
+  html,
+  body,
+  #root {
+    background: white !important;
+    background-color: white !important;
+    color: black !important;
+  }
+
+  /* Ensure text is readable in print (black on white) */
+  * {
+    color: black !important;
+    border-color: black !important;
+  }
+
+  /* Hide non-essential UI elements from print */
+  button,
+  .print-hidden,
+  [data-print-hidden] {
+    display: none !important;
+  }
+
+  /* Ensure diagrams and content are visible */
+  svg,
+  canvas,
+  img {
+    background: transparent !important;
+  }
+
+  /* Force page margins for better printing */
+  @page {
+    margin: 1in;
+    background: white;
+  }
 }
