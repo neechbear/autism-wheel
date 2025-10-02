@@ -373,25 +373,23 @@ function DetailedBreakdownTable(): JSX.Element {
                         <div className={styles.impactContainer}>
                           {editingCell?.categoryId === category.id && editingCell?.type === 'typical' ? (
                             <div className={styles.numberInputContainer}>
-                              {/* Only show minus button if value > 0 */}
-                              {parseInt(editValue) > 0 && (
-                                <button
-                                  className={`${styles.spinnerButton} ${styles.spinnerButtonDown}`}
-                                  style={{
-                                    '--spinner-bg': category.color,
-                                    '--spinner-text-color': darkenColor(category.color)
-                                  } as React.CSSProperties}
-                                  data-symbol="−"
-                                  onMouseDown={(e) => {
-                                    e.preventDefault();
-                                    const input = e.currentTarget.parentElement?.querySelector('input[type="number"]') as HTMLInputElement;
-                                    input.stepDown();
-                                    input.dispatchEvent(new Event('change', { bubbles: true }));
-                                  }}
-                                  type="button"
-                                  title="Decrease value"
-                                />
-                              )}
+                              <button
+                                className={`${styles.spinnerButton} ${styles.spinnerButtonDown}`}
+                                style={{
+                                  '--spinner-bg': category.color,
+                                  '--spinner-text-color': darkenColor(category.color),
+                                  visibility: parseInt(editValue) > 0 ? 'visible' : 'hidden'
+                                } as React.CSSProperties}
+                                data-symbol="−"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  const input = e.currentTarget.parentElement?.querySelector('input[type="number"]') as HTMLInputElement;
+                                  input.stepDown();
+                                  input.dispatchEvent(new Event('change', { bubbles: true }));
+                                }}
+                                type="button"
+                                title="Decrease value"
+                              />
                               <input
                                 type="number"
                                 min="0"
@@ -408,25 +406,23 @@ function DetailedBreakdownTable(): JSX.Element {
                                 } as React.CSSProperties}
                                 autoFocus
                               />
-                              {/* Only show plus button if value < 10 */}
-                              {parseInt(editValue) < 10 && (
-                                <button
-                                  className={`${styles.spinnerButton} ${styles.spinnerButtonUp}`}
-                                  style={{
-                                    '--spinner-bg': category.color,
-                                    '--spinner-text-color': darkenColor(category.color)
-                                  } as React.CSSProperties}
-                                  data-symbol="+"
-                                  onMouseDown={(e) => {
-                                    e.preventDefault();
-                                    const input = e.currentTarget.parentElement?.querySelector('input[type="number"]') as HTMLInputElement;
-                                    input.stepUp();
-                                    input.dispatchEvent(new Event('change', { bubbles: true }));
-                                  }}
-                                  type="button"
-                                  title="Increase value"
-                                />
-                              )}
+                              <button
+                                className={`${styles.spinnerButton} ${styles.spinnerButtonUp}`}
+                                style={{
+                                  '--spinner-bg': category.color,
+                                  '--spinner-text-color': darkenColor(category.color),
+                                  visibility: parseInt(editValue) < 10 ? 'visible' : 'hidden'
+                                } as React.CSSProperties}
+                                data-symbol="+"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  const input = e.currentTarget.parentElement?.querySelector('input[type="number"]') as HTMLInputElement;
+                                  input.stepUp();
+                                  input.dispatchEvent(new Event('change', { bubbles: true }));
+                                }}
+                                type="button"
+                                title="Increase value"
+                              />
                             </div>
                           ) : (
                             <div
@@ -457,25 +453,23 @@ function DetailedBreakdownTable(): JSX.Element {
                         <div className={styles.impactContainer}>
                           {editingCell?.categoryId === category.id && editingCell?.type === 'stressed' ? (
                             <div className={styles.numberInputContainer}>
-                              {/* Only show minus button if value > 0 */}
-                              {parseInt(editValue) > 0 && (
-                                <button
-                                  className={`${styles.spinnerButton} ${styles.spinnerButtonDown}`}
-                                  style={{
-                                    '--spinner-bg': category.color + '80',
-                                    '--spinner-text-color': darkenColor(category.color)
-                                  } as React.CSSProperties}
-                                  data-symbol="−"
-                                  onMouseDown={(e) => {
-                                    e.preventDefault();
-                                    const input = e.currentTarget.parentElement?.querySelector('input[type="number"]') as HTMLInputElement;
-                                    input.stepDown();
-                                    input.dispatchEvent(new Event('change', { bubbles: true }));
-                                  }}
-                                  type="button"
-                                  title="Decrease value"
-                                />
-                              )}
+                              <button
+                                className={`${styles.spinnerButton} ${styles.spinnerButtonDown}`}
+                                style={{
+                                  '--spinner-bg': category.color + '80',
+                                  '--spinner-text-color': darkenColor(category.color),
+                                  visibility: parseInt(editValue) > 0 ? 'visible' : 'hidden'
+                                } as React.CSSProperties}
+                                data-symbol="−"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  const input = e.currentTarget.parentElement?.querySelector('input[type="number"]') as HTMLInputElement;
+                                  input.stepDown();
+                                  input.dispatchEvent(new Event('change', { bubbles: true }));
+                                }}
+                                type="button"
+                                title="Decrease value"
+                              />
                               <input
                                 type="number"
                                 min="0"
@@ -492,25 +486,23 @@ function DetailedBreakdownTable(): JSX.Element {
                                 } as React.CSSProperties}
                                 autoFocus
                               />
-                              {/* Only show plus button if value < 10 */}
-                              {parseInt(editValue) < 10 && (
-                                <button
-                                  className={`${styles.spinnerButton} ${styles.spinnerButtonUp}`}
-                                  style={{
-                                    '--spinner-bg': category.color + '80',
-                                    '--spinner-text-color': darkenColor(category.color)
-                                  } as React.CSSProperties}
-                                  data-symbol="+"
-                                  onMouseDown={(e) => {
-                                    e.preventDefault();
-                                    const input = e.currentTarget.parentElement?.querySelector('input[type="number"]') as HTMLInputElement;
-                                    input.stepUp();
-                                    input.dispatchEvent(new Event('change', { bubbles: true }));
-                                  }}
-                                  type="button"
-                                  title="Increase value"
-                                />
-                              )}
+                              <button
+                                className={`${styles.spinnerButton} ${styles.spinnerButtonUp}`}
+                                style={{
+                                  '--spinner-bg': category.color + '80',
+                                  '--spinner-text-color': darkenColor(category.color),
+                                  visibility: parseInt(editValue) < 10 ? 'visible' : 'hidden'
+                                } as React.CSSProperties}
+                                data-symbol="+"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  const input = e.currentTarget.parentElement?.querySelector('input[type="number"]') as HTMLInputElement;
+                                  input.stepUp();
+                                  input.dispatchEvent(new Event('change', { bubbles: true }));
+                                }}
+                                type="button"
+                                title="Increase value"
+                              />
                             </div>
                           ) : (
                             <div

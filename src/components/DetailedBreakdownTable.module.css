@@ -302,6 +302,10 @@
   color: var(--spinner-text-color, white);
 }
 
+.spinnerButton[style*="visibility: hidden"] {
+  pointer-events: none;
+}
+
 .spinnerButton:hover {
   transform: scale(1.1);
   filter: brightness(0.9);
