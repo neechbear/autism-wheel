@@ -243,15 +243,29 @@
 
 /* Edit input styling */
 .editInput {
-  width: 3rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   text-align: center;
   border: 2px solid var(--color-primary);
-  border-radius: var(--radius-sm);
-  background-color: var(--color-surface);
+  border-radius: 0.5rem;
   color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: 0.25rem;
+}
+
+/* Hide the spinner arrows completely for a cleaner look */
+.editInput::-webkit-outer-spin-button,
+.editInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* Firefox spinner styling - hide spinners */
+.editInput[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 .editInput:focus {

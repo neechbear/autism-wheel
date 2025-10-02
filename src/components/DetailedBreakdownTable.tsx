@@ -144,6 +144,40 @@ function DetailedBreakdownTable(): JSX.Element {
     setEditValue('');
   };
 
+  // Handle input validation for edit values
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    // Allow empty string for clearing
+    if (value === '') {
+      setEditValue('');
+      return;
+    }
+
+    // Only allow digits
+    if (!/^\d+$/.test(value)) {
+      return; // Don't update if non-digits are entered
+    }
+
+    // Convert to number
+    const numValue = parseInt(value);
+
+    // If it's a valid single digit (0-9), allow it
+    if (value.length === 1) {
+      setEditValue(value);
+    }
+    // If it's two digits, only allow 10
+    else if (value.length === 2) {
+      if (numValue === 10) {
+        setEditValue('10');
+      } else {
+        // If user typed something like 11, 12, etc., keep only the first digit
+        setEditValue(value.charAt(0));
+      }
+    }
+    // Don't allow more than 2 digits
+  };
+
   // Handle key press in editing input
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -324,10 +358,14 @@ function DetailedBreakdownTable(): JSX.Element {
                               min="0"
                               max="10"
                               value={editValue}
-                              onChange={(e) => setEditValue(e.target.value)}
+                              onChange={handleInputChange}
                               onBlur={finishEditing}
                               onKeyDown={handleKeyPress}
                               className={styles.editInput}
+                              style={{
+                                backgroundColor: category.color,
+                                color: darkenColor(category.color)
+                              }}
                               autoFocus
                             />
                           ) : (
@@ -363,10 +401,14 @@ function DetailedBreakdownTable(): JSX.Element {
                               min="0"
                               max="10"
                               value={editValue}
-                              onChange={(e) => setEditValue(e.target.value)}
+                              onChange={handleInputChange}
                               onBlur={finishEditing}
                               onKeyDown={handleKeyPress}
                               className={styles.editInput}
+                              style={{
+                                backgroundColor: category.color + '80',
+                                color: darkenColor(category.color)
+                              }}
                               autoFocus
                             />
                           ) : (
