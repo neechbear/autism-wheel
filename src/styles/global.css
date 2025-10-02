@@ -282,6 +282,30 @@ input, textarea, select {
 }
 
 /* =============================================================================
+   SVG INTERACTION STYLES
+   ============================================================================= */
+
+/* Prevent text selection cursor on SVG text elements */
+svg text {
+  cursor: default;
+  user-select: none;
+  pointer-events: none; /* Ensure all SVG text is click-through by default */
+}
+
+/* Override pointer-events for specifically interactive text elements */
+svg text[data-interactive="true"],
+svg text.cursor-pointer {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Ensure interactive SVG elements show pointer cursor */
+svg [data-interactive="true"],
+svg .cursor-pointer {
+  cursor: pointer;
+}
+
+/* =============================================================================
    PRINT STYLES
    ============================================================================= */
 
