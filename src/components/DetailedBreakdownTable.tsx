@@ -47,12 +47,112 @@ type SortColumn = 'category' | 'typical' | 'stressed';
 type SortDirection = 'asc' | 'desc';
 
 function DetailedBreakdownTable(): JSX.Element {
-  const { state } = useAppContext();
+  const { state, dispatch } = useAppContext();
   const { categories, profile, settings } = state;
 
   // Sorting state - default to Under Stress Impact descending
   const [sortColumn, setSortColumn] = useState<SortColumn>('stressed');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+
+  // Editing state - track which cell is being edited
+  const [editingCell, setEditingCell] = useState<{ categoryId: string; type: 'typical' | 'stressed' } | null>(null);
+  const [editValue, setEditValue] = useState<string>('');
+
+  // Helper function to update impact values with conflict resolution
+  const updateImpactValue = (categoryId: string, type: 'typical' | 'stressed', newValue: number) => {
+    const categoryIndex = categories.findIndex(cat => cat.id === categoryId);
+    if (categoryIndex === -1) return;
+
+    const currentSelections = profile.selections[categoryIndex] || [];
+    let newSelections = [...currentSelections];
+
+    // Ensure array has at least 2 elements for both typical and stressed values
+    while (newSelections.length < 2) {
+      newSelections.push(0);
+    }
+
+    if (type === 'typical') {
+      // Updating typical impact
+      if (newValue === 0) {
+        // Remove typical impact - this means remove everything since typical must always exist if stressed exists
+        newSelections = [];
+      } else {
+        newSelections[0] = newValue;
+        // If stressed value exists and is less than or equal to new typical value, update it
+        if (newSelections[1] > 0 && newSelections[1] <= newValue) {
+          const requiredStressedValue = newValue + 1;
+          if (requiredStressedValue > 10) {
+            // Can't set stressed value above 10, so remove it entirely
+            // Keep only the typical value
+            newSelections = [newValue];
+          } else {
+            newSelections[1] = requiredStressedValue; // Stressed must be at least 1 higher than typical
+          }
+        }
+      }
+    } else {
+      // Updating stressed impact
+      if (newValue <= 1) {
+        // If user tries to set stressed to 1 or less, remove stressed impact entirely
+        // Keep only typical impact
+        newSelections = newSelections[0] > 0 ? [newSelections[0]] : [];
+      } else {
+        // Valid stressed impact (2 or higher)
+        if (newSelections[0] === 0) {
+          // If no typical value exists, set it to be 1 less than stressed (minimum 1)
+          newSelections[0] = Math.max(1, newValue - 1);
+        } else if (newValue <= newSelections[0]) {
+          // If stressed is not higher than typical, adjust typical to be 1 less
+          newSelections[0] = Math.max(1, newValue - 1);
+        }
+        // Set the stressed value
+        newSelections[1] = newValue;
+      }
+    }
+
+    // Clean up the array: remove any 0 values and ensure proper structure
+    // Filter out zeros and ensure we don't have trailing zeros
+    const cleanedSelections = newSelections.filter((val, index) => {
+      // Keep non-zero values
+      if (val > 0) return true;
+      // For zero values: only keep if there are non-zero values after this index
+      return newSelections.slice(index + 1).some(v => v > 0);
+    });
+
+    // Dispatch the update
+    dispatch({
+      type: 'UPDATE_SELECTION',
+      payload: { sliceIndex: categoryIndex.toString(), values: cleanedSelections }
+    });
+  };
+
+  // Handle editing start
+  const startEditing = (categoryId: string, type: 'typical' | 'stressed', currentValue: number) => {
+    setEditingCell({ categoryId, type });
+    setEditValue(currentValue.toString());
+  };
+
+  // Handle editing finish
+  const finishEditing = () => {
+    if (editingCell) {
+      const newValue = parseInt(editValue);
+      if (!isNaN(newValue) && newValue >= 0 && newValue <= 10) {
+        updateImpactValue(editingCell.categoryId, editingCell.type, newValue);
+      }
+    }
+    setEditingCell(null);
+    setEditValue('');
+  };
+
+  // Handle key press in editing input
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      finishEditing();
+    } else if (e.key === 'Escape') {
+      setEditingCell(null);
+      setEditValue('');
+    }
+  };
 
   // Handle column header clicks for sorting
   const handleSort = (column: SortColumn) => {
@@ -218,15 +318,31 @@ function DetailedBreakdownTable(): JSX.Element {
                     <TableCell className={styles.impactCell}>
                       {typicalImpact > 0 ? (
                         <div className={styles.impactContainer}>
-                          <div
-                            className={styles.impactValue}
-                            style={{
-                              backgroundColor: category.color,
-                              color: darkenColor(category.color)
-                            }}
-                          >
-                            {typicalImpact}
-                          </div>
+                          {editingCell?.categoryId === category.id && editingCell?.type === 'typical' ? (
+                            <input
+                              type="number"
+                              min="0"
+                              max="10"
+                              value={editValue}
+                              onChange={(e) => setEditValue(e.target.value)}
+                              onBlur={finishEditing}
+                              onKeyDown={handleKeyPress}
+                              className={styles.editInput}
+                              autoFocus
+                            />
+                          ) : (
+                            <div
+                              className={`${styles.impactValue} ${styles.clickableValue}`}
+                              style={{
+                                backgroundColor: category.color,
+                                color: darkenColor(category.color)
+                              }}
+                              onClick={() => startEditing(category.id, 'typical', typicalImpact)}
+                              title="Click to edit"
+                            >
+                              {typicalImpact}
+                            </div>
+                          )}
                           <div className={styles.categoryDescription}>
                             {getASDLevel(typicalImpact)}
                           </div>
@@ -241,15 +357,31 @@ function DetailedBreakdownTable(): JSX.Element {
                     <TableCell className={styles.impactCell}>
                       {stressedImpact > 0 && stressedImpact !== typicalImpact ? (
                         <div className={styles.impactContainer}>
-                          <div
-                            className={styles.impactValue}
-                            style={{
-                              backgroundColor: category.color + '80',
-                              color: darkenColor(category.color, 0.15)
-                            }}
-                          >
-                            {stressedImpact}
-                          </div>
+                          {editingCell?.categoryId === category.id && editingCell?.type === 'stressed' ? (
+                            <input
+                              type="number"
+                              min="0"
+                              max="10"
+                              value={editValue}
+                              onChange={(e) => setEditValue(e.target.value)}
+                              onBlur={finishEditing}
+                              onKeyDown={handleKeyPress}
+                              className={styles.editInput}
+                              autoFocus
+                            />
+                          ) : (
+                            <div
+                              className={`${styles.impactValue} ${styles.clickableValue}`}
+                              style={{
+                                backgroundColor: category.color + '80',
+                                color: darkenColor(category.color, 0.15)
+                              }}
+                              onClick={() => startEditing(category.id, 'stressed', stressedImpact)}
+                              title="Click to edit"
+                            >
+                              {stressedImpact}
+                            </div>
+                          )}
                           <div className={styles.categoryDescription}>
                             {getASDLevel(stressedImpact)}
                           </div>

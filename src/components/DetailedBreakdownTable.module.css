@@ -231,6 +231,35 @@
   font-style: italic;
 }
 
+/* Clickable impact values */
+.clickableValue {
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.clickableValue:hover {
+  opacity: 0.8;
+}
+
+/* Edit input styling */
+.editInput {
+  width: 3rem;
+  height: 2rem;
+  text-align: center;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: var(--color-ring);
+  box-shadow: 0 0 0 2px var(--color-ring-offset);
+}
+
 /* Print-specific styles */
 @media print {
   .container {
