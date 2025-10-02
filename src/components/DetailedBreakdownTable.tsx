@@ -8,7 +8,13 @@
  * 2. NEVER use inline style="" attributes on HTML elements
  *    - All styling MUST be via dedicated CSS files
  *    - Use CSS Modules for component-specific styles
- *    - Use global.css for shared design tokens
+ *                              </div>
+                                       </div>
+                          <div className={styles.categoryDescription}>
+                            {getASDLevel(getPreviewValue(category.id, 'stressed', stressedImpact))}
+                          </div>         <div className={styles.categoryDescription}>
+                            {getASDLevel(getPreviewValue(category.id, 'typical', typicalImpact))}
+                          </div>e global.css for shared design tokens
  *
  * Violation of these rules is STRICTLY FORBIDDEN.
  */
@@ -186,6 +192,19 @@ function DetailedBreakdownTable(): JSX.Element {
       setEditingCell(null);
       setEditValue('');
     }
+  };
+
+  // Get the value to display for support needs (either current edit value or saved value)
+  const getPreviewValue = (categoryId: string, type: 'typical' | 'stressed', savedValue: number): number => {
+    if (editingCell?.categoryId === categoryId && editingCell?.type === type) {
+      // Handle empty string as 0 (no support needs)
+      if (editValue === '') {
+        return 0;
+      }
+      const previewValue = parseInt(editValue);
+      return !isNaN(previewValue) && previewValue >= 0 && previewValue <= 10 ? previewValue : savedValue;
+    }
+    return savedValue;
   };
 
   // Handle column header clicks for sorting
@@ -382,7 +401,7 @@ function DetailedBreakdownTable(): JSX.Element {
                             </div>
                           )}
                           <div className={styles.categoryDescription}>
-                            {getASDLevel(typicalImpact)}
+                            {getASDLevel(getPreviewValue(category.id, 'typical', typicalImpact))}
                           </div>
                         </div>
                       ) : (
@@ -425,7 +444,7 @@ function DetailedBreakdownTable(): JSX.Element {
                             </div>
                           )}
                           <div className={styles.categoryDescription}>
-                            {getASDLevel(stressedImpact)}
+                            {getASDLevel(getPreviewValue(category.id, 'stressed', stressedImpact))}
                           </div>
                         </div>
                       ) : (
