@@ -254,7 +254,7 @@
   margin-bottom: 0.25rem;
 }
 
-/* Hide the spinner arrows completely for a cleaner look */
+/* Hide default webkit spinners so we can create custom ones */
 .editInput::-webkit-outer-spin-button,
 .editInput::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -262,10 +262,90 @@
   margin: 0;
 }
 
-/* Firefox spinner styling - hide spinners */
+/* Hover effects for spinner buttons */
+.editInput::-webkit-inner-spin-button:hover,
+.editInput::-webkit-outer-spin-button:hover {
+  background: transparent;
+}
+
+/* Hide default number input appearance */
 .editInput[type="number"] {
+  /* Hide default spinners */
   appearance: textfield;
   -moz-appearance: textfield;
+  position: relative;
+}
+
+/* Custom spinner container */
+.numberInputContainer {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Custom spinner buttons positioned outside the input */
+.spinnerButton {
+  width: 24px;
+  height: calc(2.5rem - 4px); /* Match input height minus borders */
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: bold;
+  position: relative;
+  /* Match the input colors exactly */
+  background-color: var(--spinner-bg, currentColor);
+  color: var(--spinner-text-color, white);
+}
+
+.spinnerButton:hover {
+  transform: scale(1.1);
+  filter: brightness(0.9);
+}
+
+/* Left triangle for minus button */
+.spinnerButtonDown {
+  clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
+  border-radius: 4px 0 0 4px;
+}
+
+/* Right triangle for plus button */
+.spinnerButtonUp {
+  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Button content styling */
+.spinnerButton::before {
+  content: attr(data-symbol);
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* Custom Firefox spinner implementation */
+.editInput[type="number"]::-moz-number-spin-box {
+  display: flex;
+  flex-direction: column;
+  width: 20px;
+  height: 100%;
+  background: transparent;
+  border: none;
+}
+
+.editInput[type="number"]::-moz-number-spin-up,
+.editInput[type="number"]::-moz-number-spin-down {
+  background: transparent;
+  border: none;
+  color: currentColor;
+  cursor: pointer;
+  opacity: 1;
+  width: 100%;
+  height: 50%;
 }
 
 .editInput:focus {
