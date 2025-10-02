@@ -323,12 +323,23 @@
   border-radius: 0 4px 4px 0;
 }
 
-/* Button content styling */
+/* Button content styling with subtle positioning adjustments */
 .spinnerButton::before {
   content: attr(data-symbol);
   font-size: 12px;
   font-weight: bold;
   line-height: 1;
+  position: relative;
+}
+
+/* Move minus character slightly right (closer to input) */
+.spinnerButtonDown::before {
+  left: 2px;
+}
+
+/* Move plus character slightly left (closer to input) */
+.spinnerButtonUp::before {
+  right: 2px;
 }
 
 /* Custom Firefox spinner implementation */
