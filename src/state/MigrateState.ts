@@ -70,6 +70,8 @@ function migrateV0toV1(legacyState: LegacyState): ApplicationState {
       boundaryWeight: (legacyState.boundaryWeight as any) || 'bold',
       sortColumn: (legacyState.sortColumn as any) || 'stress',
       sortDirection: (legacyState.sortDirection as any) || 'desc',
+      tooltipDisabled: false,
+      tooltipDelayDuration: 700,
     },
   };
 }

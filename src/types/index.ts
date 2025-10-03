@@ -51,6 +51,8 @@ export interface AppSettings {
   boundaryWeight: BoundaryWeightType;
   sortColumn: SortColumnType;
   sortDirection: SortDirectionType;
+  tooltipDisabled: boolean;
+  tooltipDelayDuration: number;
 }
 
 // Type aliases for union types and component props
