@@ -452,10 +452,13 @@ function DetailedBreakdownTable(): JSX.Element {
                               className={`${styles.impactValue} ${styles.clickableValue}`}
                               style={{
                                 backgroundColor: category.color,
-                                color: darkenColor(category.color)
-                              }}
+                                color: darkenColor(category.color),
+                                '--print-bg-color': category.color,
+                                '--print-border-color': darkenColor(category.color)
+                              } as React.CSSProperties}
                               onClick={() => startEditing(category.id, 'typical', typicalImpact)}
                               title="Click to edit"
+                              data-preserve-print-colors="true"
                             >
                               {typicalImpact}
                             </div>
@@ -538,10 +541,13 @@ function DetailedBreakdownTable(): JSX.Element {
                               className={`${styles.impactValue} ${styles.clickableValue}`}
                               style={{
                                 backgroundColor: category.color + '80',
-                                color: darkenColor(category.color, 0.15)
-                              }}
+                                color: darkenColor(category.color, 0.15),
+                                '--print-bg-color': category.color + '80',
+                                '--print-border-color': darkenColor(category.color)
+                              } as React.CSSProperties}
                               onClick={() => startEditing(category.id, 'stressed', stressedImpact)}
                               title="Click to edit"
+                              data-preserve-print-colors="true"
                             >
                               {stressedImpact}
                             </div>

@@ -756,11 +756,22 @@ button {
    ============================================================================= */
 
 @media print {
-  /* Force white backgrounds for all elements in print */
+  /* Force white backgrounds for all elements in print except preserved ones */
   *,
   *::before,
   *::after {
     background-color: white !important;
+    background-image: none !important;
+  }
+  
+  /* Preserve colors for elements marked for color preservation */
+  *[data-preserve-print-colors],
+  *[data-preserve-print-colors]::before,
+  *[data-preserve-print-colors]::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background-color: var(--print-bg-color) !important;
+    border-color: var(--print-border-color) !important;
     background-image: none !important;
   }
 
@@ -773,10 +784,15 @@ button {
     color: black !important;
   }
 
-  /* Ensure text is readable in print (black on white) */
+  /* Ensure text is readable in print (black on white) except preserved elements */
   * {
     color: black !important;
     border-color: black !important;
+  }
+  
+  /* Preserve border colors for marked elements */
+  *[data-preserve-print-colors] {
+    border-color: var(--print-border-color) !important;
   }
 
   /* Hide non-essential UI elements from print */
