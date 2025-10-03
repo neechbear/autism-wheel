@@ -286,6 +286,11 @@ function DetailedBreakdownTable(): JSX.Element {
     return sorted;
   }, [tableData, sortColumn, sortDirection]);
 
+  // Check if any stress impact values exist
+  const hasAnyStressValues = useMemo(() => {
+    return tableData.some(item => item.stressedImpact > 0);
+  }, [tableData]);
+
   // Render sort icon for column headers
   const renderSortIcon = (column: SortColumn) => {
     if (sortColumn !== column) {
@@ -355,7 +360,7 @@ function DetailedBreakdownTable(): JSX.Element {
                   </div>
                 </TableHead>
               )}
-              {shouldShowNumbers && (
+              {shouldShowNumbers && hasAnyStressValues && (
                 <TableHead
                   className={`${styles.tableHead} ${styles.tableCellCenter} ${styles.sortableHeader}`}
                   onClick={() => handleSort('stressed')}
@@ -480,7 +485,7 @@ function DetailedBreakdownTable(): JSX.Element {
                       )}
                     </TableCell>
                   )}
-                  {shouldShowNumbers && (
+                  {shouldShowNumbers && hasAnyStressValues && (
                     <TableCell className={styles.impactCell}>
                       {stressedImpact > 0 && stressedImpact !== typicalImpact ? (
                         <div className={styles.impactContainer}>
