@@ -94,7 +94,7 @@ function MainView(): JSX.Element {
               className={clsx(styles.button, styles.blueButton)}
               data-testid="edit-categories-button"
             >
-              Edit Categories
+              Edit categories
             </Button>
           )}
         </div>

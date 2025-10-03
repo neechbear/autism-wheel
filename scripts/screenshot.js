@@ -27,7 +27,7 @@ async function takeScreenshot() {
     if (view === 'edit') {
       console.log('Clicking Edit categories button...');
       await page.getByRole('button', { name: 'Edit categories' }).click();
-      await page.waitForSelector('text=Edit Categories', { timeout: 5000 });
+      await page.waitForSelector('text=Category Name & Description', { timeout: 5000 });
       console.log('Edit categories view loaded');
     } else if (view === 'help') {
       console.log('Clicking Help button...');
