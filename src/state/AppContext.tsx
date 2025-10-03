@@ -19,7 +19,6 @@
 import React, { createContext, useContext, useReducer, useEffect, type ReactNode } from 'react';
 import type {
   ApplicationState,
-  UserProfile,
   AppSettings,
   ViewType,
   ThemeType,
@@ -37,7 +36,7 @@ import {
   DEFAULT_SLICE_COLORS,
 } from '../constants/defaults';
 import { loadAndMigrateState } from './MigrateState';
-import { getTooltipConfig } from '../utils';
+import { getTooltipConfig, isFileScheme, getStateFromMetaTag } from '../utils';
 
 // Action types for state updates
 export type AppAction =
@@ -294,28 +293,55 @@ type AppProviderProps = {
 export function AppProvider({ children }: AppProviderProps): JSX.Element {
   const [state, dispatch] = useReducer(appReducer, createDefaultState());
 
-  // Load state with URL taking precedence over localStorage
+  // Load state with proper order of precedence as per copilot instructions
   useEffect(() => {
     try {
-      // First check for URL parameters (takes precedence)
+      // 1. First check for URL parameters (highest priority)
       const urlParams = new URLSearchParams(window.location.search);
       const urlState = urlParams.get('state');
 
       if (urlState) {
-        // URL state found - decode and load it
         const decodedState = loadAndMigrateState(urlState);
         if (decodedState) {
           dispatch({ type: 'LOAD_STATE', payload: decodedState });
-          return; // Exit early, don't load localStorage
+          return;
         }
       }
 
-      // No URL state or failed to decode - try localStorage
+      // 2. Meta Tag (Offline Context) - file:// scheme
+      if (isFileScheme()) {
+        const metaState = getStateFromMetaTag();
+        if (metaState) {
+          const decodedState = loadAndMigrateState(metaState);
+          if (decodedState) {
+            dispatch({ type: 'LOAD_STATE', payload: decodedState });
+            return;
+          }
+        }
+      }
+
+      // 3. Local Browser Storage
       const savedState = localStorage.getItem('autism-wheel-state');
       if (savedState) {
         const parsedState = JSON.parse(savedState);
         dispatch({ type: 'LOAD_STATE', payload: parsedState });
+        return;
       }
+
+      // 4. Meta Tag (Web Context) - http:// or https:// scheme
+      if (!isFileScheme()) {
+        const metaState = getStateFromMetaTag();
+        if (metaState) {
+          const decodedState = loadAndMigrateState(metaState);
+          if (decodedState) {
+            dispatch({ type: 'LOAD_STATE', payload: decodedState });
+            return;
+          }
+        }
+      }
+
+      // 5. Default State (lowest priority) - will use createDefaultState() from useReducer
+      // No action needed, the reducer was initialized with default state
     } catch (error) {
       console.warn('Failed to load state:', error);
     }

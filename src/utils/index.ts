@@ -10,6 +10,37 @@ export function isLockedHtmlMode(): boolean {
 }
 
 /**
+ * Checks if the application is loaded from a file:// URL scheme
+ * @returns true if loaded from file:// (offline context), false otherwise
+ */
+export function isFileScheme(): boolean {
+  return window.location.protocol === 'file:';
+}
+
+/**
+ * Attempts to load state from the autism-wheel-state meta tag
+ * @returns encoded state string or null if not found/invalid
+ */
+export function getStateFromMetaTag(): string | null {
+  try {
+    const metaTag = document.querySelector('meta[name="autism-wheel-state"]');
+    if (!metaTag) {
+      return null;
+    }
+    
+    const content = metaTag.getAttribute('content');
+    if (!content || content.trim() === '') {
+      return null;
+    }
+    
+    return content.trim();
+  } catch (error) {
+    console.warn('Failed to read state from meta tag:', error);
+    return null;
+  }
+}
+
+/**
  * Gets tooltip configuration from URL parameters
  * @returns Object with disabled state and delay duration
  */
