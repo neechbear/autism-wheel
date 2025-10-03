@@ -22,9 +22,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useAppContext, appActions } from '../state/AppContext';
 import { encodeState } from '../state/MigrateState';
 import styles from './ActionToolbar.module.css';
+import { useState } from 'react';
 
 function ActionToolbar(): JSX.Element {
   const { state, dispatch } = useAppContext();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handlePrint = () => {
     window.print();
@@ -48,6 +50,128 @@ function ActionToolbar(): JSX.Element {
   };
 
   const handleSaveDiagram = (format: string) => {
+    // For HTML exports, close dropdown first to prevent capture of open state
+    if (format === 'html' || format === 'locked_html') {
+      setDropdownOpen(false);
+      // Use a longer delay to ensure dropdown is fully closed
+      setTimeout(() => {
+        handleHtmlExport(format);
+      }, 200);
+      return;
+    }
+
+    // For other formats, proceed with the rest of the logic
+    handleNonHtmlExport(format);
+  };
+
+  const handleHtmlExport = async (format: string) => {
+    // Better approach: Always use clean DOM capture with proper cleanup
+    // Close dropdown first
+    setDropdownOpen(false);
+
+    // Small delay to ensure dropdown closes
+    setTimeout(() => {
+      // Scroll to top to ensure clean capture
+      window.scrollTo(0, 0);
+
+      // Encode current state to include in the HTML
+      const encodedState = encodeState(state);
+
+      // Get the HTML content and clean it thoroughly
+      let htmlContent = document.documentElement.outerHTML;
+
+      // Remove development-specific scripts that break in static files
+      htmlContent = htmlContent.replace(/<script[^>]*src=".*\/@vite\/client"[^>]*><\/script>/gi, '');
+      htmlContent = htmlContent.replace(/<script[^>]*src=".*\/src\/main\.tsx"[^>]*><\/script>/gi, '');
+
+      // Clear any Radix UI portals and dropdowns
+      htmlContent = htmlContent.replace(/<div[^>]*data-radix-portal[^>]*>[\s\S]*?<\/div>/gi, '');
+      htmlContent = htmlContent.replace(/data-state="open"/gi, 'data-state="closed"');
+
+      // Remove any style elements that contain development-specific CSS
+      htmlContent = htmlContent.replace(/<style[^>]*data-vite-dev-id[^>]*>[\s\S]*?<\/style>/gi, '');
+
+      // Add comprehensive initialization script
+      const initScript = `
+      <script>
+        (function() {
+          // Comprehensive scroll and interaction fixes
+          function fixPage() {
+            // Reset scroll
+            if (document.body) document.body.scrollTop = 0;
+            if (document.documentElement) document.documentElement.scrollTop = 0;
+
+            // Ensure scrolling works
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
+            document.body.style.height = 'auto';
+            document.documentElement.style.height = 'auto';
+
+            // Remove any stuck dropdown states
+            const stuckElements = document.querySelectorAll('[data-state="open"]');
+            stuckElements.forEach(el => {
+              el.setAttribute('data-state', 'closed');
+              el.removeAttribute('data-state');
+            });
+
+            // Remove any overlay elements that might block interaction
+            const overlays = document.querySelectorAll('[data-radix-portal], [data-radix-focus-guard]');
+            overlays.forEach(el => el.remove());
+
+            // Force re-layout
+            document.body.offsetHeight;
+          }
+
+          // Apply fixes immediately and on load
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', fixPage);
+          } else {
+            fixPage();
+          }
+
+          window.addEventListener('load', fixPage);
+
+          // Also apply fixes after a short delay to catch any late-loading content
+          setTimeout(fixPage, 100);
+          setTimeout(fixPage, 500);
+        })();
+      </script>`;
+
+      if (format === 'html') {
+        htmlContent = htmlContent.replace(
+          '<head>',
+          `<head>\n<meta name="autism-wheel-state" content="${encodedState}">${initScript}`
+        );
+
+        const htmlBlob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(htmlBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'autism-wheel.html';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } else if (format === 'locked_html') {
+        htmlContent = htmlContent.replace(
+          '<head>',
+          `<head>\n<meta name="autism-wheel-locked-html-mode" content="true">\n<meta name="autism-wheel-state" content="${encodedState}">${initScript}`
+        );
+
+        const htmlBlob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(htmlBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'autism-wheel-locked.html';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+    }, 300); // Longer delay to ensure cleanup
+  };
+
+  const handleNonHtmlExport = (format: string) => {
     // Look for the main radial diagram SVG - it should be the largest one or have specific attributes
     const svgElements = document.querySelectorAll('svg');
     let svgElement: SVGElement | null = null;
@@ -144,41 +268,6 @@ function ActionToolbar(): JSX.Element {
         return;
       }
 
-      if (format === 'html') {
-        // Save current page as HTML
-        const htmlContent = document.documentElement.outerHTML;
-        const htmlBlob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-        const url = URL.createObjectURL(htmlBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'autism-wheel.html';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        return;
-      }
-
-      if (format === 'locked_html') {
-        // Save as locked HTML with meta tag
-        let htmlContent = document.documentElement.outerHTML;
-        // Add the locked mode meta tag
-        htmlContent = htmlContent.replace(
-          '<head>',
-          '<head>\n<meta name="autism-wheel-locked-html-mode" content="true">'
-        );
-        const htmlBlob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-        const url = URL.createObjectURL(htmlBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'autism-wheel-locked.html';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        return;
-      }
-
       // For PNG and JPEG, convert SVG to canvas with high resolution
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
@@ -265,7 +354,7 @@ function ActionToolbar(): JSX.Element {
         Print
       </Button>
 
-      <DropdownMenu>
+      <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
         <DropdownMenuTrigger className={`${styles.button} ${styles.blackButton}`}>
           Save diagram
           <ChevronDown className={styles.chevronIcon} />
