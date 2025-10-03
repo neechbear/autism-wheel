@@ -45,8 +45,8 @@ deploy: clean $(DIST_DIR)/index.html test
 	mkdir -pv backup
 	gcloud storage cp gs://www.myautisticprofile.com/index.html backup/index-$(TIMESTAMP).html || \
 	gsutil cp gs://www.myautisticprofile.com/index.html backup/index-$(TIMESTAMP).html
-	gcloud storage cp $< gs://www.myautisticprofile.com/index.html || \
-	gsutil cp $< gs://www.myautisticprofile.com/index.html
+	gcloud storage cp $(DIST_DIR)/index.html gs://www.myautisticprofile.com/index.html || \
+	gsutil cp $(DIST_DIR)/index.html gs://www.myautisticprofile.com/index.html
 	gcloud storage cp *.png *.jpg gs://www.myautisticprofile.com/ || \
 	gsutil cp *.png *.jpg gs://www.myautisticprofile.com/
 
