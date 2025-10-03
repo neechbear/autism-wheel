@@ -550,7 +550,22 @@ function RadialDiagram({ onSegmentClick, tooltipsDisabled = false, tooltipDelay 
         {settings.showIcons && sliceLabels.length > 0 && sliceIcons.map((icon, sliceIndex) => {
           const angleStep = (2 * Math.PI) / sliceLabels.length;
           const angle = sliceIndex * angleStep - Math.PI / 2 + angleStep / 2; // Center of slice
-          const iconRadius = MIN_RADIUS * 0.7; // Move them out a bit more but still within ring 0
+
+          // Dynamic sizing and positioning based on number of categories
+          const numCategories = sliceLabels.length;
+
+          // Calculate dynamic font size: 36 for 2 categories, 18 for 10 categories, linear interpolation between
+          const minFontSize = 18; // 10 categories
+          const maxFontSize = 36; // 2 categories
+          const fontSize = Math.round(maxFontSize - ((numCategories - 2) / (10 - 2)) * (maxFontSize - minFontSize));
+
+          // Calculate dynamic radius: slightly closer for fewer categories
+          // 0.5 for 2 categories, 0.7 for 10 categories
+          const minRadiusMultiplier = 0.5; // 2 categories (closer to center)
+          const maxRadiusMultiplier = 0.7;  // 10 categories (current position)
+          const radiusMultiplier = minRadiusMultiplier + ((numCategories - 2) / (10 - 2)) * (maxRadiusMultiplier - minRadiusMultiplier);
+
+          const iconRadius = MIN_RADIUS * radiusMultiplier;
           const iconX = CENTER_X + iconRadius * Math.cos(angle);
           const iconY = CENTER_Y + iconRadius * Math.sin(angle);
 
@@ -561,7 +576,7 @@ function RadialDiagram({ onSegmentClick, tooltipsDisabled = false, tooltipDelay 
               y={iconY}
               textAnchor="middle"
               dominantBaseline="middle"
-              fontSize="18"
+              fontSize={fontSize}
               style={{ pointerEvents: 'none' }}
             >
               {icon}
