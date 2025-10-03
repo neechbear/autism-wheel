@@ -38,19 +38,11 @@ function EmojiPicker({ selectedEmoji, onEmojiSelect }: EmojiPickerProps): JSX.El
         side="right"
         className="w-fit p-0 max-w-none"
       >
-        <div className={styles.content} style={{ padding: '12px' }}>
+        <div className={styles.content}>
           {Object.entries(EMOJI_CATEGORIES).map(([category, emojis]) => (
             <div key={category} className={styles.category}>
               <h4 className={styles.categoryTitle}>{category}</h4>
-              <div
-                className={styles.grid}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(8, 2.25rem)',
-                  gap: '2px',
-                  width: 'fit-content'
-                }}
-              >
+              <div className={styles.grid}>
                 {emojis.map((emoji, index) => (
                   <button
                     key={`${category}-${index}`}

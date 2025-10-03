@@ -462,3 +462,13 @@ textarea.textArea:focus {
     font-size: 16px; /* Prevent zoom on iOS */
   }
 }
+
+.editCategoriesSection table td[data-slot="table-cell"],
+.editCategoriesSection table th[data-slot="table-head"] {
+  padding: var(--spacing-sm) 0 !important;
+}
+
+/* Remove top padding specifically for icon table cells */
+.editCategoriesSection table td[data-slot="table-cell"].iconTableCell {
+  padding: 0 0 var(--spacing-sm) 0 !important;
+}
