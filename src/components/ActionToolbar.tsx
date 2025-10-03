@@ -23,10 +23,12 @@ import { useAppContext, appActions } from '../state/AppContext';
 import { encodeState } from '../state/MigrateState';
 import styles from './ActionToolbar.module.css';
 import { useState } from 'react';
+import { isLockedHtmlMode } from '../utils';
 
 function ActionToolbar(): JSX.Element {
   const { state, dispatch } = useAppContext();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const isLocked = isLockedHtmlMode();
 
   const handlePrint = () => {
     window.print();
@@ -369,12 +371,16 @@ function ActionToolbar(): JSX.Element {
           <DropdownMenuItem onClick={() => handleSaveDiagram('jpeg')}>
             Save as JPEG
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleSaveDiagram('html')}>
-            Save as HTML
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleSaveDiagram('locked_html')}>
-            Save as locked HTML
-          </DropdownMenuItem>
+          {!isLocked && (
+            <DropdownMenuItem onClick={() => handleSaveDiagram('html')}>
+              Save as HTML
+            </DropdownMenuItem>
+          )}
+          {!isLocked && (
+            <DropdownMenuItem onClick={() => handleSaveDiagram('locked_html')}>
+              Save as locked HTML
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 
