@@ -323,7 +323,8 @@ function DetailedBreakdownTable(): JSX.Element {
     return null;
   };
 
-  const shouldShowNumbers = settings.numberPosition !== 'hide_all' && settings.numberPosition !== 'hide_segment';
+  // The detailed breakdown table should always show impact values regardless of diagram display settings
+  const shouldShowNumbers = true;
 
   return (
     <div className={styles.container}>
