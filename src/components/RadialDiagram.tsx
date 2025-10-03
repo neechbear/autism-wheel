@@ -188,7 +188,7 @@ function RadialDiagram({ onSegmentClick, tooltipsDisabled = false, tooltipDelay 
                     <path
                       d={path}
                       fill={fill}
-                      stroke={isDarkMode ? "#808080" : "white"}
+                      stroke={isDarkMode ? "#393939ff" : "white"}
                       strokeWidth="1"
                       className="cursor-pointer hover:opacity-80 transition-opacity"
                       onClick={() => onSegmentClick(sliceIndex, ringIndex)}
@@ -259,7 +259,7 @@ function RadialDiagram({ onSegmentClick, tooltipsDisabled = false, tooltipDelay 
                 <path
                   d={path}
                   fill={fill}
-                  stroke={isDarkMode ? "#808080" : "white"}
+                  stroke={isDarkMode ? "#393939ff" : "white"}
                   strokeWidth="1"
                   className="cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => onSegmentClick(sliceIndex, ringIndex)}
@@ -286,7 +286,7 @@ function RadialDiagram({ onSegmentClick, tooltipsDisabled = false, tooltipDelay 
               y1={y1}
               x2={x2}
               y2={y2}
-              stroke={isDarkMode ? "#808080" : "white"}
+              stroke={isDarkMode ? "#393939ff" : "white"}
               strokeWidth={settings.boundaryWeight === 'bold' ? "2" : "1"}
             />
           );
@@ -323,7 +323,7 @@ function RadialDiagram({ onSegmentClick, tooltipsDisabled = false, tooltipDelay 
               cy={CENTER_Y}
               r={radius}
               fill="none"
-              stroke={isDarkMode ? "#808080" : "white"}
+              stroke={isDarkMode ? "#393939ff" : "white"}
               strokeWidth={settings.boundaryWeight === 'bold' ? "2" : "1"}
             />
           );

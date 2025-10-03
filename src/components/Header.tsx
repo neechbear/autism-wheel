@@ -29,7 +29,8 @@ function Header({ isLockedMode, hideIntro, onHelp }: HeaderProps): JSX.Element {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>
-        {isLockedMode ? "My Autism Wheel" : "Autism Wheel"}
+        My Autism Wheel
+        {/* {isLockedMode ? "My Autism Wheel" : "Autism Wheel"} */}
       </h1>
 
       {!isLockedMode && !hideIntro && (

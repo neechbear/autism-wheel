@@ -23,14 +23,14 @@ import EditCategoriesView from './views/EditCategoriesView';
 function AppContent() {
   const { state } = useAppContext();
 
-  useEffect(() => {
-    const lockedMeta = document.querySelector('meta[name="autism-wheel-locked-html-mode"]');
-    if (lockedMeta) {
-      document.title = 'My Autism Wheel';
-    } else {
-      document.title = 'Autism Wheel';
-    }
-  }, []);
+  //useEffect(() => {
+  //  const lockedMeta = document.querySelector('meta[name="autism-wheel-locked-html-mode"]');
+  //  if (lockedMeta) {
+  //    document.title = 'My Autism Wheel';
+  //  } else {
+  //    document.title = 'Autism Wheel';
+  //  }
+  //}, []);
 
   // Apply theme to document
   useEffect(() => {
