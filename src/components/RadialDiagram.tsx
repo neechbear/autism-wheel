@@ -292,6 +292,27 @@ function RadialDiagram({ onSegmentClick, tooltipsDisabled = false, tooltipDelay 
           );
         })}
 
+        {/* Center radial grid lines (spokes in the emoji area) */}
+        {sliceLabels.length > 0 && Array.from({ length: sliceLabels.length }, (_, i) => {
+          const angle = (i * 2 * Math.PI) / sliceLabels.length - Math.PI / 2;
+          const x1 = CENTER_X;
+          const y1 = CENTER_Y;
+          const x2 = CENTER_X + MIN_RADIUS * Math.cos(angle);
+          const y2 = CENTER_Y + MIN_RADIUS * Math.sin(angle);
+
+          return (
+            <line
+              key={`center-spoke-${i}`}
+              x1={x1}
+              y1={y1}
+              x2={x2}
+              y2={y2}
+              stroke={isDarkMode ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.15)"}
+              strokeWidth={settings.boundaryWeight === 'bold' ? "2" : "1"}
+            />
+          );
+        })}
+
         {/* Concentric circles */}
         {Array.from({ length: TOTAL_RINGS + 1 }, (_, i) => {
           const radius = MIN_RADIUS + i * RING_WIDTH;
