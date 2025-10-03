@@ -73,13 +73,13 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-xs);
-  color: var(--color-primary);
+  color: var(--color-green-600);
   text-decoration: underline;
   transition: color var(--transition-fast);
 }
 
 .helpLink:hover {
-  color: var(--color-primary-hover);
+  color: var(--color-green-700);
 }
 
 .helpIcon {

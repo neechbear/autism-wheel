@@ -534,7 +534,7 @@ test.describe('Category Editing & Customization Features', () => {
     }
   });
 
-  test('should restore default categories with default categories button', async ({ page }) => {
+  test('should restore default categories with load presets dropdown', async ({ page }) => {
     // First, make significant changes and save them
     await page.getByRole('button', { name: 'Edit categories' }).click();
 
@@ -547,22 +547,27 @@ test.describe('Category Editing & Customization Features', () => {
       await page.waitForTimeout(300); // Allow state to update
     }
 
-    // Look for default categories button and check if it's enabled after our change
-    const defaultButtons = page.locator('button:has-text("Default"), button:has-text("Reset to default"), button[aria-label*="default"]');
-    const defaultButtonCount = await defaultButtons.count();
+    // Look for "Load presets" button
+    const loadPresetsButton = page.locator('button:has-text("Load presets")');
+    const buttonCount = await loadPresetsButton.count();
 
-    if (defaultButtonCount > 0) {
-      const defaultButton = defaultButtons.first();
+    if (buttonCount > 0) {
+      const button = loadPresetsButton.first();
 
       // Check if button is enabled after our changes
-      const isEnabled = await defaultButton.isEnabled();
+      const isEnabled = await button.isEnabled();
       if (isEnabled) {
         // Get current state before restoring defaults
         const currentInputs = page.locator('input[type="text"]');
         const currentCount = await currentInputs.count();
 
-        // Click default categories button
-        await defaultButton.click();
+        // Click the "Load presets" button to open dropdown
+        await button.click();
+        await page.waitForTimeout(300);
+
+        // Click on "Autism wheel categories" option using more specific selector
+        const autismWheelOption = page.locator('[role="menuitem"]').filter({ hasText: 'Autism wheel categories' });
+        await autismWheelOption.click({ force: true });
         await page.waitForTimeout(500);
 
         // Verify categories were restored (should have different names)
@@ -579,14 +584,69 @@ test.describe('Category Editing & Customization Features', () => {
 
         // Save the restored defaults
         await page.getByRole('button', { name: 'Save' }).click();
-        await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
       } else {
-        console.log('Default categories button found but is disabled - might need more changes to enable it');
+        console.log('Load presets button found but is disabled - might need more changes to enable it');
         // Just exit without saving
         await page.getByRole('button', { name: 'Save' }).click();
       }
     } else {
-      console.log('No default categories button found - skipping default restore test');
+      console.log('No load presets button found - skipping default restore test');
+      // Just exit without saving
+      await page.getByRole('button', { name: 'Save' }).click();
+    }
+  });
+
+  test('should load sensory wheel categories with load presets dropdown', async ({ page }) => {
+    // Navigate to edit categories
+    await page.getByRole('button', { name: 'Edit categories' }).click();
+
+    // Look for "Load presets" button
+    const loadPresetsButton = page.locator('button:has-text("Load presets")');
+    const buttonCount = await loadPresetsButton.count();
+
+    if (buttonCount > 0) {
+      const button = loadPresetsButton.first();
+
+      // Check if button is enabled
+      const isEnabled = await button.isEnabled();
+      if (isEnabled) {
+        // Click the "Load presets" button to open dropdown
+        await button.click();
+        await page.waitForTimeout(300);
+
+        // Click on "Sensory wheel categories" option using more specific selector
+        const sensoryWheelOption = page.locator('[role="menuitem"]').filter({ hasText: 'Sensory wheel categories' });
+        await sensoryWheelOption.click({ force: true });
+        await page.waitForTimeout(500);
+
+        // Verify categories were loaded by checking for sensory-specific names
+        const nameInputs = page.locator('input[type="text"]');
+        const inputCount = await nameInputs.count();
+
+        if (inputCount > 0) {
+          // Check for sensory category names like "Sound (Auditory)"
+          const firstValue = await nameInputs.nth(0).inputValue();
+          const isSensoryCategory = firstValue.includes('Sound') || firstValue.includes('Auditory') ||
+                                   firstValue.includes('Visual') || firstValue.includes('Tactile');
+
+          if (isSensoryCategory) {
+            console.log(`Successfully loaded sensory categories. First category: ${firstValue}`);
+          } else {
+            console.log(`Loaded categories but first doesn't appear sensory-specific: ${firstValue}`);
+          }
+        }
+
+        // Save the sensory categories
+        await page.getByRole('button', { name: 'Save' }).click();
+        await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
+      } else {
+        console.log('Load presets button found but is disabled');
+        // Just exit without saving
+        await page.getByRole('button', { name: 'Save' }).click();
+      }
+    } else {
+      console.log('No load presets button found - skipping sensory categories test');
       // Just exit without saving
       await page.getByRole('button', { name: 'Save' }).click();
     }

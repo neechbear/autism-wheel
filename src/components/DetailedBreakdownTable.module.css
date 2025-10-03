@@ -416,4 +416,9 @@
   .emptyValue {
     display: none !important;
   }
+
+  /* Hide stress column for print when no stress values exist */
+  .printHideColumn {
+    display: none !important;
+  }
 }

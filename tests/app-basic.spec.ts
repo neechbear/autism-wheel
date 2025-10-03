@@ -28,7 +28,7 @@ test.describe('Application Loading & Core UI Elements', () => {
   });
 
   test('should navigate to help view when help button is clicked', async ({ page }) => {
-    // Click the Help button (use exact match to avoid conflict with "the help button" text)
+    // Click the Help button (use exact match to avoid conflict with "the green help button" text)
     await page.getByRole('button', { name: 'Help', exact: true }).click();
 
     // Wait for help view to load and check for the help heading

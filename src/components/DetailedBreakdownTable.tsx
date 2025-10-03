@@ -360,9 +360,9 @@ function DetailedBreakdownTable(): JSX.Element {
                   </div>
                 </TableHead>
               )}
-              {shouldShowNumbers && hasAnyStressValues && (
+              {shouldShowNumbers && (
                 <TableHead
-                  className={`${styles.tableHead} ${styles.tableCellCenter} ${styles.sortableHeader}`}
+                  className={`${styles.tableHead} ${styles.tableCellCenter} ${styles.sortableHeader} ${!hasAnyStressValues ? styles.printHideColumn : ''}`}
                   onClick={() => handleSort('stressed')}
                 >
                   <div className={styles.headerContentCenter}>
@@ -485,8 +485,8 @@ function DetailedBreakdownTable(): JSX.Element {
                       )}
                     </TableCell>
                   )}
-                  {shouldShowNumbers && hasAnyStressValues && (
-                    <TableCell className={styles.impactCell}>
+                  {shouldShowNumbers && (
+                    <TableCell className={`${styles.impactCell} ${!hasAnyStressValues ? styles.printHideColumn : ''}`}>
                       {stressedImpact > 0 && stressedImpact !== typicalImpact ? (
                         <div className={styles.impactContainer}>
                           {editingCell?.categoryId === category.id && editingCell?.type === 'stressed' ? (

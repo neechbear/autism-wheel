@@ -34,7 +34,18 @@ export const createDefaultCategories = (): ProfileCategory[] => {
   }));
 };
 
-export const SENSORT_SLICE_DESCRIPTIONS = [
+// Helper function to create sensory categories from arrays
+export const createSensoryCategories = (): ProfileCategory[] => {
+  return SENSORY_SLICE_LABELS.map((label, index) => ({
+    id: `sensory-${index}`,
+    name: label,
+    description: SENSORY_SLICE_DESCRIPTIONS[index] || `Description for ${label}`,
+    icon: SENSORY_SLICE_ICONS[index] || '❓',
+    color: DEFAULT_SLICE_COLORS[index] || '#e2e8f0' // Use default colors as specified
+  }));
+};
+
+export const SENSORY_SLICE_DESCRIPTIONS = [
   'Your unique response to sound. A low score indicates you can generally filter background noise and tolerate everyday sounds. A high score reflects extreme sensitivity (hyper), where common noises are painful or overwhelming, or under-sensitivity (hypo), where you might seek out loud, intense sounds to feel regulated.',
   'Your ability to perceive signals from inside your body. A low score means you reliably notice internal cues like hunger, thirst, or pain. A high score reflects difficulty recognising these signals, which can lead to not eating until famished, not drinking until dehydrated, or not identifying emotions until they become overwhelming.',
   'Your experience of the visual world. A low score suggests you handle typical lighting and visual clutter comfortably. A high score can mean hypersensitivity, where bright lights or busy patterns are disorienting, or hyposensitivity, where you might be drawn to intense visual stimuli like flashing lights to feel engaged.',
@@ -45,7 +56,7 @@ export const SENSORT_SLICE_DESCRIPTIONS = [
   'Your brain\'s unconscious awareness of where your body is in space. A low score means you move with confidence and rarely misjudge force. A high score can manifest as clumsiness, bumping into objects, or using too much or too little force (e.g., writing too hard or holding things too loosely), often seeking deep pressure to get a better sense of your body.'
 ];
 
-export const SENSORT_SLICE_COLORS = [
+export const SENSORY_SLICE_LABELS = [
   'Sound (Auditory)',
   'Internal Sensations (Interoception)',
   'Sight (Visual)',

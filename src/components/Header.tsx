@@ -43,7 +43,7 @@ function Header({ isLockedMode, hideIntro, onHelp }: HeaderProps): JSX.Element {
                 onClick={onHelp}
                 className={styles.helpLink}
               >
-                the help button
+                the green help button
                 <HelpCircle className={styles.helpIcon} />
               </button>
               {' '}for additional guidance.

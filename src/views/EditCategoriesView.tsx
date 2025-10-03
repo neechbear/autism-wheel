@@ -16,14 +16,15 @@
 // Edit Categories view component following Single Responsibility Principle
 // Dedicated interface for users to customize categories displayed on the wheel
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './EditCategoriesView.module.css';
 import { Button } from '../components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../components/ui/dropdown-menu';
 import { GripVertical, ChevronUp, ChevronDown, Trash2, Save } from 'lucide-react';
 import EmojiPicker from '../components/EmojiPicker';
 import { useAppContext, appActions } from '../state/AppContext';
-import { createDefaultCategories } from '../constants/defaults';
+import { createDefaultCategories, createSensoryCategories } from '../constants/defaults';
 import { DEFAULT_SLICE_COLORS } from '../constants/defaults';
 import type { ProfileCategory } from '../types';
 
@@ -31,6 +32,7 @@ function EditCategoriesView(): JSX.Element {
   const { state, dispatch } = useAppContext();
   const [draftCategories, setDraftCategories] = useState<ProfileCategory[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Initialize draft state when component mounts
   useEffect(() => {
@@ -108,8 +110,14 @@ function EditCategoriesView(): JSX.Element {
     dispatch({ type: 'SET_VIEW', payload: 'main' });
   };
 
-  const handleDefaultCategories = () => {
+  const handleLoadAutismWheelCategories = () => {
     setDraftCategories(createDefaultCategories());
+    setDropdownOpen(false);
+  };
+
+  const handleLoadSensoryWheelCategories = () => {
+    setDraftCategories(createSensoryCategories());
+    setDropdownOpen(false);
   };
 
   const handleAddCategory = () => {
@@ -183,7 +191,7 @@ function EditCategoriesView(): JSX.Element {
             You may customise the categories in your autism wheel. You can edit the name, description, icon, and colour for each category. You can also remove and add categories, and reorder categories by dragging the grip handle or using the up/down arrows. Changes are saved when you click the "Save" button.
           </p>
           <p className={styles.introText}>
-            You can discard any unsaved changes and return to the main menu at any time by clicking the "Discard changes" button. Clicking the "Default categories" button will load the default set of categories.
+            You can discard any unsaved changes and return to the main menu at any time by clicking the "Discard changes" button. Clicking the "Load presets" button allows you to choose from predefined category sets.
           </p>
         </div>
 
@@ -197,13 +205,23 @@ function EditCategoriesView(): JSX.Element {
             Discard changes
           </Button>
 
-          <Button
-            onClick={handleDefaultCategories}
-            variant="default"
-            className={styles.blueButton}
-          >
-            Default categories
-          </Button>
+          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+            <DropdownMenuTrigger
+              role="button"
+              className={styles.blueButton}
+            >
+              Load presets
+              <ChevronDown className={styles.buttonIcon} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem onClick={handleLoadAutismWheelCategories}>
+                Autism wheel categories
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLoadSensoryWheelCategories}>
+                Sensory wheel categories
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <Button
             onClick={handleAddCategory}
