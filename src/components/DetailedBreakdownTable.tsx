@@ -194,6 +194,29 @@ function DetailedBreakdownTable(): JSX.Element {
     }
   };
 
+  // Handle creating a new impact value when clicking on empty cell
+  const createNewImpactValue = (categoryId: string, type: 'typical' | 'stressed') => {
+    if (type === 'typical') {
+      // For typical impact, always start with 1
+      updateImpactValue(categoryId, 'typical', 1);
+      startEditing(categoryId, 'typical', 1);
+    } else if (type === 'stressed') {
+      // For stressed impact, only allow if typical impact exists
+      const categoryIndex = categories.findIndex(cat => cat.id === categoryId);
+      if (categoryIndex === -1) return;
+
+      const currentSelections = profile.selections[categoryIndex] || [];
+      const typicalImpact = currentSelections[0] || 0;
+
+      if (typicalImpact > 0) {
+        // Start stress value 1 higher than typical (max 10)
+        const initialStressValue = Math.min(typicalImpact + 1, 10);
+        updateImpactValue(categoryId, 'stressed', initialStressValue);
+        startEditing(categoryId, 'stressed', initialStressValue);
+      }
+    }
+  };
+
   // Get the value to display for support needs (either current edit value or saved value)
   const getPreviewValue = (categoryId: string, type: 'typical' | 'stressed', savedValue: number): number => {
     if (editingCell?.categoryId === categoryId && editingCell?.type === type) {
@@ -442,8 +465,14 @@ function DetailedBreakdownTable(): JSX.Element {
                           </div>
                         </div>
                       ) : (
-                        // Show nothing when there's no typical impact value
-                        <div></div>
+                        // Clickable area to create new typical impact value
+                        <div
+                          className={`${styles.impactValue} ${styles.clickableValue} ${styles.emptyValue}`}
+                          onClick={() => createNewImpactValue(category.id, 'typical')}
+                          title="Click to add typical impact value"
+                        >
+                          <span className={styles.emptyValueText}>+</span>
+                        </div>
                       )}
                     </TableCell>
                   )}
@@ -522,8 +551,19 @@ function DetailedBreakdownTable(): JSX.Element {
                           </div>
                         </div>
                       ) : (
-                        // Show nothing when there's no separate stressed impact value
-                        <div></div>
+                        // Clickable area to create new stressed impact value (only if typical exists)
+                        typicalImpact > 0 ? (
+                          <div
+                            className={`${styles.impactValue} ${styles.clickableValue} ${styles.emptyValue}`}
+                            onClick={() => createNewImpactValue(category.id, 'stressed')}
+                            title="Click to add stressed impact value"
+                          >
+                            <span className={styles.emptyValueText}>+</span>
+                          </div>
+                        ) : (
+                          // Show nothing when there's no typical impact value
+                          <div></div>
+                        )
                       )}
                     </TableCell>
                   )}
