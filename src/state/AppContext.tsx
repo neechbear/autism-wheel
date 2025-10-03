@@ -64,7 +64,7 @@ export type AppAction =
 // Default application state
 const createDefaultState = (): ApplicationState => {
   const tooltipConfig = getTooltipConfig();
-  
+
   return {
     currentView: 'main',
     profile: {
@@ -324,12 +324,12 @@ export function AppProvider({ children }: AppProviderProps): JSX.Element {
   // Apply tooltip settings from URL parameters after any state loading
   useEffect(() => {
     const tooltipConfig = getTooltipConfig();
-    dispatch({ 
-      type: 'UPDATE_TOOLTIP_SETTINGS', 
-      payload: { 
-        disabled: tooltipConfig.disabled, 
-        delayDuration: tooltipConfig.delayDuration 
-      } 
+    dispatch({
+      type: 'UPDATE_TOOLTIP_SETTINGS',
+      payload: {
+        disabled: tooltipConfig.disabled,
+        delayDuration: tooltipConfig.delayDuration
+      }
     });
   }, []);
 
