@@ -47,28 +47,28 @@ export const createSensoryCategories = (): ProfileCategory[] => {
 
 export const SENSORY_SLICE_DESCRIPTIONS = [
   'Your unique response to sound. A low score indicates you can generally filter background noise and tolerate everyday sounds. A high score reflects extreme sensitivity (hyper), where common noises are painful or overwhelming, or under-sensitivity (hypo), where you might seek out loud, intense sounds to feel regulated.',
-  'Your ability to perceive signals from inside your body. A low score means you reliably notice internal cues like hunger, thirst, or pain. A high score reflects difficulty recognising these signals, which can lead to not eating until famished, not drinking until dehydrated, or not identifying emotions until they become overwhelming.',
   'Your experience of the visual world. A low score suggests you handle typical lighting and visual clutter comfortably. A high score can mean hypersensitivity, where bright lights or busy patterns are disorienting, or hyposensitivity, where you might be drawn to intense visual stimuli like flashing lights to feel engaged.',
   'Your sensitivity and reaction to different scents. A low score means you notice smells but are not typically overwhelmed. A high score can indicate hypersensitivity, where common smells like perfume or food are nauseating, or hyposensitivity, where you might not notice strong odours or may actively seek them out.',
-  'Your sensitivity to flavours and textures in your mouth. A low score means you enjoy a varied diet without issue. A high score can mean hypersensitivity leading to a restricted diet where certain textures are unbearable, or hyposensitivity where you crave extremely strong flavours (e.g., very spicy or sour) to register the taste.',
   'Your experience of physical contact and textures on your skin. A low score indicates comfort with varied clothing, temperatures, and types of touch. A high score can mean hypersensitivity, making clothing tags or light touch feel painful, or hyposensitivity, where you might not notice pain or may seek deep pressure to feel calm.',
+  'Your sensitivity to flavours and textures in your mouth. A low score means you enjoy a varied diet without issue. A high score can mean hypersensitivity leading to a restricted diet where certain textures are unbearable, or hyposensitivity where you crave extremely strong flavours (e.g., very spicy or sour) to register the taste.',
+  'Your ability to perceive signals from inside your body. A low score means you reliably notice internal cues like hunger, thirst, or pain. A high score reflects difficulty recognising these signals, which can lead to not eating until famished, not drinking until dehydrated, or not identifying emotions until they become overwhelming.',
   'Your internal sense of balance, movement, and spatial orientation. A low score suggests you feel stable and coordinated. A high score might reflect hypersensitivity, causing motion sickness from small movements, or hyposensitivity, leading to a need for intense movement like spinning or rocking to feel regulated.',
   'Your brain\'s unconscious awareness of where your body is in space. A low score means you move with confidence and rarely misjudge force. A high score can manifest as clumsiness, bumping into objects, or using too much or too little force (e.g., writing too hard or holding things too loosely), often seeking deep pressure to get a better sense of your body.'
 ];
 
 export const SENSORY_SLICE_LABELS = [
   'Sound (Auditory)',
-  'Internal Sensations (Interoception)',
   'Sight (Visual)',
   'Smell (Olfactory)',
-  'Taste (Gustatory)',
   'Touch (Tactile)',
+  'Taste (Gustatory)',
+  'Internal Sensations (Interoception)',
   'Balance (Vestibular)',
   'Body Awareness (Proprioception)'
 ];
 
 export const SENSORY_SLICE_ICONS = [
-  '👂','👁️','✋','💝','👃','👅','🤸‍♀','🚶‍♂️'
+  '👂','👁️','👃','✋','👅','💝','🤸‍♀','🚶‍♂️'
 ]
 
 export const DEFAULT_SLICE_LABELS = [
