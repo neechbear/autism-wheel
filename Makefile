@@ -21,7 +21,7 @@ export CLOUDSDK_CORE_PROJECT
 
 .DEFAULT_GOAL := all
 
-.PHONY: all clean install build dev test test-headed test-ui format lint type-check preview deps-check deps-update deps-audit screenshots
+.PHONY: all clean install build dev test test-headed test-ui format lint type-check preview deps-check deps-update deps-audit screenshots samples
 
 all: clean install build test
 
@@ -41,7 +41,7 @@ dev: install
 $(DIST_DIR)/index.html: install
 	$(PACKAGE_MANAGER) run build
 
-deploy: clean $(DIST_DIR)/index.html test
+deploy: clean $(DIST_DIR)/index.html screenshots test
 	mkdir -pv backup
 	gcloud storage cp gs://www.myautisticprofile.com/index.html backup/index-$(TIMESTAMP).html || \
 	gsutil cp gs://www.myautisticprofile.com/index.html backup/index-$(TIMESTAMP).html
@@ -59,16 +59,12 @@ test-headed: install
 test-ui: install
 	npx playwright test --ui
 
-screenshots: $(SCREENSHOT_FILES)
+screenshots: $(SCREENSHOT_FILES) samples
 
-$(SCREENSHOT_FILES): install
+samples $(SCREENSHOT_FILES): $(DIST_DIR)/index.html
 	mkdir -pv $(SCREENSHOT_DIR)
-	lsof -ti:$(DEV_PORT) | xargs kill -9 2>/dev/null || true
-	VITE_PORT=$(DEV_PORT) $(PACKAGE_MANAGER) run dev -- --port $(DEV_PORT) --host $(DEV_HOST) --no-open > /dev/null 2>&1 & \
-	DEV_PID=$$!; \
-	sleep 5; \
-	node scripts/screenshot.js $(TEST_URL) $@ $(basename $(notdir $@) .png); \
-	kill $$DEV_PID 2>/dev/null || true
+	node scripts/screenshot.js file://$(abspath $<) $(SCREENSHOT_DIR) $(basename $(notdir $@))
+	find $(SCREENSHOT_DIR) -ls
 
 preview: build
 	npx vite preview
