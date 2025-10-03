@@ -3,15 +3,15 @@ import { test, expect } from '@playwright/test';
 test.describe('Application Loading & Core UI Elements', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible({ timeout: 15000 });
   });
 
   test('should load the application with correct title and heading', async ({ page }) => {
     // Check page title
-    await expect(page).toHaveTitle('Autism Wheel');
+    await expect(page).toHaveTitle('My Autism Wheel');
 
     // Check main heading is visible
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
   });
 
   test('should display basic UI elements', async ({ page }) => {
@@ -39,6 +39,6 @@ test.describe('Application Loading & Core UI Elements', () => {
 
     // Verify we can return to main view using the Return to app button
     await page.getByRole('button', { name: 'Return to app' }).first().click();
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
   });
 });

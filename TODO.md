@@ -133,50 +133,6 @@ compliance with the style guide defined in `.github/copilot-instructions.md`.
 
 ## Priority 6: Code Quality & MaintenanceFunctionality)
 
-### 1.1 localStorage Persistence Implementation
-
-**Status:** ❌ Missing (Core Requirement Violation)
-**Impact:** Users lose work on page refresh
-**Location:** `src/state/AppContext.tsx`
-
-The style guide mandates localStorage persistence as a "core requirement for
-usability" but this is not implemented.
-
-**Required Changes:**
-
-- [ ] Add `saveStateToLocalStorage(state: ApplicationState): void` function
-- [ ] Add `loadStateFromLocalStorage(): ApplicationState | null` function
-- [ ] Initialize state from localStorage on app startup
-- [ ] Auto-save state changes to localStorage
-- [ ] Add error handling for localStorage failures
-
-**Estimated Effort:** 2-3 hours
-
-### 1.2 State Loading Priority Order
-
-**Status:** ❌ Missing (Section 9.5 Violation)
-**Impact:** Incorrect state loading behavior
-**Location:** `src/state/AppContext.tsx` or `src/state/MigrateState.ts`
-
-Section 9.5 specifies strict state loading precedence that is not implemented.
-
-**Required Order:**
-
-1. URL Query String ✅ (appears implemented)
-2. Meta Tag (offline context) ❓ (needs verification)
-3. Local Browser Storage ❌ (missing)
-4. Meta Tag (web context) ❓ (needs verification)
-5. Default State ✅ (implemented)
-
-**Required Changes:**
-
-- [ ] Implement loadStateFromLocalStorage integration
-- [ ] Verify meta tag loading works correctly
-- [ ] Ensure precedence order is strictly followed
-- [ ] Add logging/debugging for state source tracking
-
-**Estimated Effort:** 3-4 hours
-
 ## Priority 2: TypeScript & Component Standards
 
 ### 2.1 React.FC Type Annotations
@@ -289,25 +245,6 @@ Section 8.1 requires 14px base font size using CSS variables.
 
 ## Priority 4: Architecture & Component Structure
 
-### 4.1 ViewOptions Component Extraction
-
-**Status:** ❌ Missing (Section 6.1)
-**Impact:** Component decomposition violation
-**Location:** `src/views/MainView.tsx`
-
-Section 6.1 requires separate `ViewOptions.tsx` component.
-
-**Current Status:** ViewOptions exists but may not be properly extracted
-
-**Required Changes:**
-
-- [ ] Verify ViewOptions component is properly separated
-- [ ] Ensure it handles Numbers/Labels/Icons/Theme controls
-- [ ] Confirm it reads from and updates global AppSettings
-- [ ] Remove any remaining view options logic from MainView
-
-**Estimated Effort:** 1-2 hours
-
 ### 4.2 Component Prop Destructuring
 
 **Status:** ⚠️ Inconsistent (Section 3.3)
@@ -416,8 +353,8 @@ Complete component structure improvements and accessibility audits.
 
 ---
 
-**Total Estimated Effort:** 37-59 hours
-**Recommended Completion Timeline:** 2-4 weeks
+**Total Estimated Effort:** 30-50 hours
+**Recommended Completion Timeline:** 2-3 weeks
 
 **Note:** This TODO represents a comprehensive audit. Not all items may need
 to be completed immediately. Prioritize based on current project needs and

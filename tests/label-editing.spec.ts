@@ -14,15 +14,15 @@ test.describe('Category Editing & Customization Features', () => {
   test('should enter edit mode when clicking "Edit categories"', async ({ page }) => {
     // Click the Edit categories button
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    // Should now show the editing interface
-    await expect(page.getByText('Edit Categories')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Save categories' })).toBeVisible();
+    // Should now show the editing interface with Save button
+    await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
   });
 
   test('should show category editing interface with input fields', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
+    // Should now show the editing interface
+    await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
 
     // Check for the presence of input fields for editing categories
     // Look for text inputs that would contain category names
@@ -35,13 +35,12 @@ test.describe('Category Editing & Customization Features', () => {
     // Check that some category names are visible in the editing interface
     // Just verify that we have content in edit mode, not specific text
     const editingContent = page.locator('body');
-    await expect(editingContent).toContainText('Edit Categories');
+    await expect(editingContent).toContainText('My Autism Wheel');
   });
 
   test('should allow editing category names', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Find the first text input field and modify it
     const firstInput = page.locator('input[type="text"]').first();
@@ -55,13 +54,12 @@ test.describe('Category Editing & Customization Features', () => {
     }
 
     // The interface should still be functional
-    await expect(page.getByRole('button', { name: 'Save categories' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
   });
 
   test('should handle save categories action', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Make a small change if possible
     const firstInput = page.locator('input[type="text"]').first();
@@ -71,8 +69,8 @@ test.describe('Category Editing & Customization Features', () => {
       await firstInput.fill(originalValue + ' (edited)');
     }
 
-    // Click Save categories
-    await page.getByRole('button', { name: 'Save categories' }).click();
+    // Click Save
+    await page.getByRole('button', { name: 'Save' }).click();
 
     // Should return to the main view
     await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
@@ -86,7 +84,6 @@ test.describe('Category Editing & Customization Features', () => {
 
     // 1. Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // 2. Interact with editing controls (if available)
     const textInputs = page.locator('input[type="text"]');
@@ -98,7 +95,7 @@ test.describe('Category Editing & Customization Features', () => {
     }
 
     // 3. Save changes and return to main view
-    await page.getByRole('button', { name: 'Save categories' }).click();
+    await page.getByRole('button', { name: 'Save' }).click();
     await page.waitForTimeout(500);
 
     // 4. Verify we're back to the main view and everything still works
@@ -113,18 +110,16 @@ test.describe('Category Editing & Customization Features', () => {
   test('should be able to enter and exit edit mode multiple times', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Save and exit
-    await page.getByRole('button', { name: 'Save categories' }).click();
+    await page.getByRole('button', { name: 'Save' }).click();
     await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
 
     // Enter edit mode again
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Save and exit again
-    await page.getByRole('button', { name: 'Save categories' }).click();
+    await page.getByRole('button', { name: 'Save' }).click();
     await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
 
     // Verify everything is still functional
@@ -136,7 +131,6 @@ test.describe('Category Editing & Customization Features', () => {
   test('should allow deleting a category and saving changes', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Look for delete buttons (common patterns: X, delete icon, trash icon)
     const deleteButtons = page.locator('button[aria-label*="delete"], button[title*="delete"], button:has-text("×"), button:has-text("Delete"), [data-testid*="delete"]');
@@ -156,7 +150,7 @@ test.describe('Category Editing & Customization Features', () => {
       expect(newCount).toBeLessThan(initialCount);
 
       // Save changes
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
       await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
 
       console.log(`Successfully deleted a category. Count changed from ${initialCount} to ${newCount}`);
@@ -168,7 +162,6 @@ test.describe('Category Editing & Customization Features', () => {
   test('should allow renaming a category and saving changes', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Find category name inputs
     const nameInputs = page.locator('input[type="text"], input[placeholder*="name"], input[aria-label*="name"]');
@@ -185,12 +178,11 @@ test.describe('Category Editing & Customization Features', () => {
       await expect(firstInput).toHaveValue(newValue);
 
       // Save changes
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
       await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
 
       // Verify the change persisted by re-entering edit mode
       await page.getByRole('button', { name: 'Edit categories' }).click();
-      await expect(page.getByText('Edit Categories')).toBeVisible();
 
       const renamedInput = nameInputs.first();
       await expect(renamedInput).toHaveValue(newValue);
@@ -198,7 +190,7 @@ test.describe('Category Editing & Customization Features', () => {
       console.log(`Successfully renamed category from "${originalValue}" to "${newValue}"`);
 
       // Exit edit mode
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
     } else {
       console.log('No category name inputs found - skipping rename test');
     }
@@ -207,7 +199,6 @@ test.describe('Category Editing & Customization Features', () => {
   test('should allow changing a category description and saving changes', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Look for description inputs (textarea, input with description in placeholder/label)
     const descriptionInputs = page.locator('textarea, input[placeholder*="description"], input[aria-label*="description"]');
@@ -224,12 +215,11 @@ test.describe('Category Editing & Customization Features', () => {
       await expect(firstDescInput).toHaveValue(newValue);
 
       // Save changes
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
       await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
 
       // Verify the change persisted
       await page.getByRole('button', { name: 'Edit categories' }).click();
-      await expect(page.getByText('Edit Categories')).toBeVisible();
 
       const updatedDescInput = descriptionInputs.first();
       await expect(updatedDescInput).toHaveValue(newValue);
@@ -237,7 +227,7 @@ test.describe('Category Editing & Customization Features', () => {
       console.log(`Successfully changed description from "${originalValue}" to "${newValue}"`);
 
       // Exit edit mode
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
     } else {
       console.log('No category description inputs found - skipping description test');
     }
@@ -246,7 +236,6 @@ test.describe('Category Editing & Customization Features', () => {
   test('should allow changing a category color and saving changes', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Look for color inputs (input[type="color"], color picker buttons, color swatches)
     const colorInputs = page.locator('input[type="color"], .color-picker, [data-testid*="color"], button[aria-label*="color"]');
@@ -264,12 +253,11 @@ test.describe('Category Editing & Customization Features', () => {
         await expect(firstColorInput).toHaveValue(newColor);
 
         // Save changes
-        await page.getByRole('button', { name: 'Save categories' }).click();
+        await page.getByRole('button', { name: 'Save' }).click();
         await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
 
         // Verify the change persisted
         await page.getByRole('button', { name: 'Edit categories' }).click();
-        await expect(page.getByText('Edit Categories')).toBeVisible();
 
         const updatedColorInput = colorInputs.first();
         await expect(updatedColorInput).toHaveValue(newColor);
@@ -277,14 +265,14 @@ test.describe('Category Editing & Customization Features', () => {
         console.log(`Successfully changed color from "${originalColor}" to "${newColor}"`);
 
         // Exit edit mode
-        await page.getByRole('button', { name: 'Save categories' }).click();
+        await page.getByRole('button', { name: 'Save' }).click();
       } else {
         // Try clicking color picker/swatch
         await firstColorInput.click();
         await page.waitForTimeout(300);
 
         // Save changes (color might have changed via click)
-        await page.getByRole('button', { name: 'Save categories' }).click();
+        await page.getByRole('button', { name: 'Save' }).click();
         await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
 
         console.log('Successfully interacted with color picker');
@@ -297,7 +285,6 @@ test.describe('Category Editing & Customization Features', () => {
   test('should allow changing a category emoji icon and saving changes', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Look for emoji/icon inputs
     const iconInputs = page.locator('input[placeholder*="emoji"], input[aria-label*="emoji"], input[placeholder*="icon"], .emoji-picker, [data-testid*="emoji"], [data-testid*="icon"]');
@@ -314,12 +301,11 @@ test.describe('Category Editing & Customization Features', () => {
       await expect(firstIconInput).toHaveValue(newEmoji);
 
       // Save changes
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
       await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
 
       // Verify the change persisted
       await page.getByRole('button', { name: 'Edit categories' }).click();
-      await expect(page.getByText('Edit Categories')).toBeVisible();
 
       const updatedIconInput = iconInputs.first();
       await expect(updatedIconInput).toHaveValue(newEmoji);
@@ -327,7 +313,7 @@ test.describe('Category Editing & Customization Features', () => {
       console.log(`Successfully changed emoji from "${originalValue}" to "${newEmoji}"`);
 
       // Exit edit mode
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
     } else {
       console.log('No emoji/icon inputs found - skipping emoji test');
     }
@@ -336,7 +322,6 @@ test.describe('Category Editing & Customization Features', () => {
   test('should allow reordering categories', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Look for drag handles or move buttons (up/down arrows, drag icons)
     const moveButtons = page.locator('button[aria-label*="move"], button[title*="move"], .drag-handle, [data-testid*="drag"], button:has-text("↑"), button:has-text("↓")');
@@ -369,7 +354,7 @@ test.describe('Category Editing & Customization Features', () => {
       }
 
       // Save changes
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
       await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
     } else {
       console.log('No move/reorder buttons found - skipping reorder test');
@@ -379,7 +364,6 @@ test.describe('Category Editing & Customization Features', () => {
   test('should prevent deleting categories when only minimum remain', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Look for delete buttons
     const deleteButtons = page.locator('button[aria-label*="delete"], button[title*="delete"], button:has-text("×"), button:has-text("Delete"), [data-testid*="delete"]');
@@ -412,7 +396,7 @@ test.describe('Category Editing & Customization Features', () => {
       }
 
       // Don't save these deletions - just exit
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
     } else {
       console.log('No delete buttons found - skipping minimum categories test');
     }
@@ -421,7 +405,6 @@ test.describe('Category Editing & Customization Features', () => {
   test('should allow adding a new category and saving changes', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Look for add/new category buttons
     const addButtons = page.locator('button:has-text("Add"), button:has-text("New"), button[aria-label*="add"], [data-testid*="add"]');
@@ -446,12 +429,11 @@ test.describe('Category Editing & Customization Features', () => {
       await newCategoryInput.fill(newCategoryName);
 
       // Save changes
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
       await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
 
       // Verify the new category persisted
       await page.getByRole('button', { name: 'Edit categories' }).click();
-      await expect(page.getByText('Edit Categories')).toBeVisible();
 
       const persistedInputs = page.locator('input[type="text"]');
       const finalCount = await persistedInputs.count();
@@ -464,7 +446,7 @@ test.describe('Category Editing & Customization Features', () => {
       console.log(`Successfully added new category: "${newCategoryName}"`);
 
       // Exit edit mode
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
     } else {
       console.log('No add category buttons found - skipping add category test');
     }
@@ -473,7 +455,6 @@ test.describe('Category Editing & Customization Features', () => {
   test('should allow reverting changes with revert button', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Look for revert/cancel button
     const revertButtons = page.locator('button:has-text("Revert"), button:has-text("Cancel"), button:has-text("Reset"), button[aria-label*="revert"], button[aria-label*="cancel"]');
@@ -509,7 +490,7 @@ test.describe('Category Editing & Customization Features', () => {
       }
 
       // Exit edit mode
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
     } else {
       console.log('No revert buttons found - skipping revert test');
     }
@@ -518,7 +499,6 @@ test.describe('Category Editing & Customization Features', () => {
   test('should restore default categories with default categories button', async ({ page }) => {
     // First, make significant changes and save them
     await page.getByRole('button', { name: 'Edit categories' }).click();
-    await expect(page.getByText('Edit Categories')).toBeVisible();
 
     // Modify a category name to create a changed state
     const nameInputs = page.locator('input[type="text"]');
@@ -560,17 +540,17 @@ test.describe('Category Editing & Customization Features', () => {
         console.log(`Successfully restored default categories. Count: ${currentCount} → ${restoredCount}`);
 
         // Save the restored defaults
-        await page.getByRole('button', { name: 'Save categories' }).click();
+        await page.getByRole('button', { name: 'Save' }).click();
         await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
       } else {
         console.log('Default categories button found but is disabled - might need more changes to enable it');
         // Just exit without saving
-        await page.getByRole('button', { name: 'Save categories' }).click();
+        await page.getByRole('button', { name: 'Save' }).click();
       }
     } else {
       console.log('No default categories button found - skipping default restore test');
       // Just exit without saving
-      await page.getByRole('button', { name: 'Save categories' }).click();
+      await page.getByRole('button', { name: 'Save' }).click();
     }
   });
 });

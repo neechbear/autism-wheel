@@ -357,7 +357,10 @@ function ActionToolbar(): JSX.Element {
       </Button>
 
       <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-        <DropdownMenuTrigger className={`${styles.button} ${styles.blackButton}`}>
+        <DropdownMenuTrigger
+          role="button"
+          className={`${styles.button} ${styles.blackButton}`}
+        >
           Save diagram
           <ChevronDown className={styles.chevronIcon} />
         </DropdownMenuTrigger>

@@ -10,7 +10,7 @@ test.describe('Export, Save & Share Functions', () => {
     });
 
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible({ timeout: 15000 });
   });
 
   test('should display save diagram button', async ({ page }) => {
@@ -73,7 +73,7 @@ test.describe('Export, Save & Share Functions', () => {
     await page.waitForTimeout(500);
 
     // Verify the page is still functional after the copy operation
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
     const svg = page.locator('svg').first();
     await expect(svg).toBeVisible();
   });
@@ -88,7 +88,7 @@ test.describe('Export, Save & Share Functions', () => {
     await page.waitForTimeout(500);
 
     // Verify the page is still functional after print
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
     const svg = page.locator('svg').first();
     await expect(svg).toBeVisible();
   });
@@ -108,7 +108,7 @@ test.describe('Export, Save & Share Functions', () => {
     await page.waitForTimeout(500);
 
     // Verify the page is still functional
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
     const svg = page.locator('svg').first();
     await expect(svg).toBeVisible();
   });
@@ -366,7 +366,7 @@ test.describe('Export, Save & Share Functions', () => {
     await page.waitForTimeout(300);
 
     // Verify the application remains functional
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
     const svg = page.locator('svg').first();
     await expect(svg).toBeVisible();
   });

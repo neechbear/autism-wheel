@@ -70,13 +70,11 @@ export class HTMLExportTestRunner {
       }
 
       // Return to main view
-      const backButton = page.getByRole('button', { name: /back|main|cancel/i });
-      if (await backButton.count() > 0) {
-        await backButton.click();
-      } else {
-        await page.keyboard.press('Escape');
+      const discardButton = page.getByRole('button', { name: 'Discard changes' });
+      if (await discardButton.count() > 0) {
+        await discardButton.click();
+        await page.waitForTimeout(500);
       }
-      await page.waitForTimeout(500);
     }
 
     console.log('Custom application state setup complete');

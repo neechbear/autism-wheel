@@ -175,7 +175,7 @@ function EditCategoriesView(): JSX.Element {
     <div className="view-container">
       <div className="view-content">
         {/* Main title - same as other views */}
-        <h1 className={styles.title}>Autism Wheel</h1>
+        <h1 className={styles.title}>My Autism Wheel</h1>
 
         {/* Descriptive text */}
         <div className={styles.textSection}>

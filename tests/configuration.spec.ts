@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Display Configuration Controls (Numbers & Theme)', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible({ timeout: 15000 });
   });
 
   test('should display numbers configuration button', async ({ page }) => {
@@ -33,7 +33,7 @@ test.describe('Display Configuration Controls (Numbers & Theme)', () => {
     await page.getByRole('menuitem', { name: 'Left aligned' }).click();
 
     // Verify the dropdown closed and page is still functional
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
   });
 
   test('should open theme dropdown menu when clicked', async ({ page }) => {
@@ -54,7 +54,7 @@ test.describe('Display Configuration Controls (Numbers & Theme)', () => {
     await page.getByRole('menuitem', { name: 'Light' }).click();
 
     // Verify the dropdown closed and page is still functional
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
   });
 
   test('should change theme when selecting different theme options', async ({ page }) => {
@@ -73,7 +73,7 @@ test.describe('Display Configuration Controls (Numbers & Theme)', () => {
     await page.waitForTimeout(500); // Wait for theme change
 
     // Verify the page is still functional after theme changes
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
     const svg = page.locator('svg').first();
     await expect(svg).toBeVisible();
   });
@@ -100,7 +100,7 @@ test.describe('Display Configuration Controls (Numbers & Theme)', () => {
     await page.waitForTimeout(200);
 
     // Verify the page is still functional
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
     const svg = page.locator('svg').first();
     await expect(svg).toBeVisible();
   });

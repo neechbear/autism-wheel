@@ -22,9 +22,8 @@ const testSuites: TestSuite[] = [
       {
         name: 'should load with correct title and heading',
         testFn: async (page: Page, isLocked: boolean) => {
-          const expectedTitle = isLocked ? 'My Autism Wheel' : 'Autism Wheel';
-          await expect(page).toHaveTitle(expectedTitle);
-          await expect(page.getByRole('heading', { name: /Autism Wheel/ })).toBeVisible();
+          await expect(page).toHaveTitle('My Autism Wheel');
+          await expect(page.getByRole('heading', { name: /My Autism Wheel/ })).toBeVisible();
         }
       },
       {

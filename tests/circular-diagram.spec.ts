@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Circular Diagram Display & Segment Interaction', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible({ timeout: 15000 });
   });
 
   test('should display the circular diagram', async ({ page }) => {
