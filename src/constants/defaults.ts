@@ -65,16 +65,16 @@ export const DEFAULT_SLICE_ICONS = [
 ];
 
 export const DEFAULT_SLICE_COLORS = [
-  '#FF6B6B', // Coral red
-  '#4ECDC4', // Turquoise
-  '#45B7D1', // Sky blue
-  '#96CEB4', // Mint green
-  '#FFEAA7', // Soft yellow
-  '#DDA0DD', // Plum
-  '#98D8C8', // Seafoam
-  '#F7DC6F', // Light gold
-  '#BB8FCE', // Lavender
-  '#FFB347'  // Peach (replaced what might have been grey)
+  '#66c5cc',
+  '#f6cf71',
+  '#f89c74',
+  '#dcb0f2',
+  '#87c55f',
+  '#9eb9f3',
+  '#fe88b1',
+  '#c9db74',
+  '#8be0a4',
+  '#b497e7',
 ];
 
 // Emoji categories for the emoji picker
