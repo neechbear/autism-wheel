@@ -16,7 +16,7 @@
 // Radial diagram component - the core SVG wheel visualization
 // Follows Single Responsibility Principle - only handles diagram rendering and interactions
 
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import { useAppContext } from '../state/AppContext';
 import type { ConditionalTooltipProps } from '../types';
@@ -307,7 +307,7 @@ function RadialDiagram({ onSegmentClick, tooltipsDisabled = false, tooltipDelay 
               y1={y1}
               x2={x2}
               y2={y2}
-              stroke={isDarkMode ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.15)"}
+              stroke={isDarkMode ? "#4b5563" : "#d1d5db"}
               strokeWidth={settings.boundaryWeight === 'bold' ? "2" : "1"}
             />
           );
