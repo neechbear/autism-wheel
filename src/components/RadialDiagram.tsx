@@ -560,14 +560,17 @@ function RadialDiagram({ onSegmentClick, tooltipsDisabled = false, tooltipDelay 
           const fontSize = Math.round(maxFontSize - ((numCategories - 2) / (10 - 2)) * (maxFontSize - minFontSize));
 
           // Calculate dynamic radius: slightly closer for fewer categories
-          // 0.5 for 2 categories, 0.7 for 10 categories
+          // 0.5 for 2 categories, 0.75 for 10 categories
           const minRadiusMultiplier = 0.5; // 2 categories (closer to center)
-          const maxRadiusMultiplier = 0.7;  // 10 categories (current position)
+          const maxRadiusMultiplier = 0.75;  // 10 categories (moved further out)
           const radiusMultiplier = minRadiusMultiplier + ((numCategories - 2) / (10 - 2)) * (maxRadiusMultiplier - minRadiusMultiplier);
 
           const iconRadius = MIN_RADIUS * radiusMultiplier;
           const iconX = CENTER_X + iconRadius * Math.cos(angle);
-          const iconY = CENTER_Y + iconRadius * Math.sin(angle);
+          // Apply a larger downward adjustment to compensate for emoji baseline issues
+          // Based on observation that emojis appear too high by about the width of a radial line
+          const verticalOffset = fontSize * 0.15; // 15% of font size downward adjustment
+          const iconY = CENTER_Y + iconRadius * Math.sin(angle) + verticalOffset;
 
           return (
             <text
@@ -575,9 +578,12 @@ function RadialDiagram({ onSegmentClick, tooltipsDisabled = false, tooltipDelay 
               x={iconX}
               y={iconY}
               textAnchor="middle"
-              dominantBaseline="middle"
+              dominantBaseline="central"
               fontSize={fontSize}
-              style={{ pointerEvents: 'none' }}
+              style={{
+                pointerEvents: 'none',
+                alignmentBaseline: 'middle'
+              }}
             >
               {icon}
             </text>
