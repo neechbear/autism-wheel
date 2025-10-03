@@ -25,9 +25,11 @@ import ActionToolbar from '../components/ActionToolbar';
 import DetailedBreakdownTable from '../components/DetailedBreakdownTable';
 import { useAppContext, appActions } from '../state/AppContext';
 import { Button } from '../components/ui/button';
+import { isLockedHtmlMode } from '../utils';
 
 function MainView(): JSX.Element {
   const { state, dispatch } = useAppContext();
+  const isLocked = isLockedHtmlMode();
 
   const handleEditCategories = () => {
     dispatch(appActions.setView('edit'));
@@ -86,16 +88,18 @@ function MainView(): JSX.Element {
         <div className={clsx(styles.actionToolbar, styles.printHidden)}>
           <ActionToolbar />
 
-          <Button
-            onClick={handleEditCategories}
-            className={clsx(styles.button, styles.blueButton)}
-          >
-            Edit Categories
-          </Button>
+          {!isLocked && (
+            <Button
+              onClick={handleEditCategories}
+              className={clsx(styles.button, styles.blueButton)}
+            >
+              Edit Categories
+            </Button>
+          )}
         </div>
 
         {/* View options */}
-        <ViewOptions />
+        {!isLocked && <ViewOptions />}
 
         {/* Main diagram section */}
         <div className={styles.diagramContainer}>
