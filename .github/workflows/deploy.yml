@@ -25,7 +25,49 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-and-test:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set up base path for deployment
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "VITE_BASE_PATH=/autism-wheel/" >> $GITHUB_ENV
+          else
+            echo "VITE_BASE_PATH=/autism-wheel/branch/${{ github.ref_name }}/" >> $GITHUB_ENV
+          fi
+
+      - name: Build project
+        run: npm run build
+        env:
+          VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: build/
+
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -60,34 +102,14 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Set up base path for deployment
-        run: |
-          if [ "${{ github.ref_name }}" = "main" ]; then
-            echo "VITE_BASE_PATH=/autism-wheel/" >> $GITHUB_ENV
-          else
-            echo "VITE_BASE_PATH=/autism-wheel/branch/${{ github.ref_name }}/" >> $GITHUB_ENV
-          fi
-
-      - name: Build project
-        run: npm run build
-        env:
-          VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
-
       - name: Run Playwright tests
         run: npm test
         env:
           CI: true
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifact
-          path: build/
-
   deploy-main:
     runs-on: ubuntu-latest
     if: github.ref_name == 'main'
-    needs: [build-and-test]
+    needs: [build, test]  # Wait for both build AND test to complete successfully
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -107,7 +129,7 @@ jobs:
   deploy-feature:
     runs-on: ubuntu-latest
     if: github.ref_name != 'main'
-    needs: [build-and-test]
+    needs: [build]  # Only wait for build, NOT tests
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v4

@@ -763,7 +763,7 @@ button {
     background-color: white !important;
     background-image: none !important;
   }
-  
+
   /* Preserve colors for elements marked for color preservation */
   *[data-preserve-print-colors],
   *[data-preserve-print-colors]::before,
@@ -789,7 +789,7 @@ button {
     color: black !important;
     border-color: black !important;
   }
-  
+
   /* Preserve border colors for marked elements */
   *[data-preserve-print-colors] {
     border-color: var(--print-border-color) !important;
