@@ -17,7 +17,8 @@
 // Follows Single Responsibility Principle - only handles diagram rendering and interactions
 
 import { useRef } from 'react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { useAppContext } from '../state/AppContext';
 import type { ConditionalTooltipProps } from '../types';
 import { TOTAL_RINGS, CENTER_X, CENTER_Y, MIN_RADIUS, RING_WIDTH, MAX_RADIUS } from '../types';
@@ -30,15 +31,15 @@ function ConditionalTooltip({ children, content, disabled = false, delayDuration
   }
 
   return (
-    <TooltipProvider>
-      <Tooltip delayDuration={delayDuration}>
+    <TooltipProvider delayDuration={delayDuration}>
+      <TooltipPrimitive.Root>
         <TooltipTrigger asChild>
           {children}
         </TooltipTrigger>
         <TooltipContent side="top" className="max-w-diagram-half">
           {content}
         </TooltipContent>
-      </Tooltip>
+      </TooltipPrimitive.Root>
     </TooltipProvider>
   );
 }

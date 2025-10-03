@@ -37,6 +37,7 @@ import {
   DEFAULT_SLICE_COLORS,
 } from '../constants/defaults';
 import { loadAndMigrateState } from './MigrateState';
+import { getTooltipConfig } from '../utils';
 
 // Action types for state updates
 export type AppAction =
@@ -57,33 +58,40 @@ export type AppAction =
   | { type: 'SET_SORT_DIRECTION'; payload: SortDirectionType }
   | { type: 'SET_SHOW_ICONS'; payload: boolean }
   | { type: 'LOAD_STATE'; payload: Partial<ApplicationState> }
+  | { type: 'UPDATE_TOOLTIP_SETTINGS'; payload: { disabled: boolean; delayDuration: number } }
   | { type: 'RESET_TO_DEFAULTS' };
 
 // Default application state
-const createDefaultState = (): ApplicationState => ({
-  currentView: 'main',
-  profile: {
-    selections: {},
-  },
-  categories: DEFAULT_SLICE_LABELS.map((label, index) => ({
-    id: `category-${index}`,
-    name: label,
-    description: DEFAULT_SLICE_DESCRIPTIONS[index],
-    icon: DEFAULT_SLICE_ICONS[index],
-    color: DEFAULT_SLICE_COLORS[index],
-  })),
-  settings: {
-    showNumbers: true,
-    showLabels: true,
-    showIcons: true,
-    theme: 'system',
-    numberPosition: 'center',
-    labelStyle: 'bold',
-    boundaryWeight: 'bold',
-    sortColumn: 'stress',
-    sortDirection: 'desc',
-  },
-});
+const createDefaultState = (): ApplicationState => {
+  const tooltipConfig = getTooltipConfig();
+  
+  return {
+    currentView: 'main',
+    profile: {
+      selections: {},
+    },
+    categories: DEFAULT_SLICE_LABELS.map((label, index) => ({
+      id: `category-${index}`,
+      name: label,
+      description: DEFAULT_SLICE_DESCRIPTIONS[index],
+      icon: DEFAULT_SLICE_ICONS[index],
+      color: DEFAULT_SLICE_COLORS[index],
+    })),
+    settings: {
+      showNumbers: true,
+      showLabels: true,
+      showIcons: true,
+      theme: 'system',
+      numberPosition: 'center',
+      labelStyle: 'bold',
+      boundaryWeight: 'bold',
+      sortColumn: 'stress',
+      sortDirection: 'desc',
+      tooltipDisabled: tooltipConfig.disabled,
+      tooltipDelayDuration: tooltipConfig.delayDuration,
+    },
+  };
+};
 
 // State reducer function
 function appReducer(state: ApplicationState, action: AppAction): ApplicationState {
@@ -246,6 +254,16 @@ function appReducer(state: ApplicationState, action: AppAction): ApplicationStat
     case 'RESET_TO_DEFAULTS':
       return createDefaultState();
 
+    case 'UPDATE_TOOLTIP_SETTINGS':
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          tooltipDisabled: action.payload.disabled,
+          tooltipDelayDuration: action.payload.delayDuration,
+        },
+      };
+
     default:
       return state;
   }
@@ -301,6 +319,18 @@ export function AppProvider({ children }: AppProviderProps): JSX.Element {
     } catch (error) {
       console.warn('Failed to load state:', error);
     }
+  }, []);
+
+  // Apply tooltip settings from URL parameters after any state loading
+  useEffect(() => {
+    const tooltipConfig = getTooltipConfig();
+    dispatch({ 
+      type: 'UPDATE_TOOLTIP_SETTINGS', 
+      payload: { 
+        disabled: tooltipConfig.disabled, 
+        delayDuration: tooltipConfig.delayDuration 
+      } 
+    });
   }, []);
 
   // Save state to localStorage whenever it changes

@@ -104,7 +104,11 @@ function MainView(): JSX.Element {
 
         {/* Main diagram section */}
         <div className={styles.diagramContainer}>
-          <RadialDiagram onSegmentClick={handleSegmentClick} />
+          <RadialDiagram 
+            onSegmentClick={handleSegmentClick}
+            tooltipsDisabled={state.settings.tooltipDisabled}
+            tooltipDelay={state.settings.tooltipDelayDuration}
+          />
         </div>
 
         {/* Detailed breakdown table */}
