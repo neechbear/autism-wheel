@@ -92,6 +92,7 @@ function MainView(): JSX.Element {
             <Button
               onClick={handleEditCategories}
               className={clsx(styles.button, styles.blueButton)}
+              data-testid="edit-categories-button"
             >
               Edit Categories
             </Button>
