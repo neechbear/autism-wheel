@@ -145,7 +145,7 @@
   --accent-foreground: oklch(0.985 0 0); /* Text on accent backgrounds - very light gray/white */
 
   --destructive: oklch(0.396 0.141 25.723); /* Delete/error button background - dark red */
-  --destructive-foreground: oklch(0.637 0.237 25.331); /* Text on destructive buttons - light red */
+  --destructive-foreground: #ffffff; /* Text on destructive buttons - white */
 
   --border: oklch(0.269 0 0);           /* Borders - medium dark gray */
   --input: oklch(0.269 0 0);            /* Input field background - medium dark gray */
