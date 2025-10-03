@@ -55,7 +55,7 @@ const HelpView: React.FC<HelpViewProps> = () => {
     <div className="view-container">
       <div className="view-content">
         {/* Main title - same as main page */}
-        <h1 className={styles.title}>Autism Wheel</h1>
+        <h1 className={styles.title}>My Autism Wheel</h1>
 
         {/* Top return button */}
         <div className={styles.buttonContainer}>
