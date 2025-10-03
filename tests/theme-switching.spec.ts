@@ -73,18 +73,33 @@ test.describe('Theme Selection & Visual Appearance Changes', () => {
   });
 
   test('should cycle through all themes without errors', async ({ page }) => {
-    const themeButton = page.getByRole('button', { name: /Theme/ });
-
     const themes = ['Light', 'Dark', 'Use system'];
 
     for (const theme of themes) {
+      // Find and click the theme button - be more specific about finding it
+      const themeButton = page.getByRole('button', { name: /Theme/ });
+      await expect(themeButton).toBeVisible({ timeout: 10000 });
+      
+      // Check if dropdown is already open, if so close it first
+      const isDropdownOpen = await page.locator('[role="menu"]').isVisible().catch(() => false);
+      if (isDropdownOpen) {
+        // Click somewhere else to close the dropdown
+        await page.locator('body').click();
+        await page.waitForTimeout(200);
+      }
+      
       // Open theme dropdown
       await themeButton.click();
-      await page.waitForTimeout(200);
+      await page.waitForTimeout(500); // Increased timeout
+      
+      // Wait for the dropdown menu to appear
+      await expect(page.locator('[role="menu"]')).toBeVisible({ timeout: 5000 });
 
       // Select the theme
-      await page.getByRole('menuitem', { name: theme }).click();
-      await page.waitForTimeout(500);
+      const menuItem = page.getByRole('menuitem', { name: theme });
+      await expect(menuItem).toBeVisible({ timeout: 5000 });
+      await menuItem.click();
+      await page.waitForTimeout(700); // Increased timeout for theme change
 
       // Verify the page is still functional
       await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
@@ -96,10 +111,25 @@ test.describe('Theme Selection & Visual Appearance Changes', () => {
   test('should maintain theme selection after page interaction', async ({ page }) => {
     // Switch to dark theme
     const themeButton = page.getByRole('button', { name: /Theme/ });
+    await expect(themeButton).toBeVisible({ timeout: 10000 });
+    
+    // Check if dropdown is already open, if so close it first
+    const isDropdownOpen = await page.locator('[role="menu"]').isVisible().catch(() => false);
+    if (isDropdownOpen) {
+      await page.locator('body').click();
+      await page.waitForTimeout(200);
+    }
+    
     await themeButton.click();
-    await page.waitForTimeout(200);
-    await page.getByRole('menuitem', { name: 'Dark' }).click();
     await page.waitForTimeout(500);
+    
+    // Wait for dropdown to appear
+    await expect(page.locator('[role="menu"]')).toBeVisible({ timeout: 5000 });
+    
+    const darkMenuItem = page.getByRole('menuitem', { name: 'Dark' });
+    await expect(darkMenuItem).toBeVisible({ timeout: 5000 });
+    await darkMenuItem.click();
+    await page.waitForTimeout(700);
 
     // Interact with other parts of the application
     const firstSegment = page.locator('[data-testid^="segment-"]').first();
