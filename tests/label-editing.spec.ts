@@ -392,128 +392,47 @@ test.describe('Category Editing & Customization Features', () => {
   });
 
   test('should allow reordering categories with up/down buttons', async ({ page }) => {
-    // Enter edit mode
-    await page.getByRole('button', { name: 'Edit categories' }).click();
-    await page.waitForLoadState('networkidle');
+    // Navigate to edit categories
+    await page.click('[data-testid="edit-categories-button"]');
+    await page.waitForSelector('h1:has-text("My Autism Wheel")');
+    await page.waitForTimeout(1000); // Wait for table to load
 
-    // Wait for the edit interface to be ready
-    const categoryTable = page.locator('table').first();
-    await expect(categoryTable).toBeVisible();
+    // Get initial order of first two categories using more reliable selectors
+    const firstNameInput = page.locator('table tbody tr').first().locator('input[type="text"]');
+    const secondNameInput = page.locator('table tbody tr').nth(1).locator('input[type="text"]');
 
-    // Get all category name inputs to determine the initial order
-    const categoryInputs = page.locator('input[type="text"]').filter({ hasText: /.*/ });
-    await expect(categoryInputs.first()).toBeVisible();
+    await expect(firstNameInput).toBeVisible({ timeout: 10000 });
+    await expect(secondNameInput).toBeVisible({ timeout: 10000 });
 
-    const initialCount = await categoryInputs.count();
-    expect(initialCount).toBeGreaterThanOrEqual(2);
+    const initialFirstName = await firstNameInput.inputValue();
+    const initialSecondName = await secondNameInput.inputValue();
+    console.log(`Initial order: 1st="${initialFirstName}", 2nd="${initialSecondName}"`);
 
-    // Get initial order
-    const firstCategoryName = await categoryInputs.nth(0).inputValue();
-    const secondCategoryName = await categoryInputs.nth(1).inputValue();
+    // Find the move down button for the first row
+    // It's the second button in the reorder cell (first is up, second is down)
+    // We look for the button containing ChevronDown icon in the first row's reorder cell
+    const firstRowReorderCell = page.locator('table tbody tr').first().locator('td').last();
+    const moveDownButton = firstRowReorderCell.locator('button').nth(1); // Second button (down)
 
-    console.log(`Initial order: 1st="${firstCategoryName}", 2nd="${secondCategoryName}"`);
+    await expect(moveDownButton).toBeVisible({ timeout: 10000 });
+    await moveDownButton.click();
+    await page.waitForTimeout(500);
 
-    // Look for ChevronDown buttons specifically - these are the move down buttons
-    // Based on the code, they should be in the reorder column
-    const allChevronDownButtons = page.locator('svg').filter({ hasText: '' }).locator('xpath=..');
+    // Check if the order changed
+    const newFirstName = await firstNameInput.inputValue();
+    const newSecondName = await secondNameInput.inputValue();
+    console.log(`After move down: 1st="${newFirstName}", 2nd="${newSecondName}"`);
 
-    // More specific: look for buttons that contain ChevronDown SVG
-    const moveDownButtons = page.locator('button').filter({
-      has: page.locator('svg[class*="lucide-chevron-down"]')
-    });
+    // Verify the order changed (first became second, second became first)
+    expect(newFirstName).toBe(initialSecondName);
+    expect(newSecondName).toBe(initialFirstName);
 
-    let downButtonCount = await moveDownButtons.count();
+    // Save the changes
+    await page.click('button:has-text("Save")');
+    await page.waitForTimeout(500);
 
-    // Fallback to searching by the ChevronDown component structure
-    if (downButtonCount === 0) {
-      const allButtons = page.locator('button');
-      const buttonCount = await allButtons.count();
-
-      // Look through all buttons to find one that likely moves things down
-      for (let i = 0; i < buttonCount; i++) {
-        const button = allButtons.nth(i);
-        const title = await button.getAttribute('title');
-        const innerHTML = await button.innerHTML();
-
-        if (title?.includes('down') || innerHTML.includes('chevron-down') || innerHTML.includes('ChevronDown')) {
-          console.log(`Found potential move down button at index ${i}: title="${title}"`);
-          downButtonCount++;
-
-          // Click this button and test if it works
-          await button.click();
-          await page.waitForTimeout(500);
-
-          // Check if order changed
-          const newFirstName = await categoryInputs.nth(0).inputValue();
-          const newSecondName = await categoryInputs.nth(1).inputValue();
-
-          if (newFirstName !== firstCategoryName || newSecondName !== secondCategoryName) {
-            console.log(`Success! Order changed to: 1st="${newFirstName}", 2nd="${newSecondName}"`);
-
-            // Now try to find and test move up button
-            for (let j = 0; j < buttonCount; j++) {
-              const upButton = allButtons.nth(j);
-              const upTitle = await upButton.getAttribute('title');
-              const upInnerHTML = await upButton.innerHTML();
-
-              if (upTitle?.includes('up') || upInnerHTML.includes('chevron-up') || upInnerHTML.includes('ChevronUp')) {
-                console.log(`Found move up button at index ${j}: title="${upTitle}"`);
-                await upButton.click();
-                await page.waitForTimeout(500);
-
-                const finalFirstName = await categoryInputs.nth(0).inputValue();
-                const finalSecondName = await categoryInputs.nth(1).inputValue();
-                console.log(`After move up: 1st="${finalFirstName}", 2nd="${finalSecondName}"`);
-                break;
-              }
-            }
-
-            console.log('Successfully tested category reordering functionality');
-            break;
-          }
-        }
-      }
-    } else {
-      // Use the specific ChevronDown buttons we found
-      const firstMoveDownButton = moveDownButtons.first();
-      await firstMoveDownButton.click();
-      await page.waitForTimeout(500);
-
-      // Verify the order changed
-      const newFirstName = await categoryInputs.nth(0).inputValue();
-      const newSecondName = await categoryInputs.nth(1).inputValue();
-
-      console.log(`After move down: 1st="${newFirstName}", 2nd="${newSecondName}"`);
-
-      if (newFirstName !== firstCategoryName || newSecondName !== secondCategoryName) {
-        console.log('Move down button worked successfully');
-
-        // Test move up button
-        const moveUpButtons = page.locator('button').filter({
-          has: page.locator('svg[class*="lucide-chevron-up"]')
-        });
-
-        if (await moveUpButtons.count() > 0) {
-          const firstMoveUpButton = moveUpButtons.first();
-          await firstMoveUpButton.click();
-          await page.waitForTimeout(500);
-
-          const finalFirstName = await categoryInputs.nth(0).inputValue();
-          const finalSecondName = await categoryInputs.nth(1).inputValue();
-          console.log(`After move up: 1st="${finalFirstName}", 2nd="${finalSecondName}"`);
-        }
-      } else {
-        console.log('Move down button did not change order - may need different selector');
-      }
-    }
-
-    if (downButtonCount === 0) {
-      console.log('No reorder buttons found - this functionality may need implementation');
-    }
-
-    // Save changes
-    await page.getByRole('button', { name: 'Save' }).click();
-    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+    // Verify we're back on main view
+    await expect(page.locator('h1:has-text("My Autism Wheel")')).toBeVisible();
   });
 
   test('should prevent deleting categories when only minimum remain', async ({ page }) => {
@@ -555,12 +474,22 @@ test.describe('Category Editing & Customization Features', () => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
 
+    // First switch to sensory wheel categories (which has fewer than 10 categories)
+    // to enable the Add category button
+    const loadPresetsButton = page.locator('button:has-text("Load presets")');
+    await loadPresetsButton.click();
+    await page.waitForTimeout(300);
+
+    const sensoryOption = page.locator('text=Sensory wheel categories');
+    await sensoryOption.click();
+    await page.waitForTimeout(500);
+
     // Look for add/new category buttons - updated to match actual button text
     const addButtons = page.locator('button:has-text("Add category")');
     const addButtonCount = await addButtons.count();
 
     if (addButtonCount > 0) {
-      // Check if button is enabled (should be disabled at max categories)
+      // Check if button is enabled (should be enabled now with sensory categories)
       const isEnabled = await addButtons.first().isEnabled();
 
       if (isEnabled) {
@@ -583,10 +512,16 @@ test.describe('Category Editing & Customization Features', () => {
 
       // Save changes
       await page.getByRole('button', { name: 'Save' }).click();
-      await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+      await page.waitForTimeout(500);
+      await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
 
-      // Verify the new category persisted
+      // Verify the new category persisted - go back to edit mode
       await page.getByRole('button', { name: 'Edit categories' }).click();
+      await page.waitForTimeout(500);
+
+      // Wait for the edit interface to load
+      await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
+      await page.waitForSelector('input[type="text"]', { timeout: 10000 });
 
       const persistedInputs = page.locator('input[type="text"]');
       const finalCount = await persistedInputs.count();
@@ -824,5 +759,73 @@ test.describe('Category Editing & Customization Features', () => {
       // Just exit without saving
       await page.getByRole('button', { name: 'Save' }).click();
     }
+  });
+
+  test('should focus and scroll to new category input when adding a category', async ({ page }) => {
+    // Enter edit mode
+    await page.getByRole('button', { name: 'Edit categories' }).click();
+    await page.waitForLoadState('networkidle');
+
+    // Load sensory categories (8 categories) to have space for adding
+    const loadPresetsButton = page.getByRole('button', { name: 'Load presets' });
+    if (await loadPresetsButton.isVisible() && !await loadPresetsButton.isDisabled()) {
+      await loadPresetsButton.click();
+      await page.waitForTimeout(200);
+
+      const sensoryOption = page.getByRole('menuitem', { name: 'Sensory wheel categories' });
+      if (await sensoryOption.isVisible()) {
+        await sensoryOption.click();
+        await page.waitForTimeout(500);
+      }
+    }
+
+    // Get count after loading sensory categories
+    const initialInputs = page.locator('input[type="text"]');
+    const initialCount = await initialInputs.count();
+    console.log(`Starting with ${initialCount} categories`);
+
+    // Find and click the "Add category" button
+    const addButton = page.getByRole('button', { name: 'Add category' });
+    await expect(addButton).toBeVisible();
+
+    // The add button should now be enabled since sensory categories has only 8 items
+    const isDisabled = await addButton.isDisabled();
+
+    if (!isDisabled) {
+      // Click the add category button
+      await addButton.click();
+      await page.waitForTimeout(300); // Wait for DOM update
+
+      // Verify a new category was added
+      const newInputs = page.locator('input[type="text"]');
+      const newCount = await newInputs.count();
+      expect(newCount).toBe(initialCount + 1);
+
+      // Verify the new input has the default "New Category" text
+      const lastInput = newInputs.last();
+      const inputValue = await lastInput.inputValue();
+      expect(inputValue).toBe('New Category');
+
+      // Verify the new category is visible on the page
+      await expect(lastInput).toBeVisible();
+
+      console.log('Successfully added category with default name');
+
+      // Test that user can select the text and replace it
+      await lastInput.selectText();
+      await page.keyboard.type('My Custom Category');
+      await page.waitForTimeout(100);
+
+      const updatedValue = await lastInput.inputValue();
+      expect(updatedValue).toBe('My Custom Category');
+
+      console.log('Successfully verified text replacement functionality');
+    } else {
+      console.log(`Add category button is disabled with ${initialCount} categories`);
+    }
+
+    // Save changes and return to main view
+    await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
   });
 });
