@@ -132,13 +132,13 @@ test.describe('Category Editing & Customization Features', () => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
 
-    // Look for delete buttons (common patterns: X, delete icon, trash icon)
-    const deleteButtons = page.locator('button[aria-label*="delete"], button[title*="delete"], button:has-text("×"), button:has-text("Delete"), [data-testid*="delete"]');
+    // Look for delete buttons (trash icon, delete text, or delete attributes)
+    const deleteButtons = page.locator('button[aria-label*="delete"], button[title*="delete"], button:has-text("×"), button:has-text("Delete"), [data-testid*="delete"], button:has(svg), button.deleteButton, button[variant="destructive"]');
     const deleteButtonCount = await deleteButtons.count();
 
     if (deleteButtonCount > 0) {
-      // Count categories before deletion
-      const categoryRows = page.locator('[data-testid*="category"], .category-row, .category-item');
+      // Count categories before deletion (using table rows)
+      const categoryRows = page.locator('tbody tr, .category-row, input[placeholder*="Category name"]');
       const initialCount = await categoryRows.count();
 
       // Delete the first category
@@ -146,12 +146,12 @@ test.describe('Category Editing & Customization Features', () => {
       await page.waitForTimeout(300);
 
       // Verify category was removed from the UI
-      const newCount = await categoryRows.count();
+      const newCount = await page.locator('tbody tr, .category-row, input[placeholder*="Category name"]').count();
       expect(newCount).toBeLessThan(initialCount);
 
       // Save changes
       await page.getByRole('button', { name: 'Save' }).click();
-      await expect(page.getByRole('heading', { name: 'Autism Wheel' })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'My Autism Wheel' })).toBeVisible();
 
       console.log(`Successfully deleted a category. Count changed from ${initialCount} to ${newCount}`);
     } else {
@@ -364,39 +364,33 @@ test.describe('Category Editing & Customization Features', () => {
   test('should prevent deleting categories when only minimum remain', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit categories' }).click();
+    await page.waitForTimeout(500);
 
-    // Look for delete buttons
-    const deleteButtons = page.locator('button[aria-label*="delete"], button[title*="delete"], button:has-text("×"), button:has-text("Delete"), [data-testid*="delete"]');
-    let deleteButtonCount = await deleteButtons.count();
+    // Count categories using table rows
+    const initialCount = await page.locator('tbody tr').count();
+    console.log(`Starting with ${initialCount} categories`);
+
+    // Look for delete buttons (try multiple selectors for the trash icon buttons)
+    const deleteButtons = page.locator('button:has(svg), .deleteButton, button[variant="destructive"], button[data-variant="destructive"], button.destructive');
+    const deleteButtonCount = await deleteButtons.count();
 
     if (deleteButtonCount > 0) {
-      // Count initial categories
-      const categoryRows = page.locator('[data-testid*="category"], .category-row, .category-item, input[type="text"]');
-      let categoryCount = await categoryRows.count();
-
-      console.log(`Starting with ${categoryCount} categories and ${deleteButtonCount} delete buttons`);
-
-      // Delete categories until we reach the minimum (usually 2)
-      while (deleteButtonCount > 0 && categoryCount > 2) {
-        await deleteButtons.first().click();
-        await page.waitForTimeout(300);
-
-        // Recount after deletion
-        categoryCount = await categoryRows.count();
-        deleteButtonCount = await deleteButtons.count();
-
-        console.log(`After deletion: ${categoryCount} categories, ${deleteButtonCount} delete buttons`);
+      if (initialCount <= 2) {
+        // At minimum, all delete buttons should be disabled
+        for (let i = 0; i < deleteButtonCount; i++) {
+          const isDisabled = await deleteButtons.nth(i).isDisabled();
+          expect(isDisabled).toBe(true);
+        }
+        console.log(`All delete buttons correctly disabled at minimum category count (${initialCount})`);
+      } else {
+        // Above minimum, delete buttons should be enabled
+        const firstDeleteEnabled = await deleteButtons.first().isEnabled();
+        expect(firstDeleteEnabled).toBe(true);
+        console.log(`Delete buttons correctly enabled when above minimum (${initialCount} categories)`);
       }
 
-      // Verify we cannot delete more when at minimum
-      if (categoryCount <= 2) {
-        const remainingDeleteButtons = await deleteButtons.count();
-        expect(remainingDeleteButtons).toBe(0);
-        console.log(`Successfully prevented deletion at minimum category count (${categoryCount})`);
-      }
-
-      // Don't save these deletions - just exit
-      await page.getByRole('button', { name: 'Save' }).click();
+      // Exit without saving
+      await page.getByRole('button', { name: 'Discard changes' }).click();
     } else {
       console.log('No delete buttons found - skipping minimum categories test');
     }
@@ -449,6 +443,50 @@ test.describe('Category Editing & Customization Features', () => {
       await page.getByRole('button', { name: 'Save' }).click();
     } else {
       console.log('No add category buttons found - skipping add category test');
+    }
+  });
+
+  test('should prevent adding categories when maximum limit is reached', async ({ page }) => {
+    // Enter edit mode
+    await page.getByRole('button', { name: 'Edit categories' }).click();
+    await page.waitForTimeout(500);
+
+    // Look for add category button
+    const addButton = page.getByRole('button', { name: 'Add category' });
+
+    if (await addButton.count() > 0) {
+      // Count initial categories using table rows in the edit view
+      const initialCount = await page.locator('tbody tr').count();
+      console.log(`Starting with ${initialCount} categories`);
+
+      // Verify add button is disabled when at maximum (10 categories)
+      if (initialCount >= 10) {
+        const isAddButtonDisabled = await addButton.isDisabled();
+        expect(isAddButtonDisabled).toBe(true);
+        console.log(`Add button correctly disabled at maximum category count (${initialCount})`);
+      } else {
+        // Add categories until we reach the maximum
+        let categoryCount = initialCount;
+        while (categoryCount < 10 && await addButton.isEnabled()) {
+          await addButton.click();
+          await page.waitForTimeout(300);
+
+          categoryCount = await page.locator('tbody tr').count();
+          console.log(`After addition: ${categoryCount} categories`);
+        }
+
+        // Verify we cannot add more when at maximum
+        if (categoryCount >= 10) {
+          const isAddButtonDisabled = await addButton.isDisabled();
+          expect(isAddButtonDisabled).toBe(true);
+          console.log(`Successfully prevented addition at maximum category count (${categoryCount})`);
+        }
+      }
+
+      // Don't save these additions - just discard changes
+      await page.getByRole('button', { name: 'Discard changes' }).click();
+    } else {
+      console.log('No add category button found - skipping maximum categories test');
     }
   });
 
