@@ -84,21 +84,21 @@ export const DEFAULT_SLICE_LABELS = [
   'Motor Skills & Coordination'
 ];
 
-export const DEFAULT_SLICE_DESCRIPTIONS = [
-  'The way the brain processes sensory information such as sound, light, touch, taste, smell, movement, and body awareness. A low score suggests comfort and typical responses to sensory input. A high score indicates significant challenges with over- or under-responsiveness to sensory stimuli, potentially causing distress, avoidance, or behavioral responses.',
-  'The energy and comfort involved in connecting with others. A low score suggests fulfilling social connections with minimal strain. A high score reflects profound difficulty or exhaustion from social demands, leading to isolation, burnout, or a complete inability to engage, requiring significant support to maintain relationships.',
-  'The use of spoken language to express thoughts, needs, and emotions. A low score indicates clear, effective verbal communication with ease. A high score suggests significant challenges in expressing oneself verbally, potentially requiring alternative communication methods or causing frequent misunderstandings.',
-  'Communication through body language, facial expressions, gestures, and tone of voice. A low score means natural, intuitive use of non-verbal cues. A high score indicates difficulty interpreting or using non-verbal communication, leading to misunderstandings, social awkwardness, or reliance on explicit verbal communication.',
-  'The mental skills needed for planning, organizing, time management, and task completion. A low score suggests strong organizational and planning abilities. A high score indicates significant challenges with executive functions, affecting daily tasks, work performance, and independent living skills.',
-  'The ability to recognize, understand, and manage emotions appropriately. A low score suggests stable emotional responses and effective coping strategies. A high score indicates intense emotional experiences, frequent overwhelm, difficulty with emotional regulation, or emotional shutdowns that significantly impact daily functioning.',
-  'The ability to adapt thinking and behavior when situations change or when faced with new information. A low score indicates easy adaptation to change and flexible thinking. A high score suggests significant difficulty with transitions, strong need for routine, and distress when expectations are not met.',
-  'Physical coordination and movement abilities, including both fine and gross motor skills. A low score indicates typical motor development and coordination. A high score suggests significant challenges with motor planning, coordination, or physical activities that may affect daily living skills and participation in activities.',
-  'The need for consistent patterns, schedules, and predictable environments. A low score suggests comfort with spontaneity and change. A high score indicates a strong reliance on routine and predictability, with significant distress or dysfunction when routines are disrupted.',
-  'Intense, focused interests in specific topics, activities, or objects. A low score suggests typical, varied interests. A high score indicates highly focused, possibly restrictive interests that may dominate time and attention, potentially interfering with other activities or social interactions.'
-];
-
 export const DEFAULT_SLICE_ICONS = [
   '💏', '🗨️', '👂', '👋', '🔍', '🏠', '😰', '♻️', '📚', '🤸‍♀️'
+];
+
+export const DEFAULT_SLICE_DESCRIPTIONS = [
+  'The energy and comfort involved in connecting with others. A low score suggests fulfilling social connections with minimal strain. A high score reflects profound difficulty or exhaustion from social demands, leading to isolation, burnout, or a complete inability to engage, requiring significant support to maintain relationships.',
+  'How you understand and express information. A low score means easy, fluid communication in your preferred style. A high score reflects significant challenges, such as being non-speaking, experiencing situational mutism, or having profound difficulty processing verbal language, requiring AAC or other extensive supports.',
+  'Your unique sensory landscape. A low score indicates manageable sensitivities or a balanced sensory profile. A high score means extreme hyper- or hyposensitivities that are disabling, causing severe distress, sensory overload, or making it impossible to navigate everyday environments without extensive accommodations.',
+  'The use of self-regulatory actions to manage internal states. A low score suggests stimming is a gentle, effective tool for comfort. A high score indicates a constant, intense need for regulation, or the presence of harmful stims (e.g., head-banging) in response to extreme distress, requiring intervention for safety.',
+  'The intensity and role of deep, focused interests. A low score reflects enjoyable hobbies that are easily balanced with other life demands. A high score indicates an all-consuming, monotropic focus that is essential for well-being but can make it extremely difficult to shift attention to other critical life tasks.',
+  'The mental energy for planning, starting, and organizing tasks. A low score means these processes are relatively smooth. A high score reflects profound challenges like autistic inertia, time blindness, and difficulty with self-care, making independent living nearly impossible without constant structure and support.',
+  'The intensity of your emotions and the effort needed to manage them. A low score indicates a manageable emotional landscape. A high score reflects intensely felt emotions, frequent dysregulation, alexithymia, or debilitating meltdowns/shutdowns that severely impact daily life and require a highly supportive environment.',
+  'The level of reliance on structure to feel safe and regulated. A low score suggests a preference for routine but with easy flexibility. A high score indicates a profound need for sameness, where even minor changes cause extreme distress, anxiety, or a meltdown, requiring a highly controlled and predictable environment.',
+  'Your distinct way of thinking and learning. A low score means your learning style is easily accommodated. A high score reflects a significant mismatch with standard educational or work environments, or the presence of a co-occurring intellectual disability, requiring highly specialized and individualized support to learn.',
+  'The connection between mind and body for movement. A low score suggests fluid motor skills. A high score reflects significant dyspraxia, poor balance, or challenges with fine/gross motor skills that impact independence in daily tasks like dressing or writing, and may lead to conditions like autistic catatonia.'
 ];
 
 export const DEFAULT_SLICE_COLORS = [
