@@ -23,28 +23,6 @@ export const ASD_LABELS = [
   { text: "ASD-3", radius: 202 }, // Between ring 7 and 8: MIN_RADIUS + 7 * RING_WIDTH
 ];
 
-// Helper function to create default categories from arrays
-export const createDefaultCategories = (): ProfileCategory[] => {
-  return DEFAULT_SLICE_LABELS.map((label, index) => ({
-    id: `default-${index}`,
-    name: label,
-    description: DEFAULT_SLICE_DESCRIPTIONS[index] || `Description for ${label}`,
-    icon: DEFAULT_SLICE_ICONS[index] || '❓',
-    color: DEFAULT_SLICE_COLORS[index] || '#e2e8f0'
-  }));
-};
-
-// Helper function to create sensory categories from arrays
-export const createSensoryCategories = (): ProfileCategory[] => {
-  return SENSORY_SLICE_LABELS.map((label, index) => ({
-    id: `sensory-${index}`,
-    name: label,
-    description: SENSORY_SLICE_DESCRIPTIONS[index] || `Description for ${label}`,
-    icon: SENSORY_SLICE_ICONS[index] || '❓',
-    color: DEFAULT_SLICE_COLORS[index] || '#e2e8f0' // Use default colors as specified
-  }));
-};
-
 export const SENSORY_SLICE_DESCRIPTIONS = [
   'Your unique response to sound. A low score indicates you can generally filter background noise and tolerate everyday sounds. A high score reflects extreme sensitivity (hyper), where common noises are painful or overwhelming, or under-sensitivity (hypo), where you might seek out loud, intense sounds to feel regulated.',
   'Your experience of the visual world. A low score suggests you handle typical lighting and visual clutter comfortably. A high score can mean hypersensitivity, where bright lights or busy patterns are disorienting, or hyposensitivity, where you might be drawn to intense visual stimuli like flashing lights to feel engaged.',
@@ -132,3 +110,24 @@ export const EMOJI_CATEGORIES = {
   'Miscellaneous': ['♻️', '🔄', '🔁', '🔂', '⏩', '⏪', '⏫', '⏬', '◀️', '▶️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️', '⤴️', '⤵️', '🔀', '🔤', '➕', '➖', '➗', '✖️', '♾️', '💲', '💱', '™️', '©️', '®️', '〰️', '➰', '➿', '🔚', '🔙', '🔛', '🔝', '🔜', '🔒', '🔓', '🔏', '🔐', '🔑', '🗝️', '🔨', '🪓', '⛏️', '⚒️', '🛠️', '🗡️', '⚔️', '💣', '🪃', '🏹', '🛡️', '🪚', '🔧', '🪛', '🔩', '⚙️', '🗜️', '⚖️', '🦯', '🔗', '⛓️', '🪝', '🧰', '🧲', '🪜', '⚗️', '🧪', '🧫', '🧬', '🔬', '🔭', '📡', '💊', '🩸', '🩹', '🩼', '🩺', '🪶']
 };
 
+// Helper function to create default categories from arrays
+export const createDefaultCategories = (): ProfileCategory[] => {
+  return DEFAULT_SLICE_LABELS.map((label, index) => ({
+    id: `default-${index}`,
+    name: label,
+    description: DEFAULT_SLICE_DESCRIPTIONS[index] || `Description for ${label}`,
+    icon: DEFAULT_SLICE_ICONS[index] || '❓',
+    color: DEFAULT_SLICE_COLORS[index] || '#e2e8f0'
+  }));
+};
+
+// Helper function to create sensory categories from arrays
+export const createSensoryCategories = (): ProfileCategory[] => {
+  return SENSORY_SLICE_LABELS.map((label, index) => ({
+    id: `sensory-${index}`,
+    name: label,
+    description: SENSORY_SLICE_DESCRIPTIONS[index] || `Description for ${label}`,
+    icon: SENSORY_SLICE_ICONS[index] || '❓',
+    color: DEFAULT_SLICE_COLORS[index] || '#e2e8f0' // Use default colors as specified
+  }));
+};
