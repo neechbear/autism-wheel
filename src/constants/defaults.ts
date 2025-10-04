@@ -24,7 +24,7 @@ export const ASD_LABELS = [
 ];
 
 // Category preset definitions
-const CATEGORY_PRESETS = {
+export const CATEGORY_PRESETS = {
   default: {
     name: 'Autism wheel categories',
     description: 'The default autism profile categories covering key areas of autistic experience',
@@ -79,10 +79,10 @@ const CATEGORY_PRESETS = {
         icon: '🤸‍♀️',
         description: 'The connection between mind and body for movement. A low score suggests fluid motor skills. A high score reflects significant dyspraxia, poor balance, or challenges with fine/gross motor skills that impact independence in daily tasks like dressing or writing, and may lead to conditions like autistic catatonia.'
       }
-    ],
+    ]
   },
   sensory: {
-    name: 'Sensory profile categories',
+    name: 'Sensory wheel categories',
     description: 'Categories focused specifically on the eight sensory processing areas',
     categories: [
       {
@@ -127,7 +127,10 @@ const CATEGORY_PRESETS = {
       }
     ]
   }
-};
+} as const;
+
+// Which preset to use as the default when the app loads
+export const DEFAULT_PRESET_KEY = 'default' as const;
 
 export const DEFAULT_SLICE_COLORS = [
   '#66c5cc',
@@ -141,6 +144,15 @@ export const DEFAULT_SLICE_COLORS = [
   '#8be0a4',
   '#b497e7',
 ];
+
+// Derived arrays for backward compatibility (if needed elsewhere)
+export const DEFAULT_SLICE_LABELS = CATEGORY_PRESETS.default.categories.map(cat => cat.name);
+export const DEFAULT_SLICE_ICONS = CATEGORY_PRESETS.default.categories.map(cat => cat.icon);
+export const DEFAULT_SLICE_DESCRIPTIONS = CATEGORY_PRESETS.default.categories.map(cat => cat.description);
+
+export const SENSORY_SLICE_LABELS = CATEGORY_PRESETS.sensory.categories.map(cat => cat.name);
+export const SENSORY_SLICE_ICONS = CATEGORY_PRESETS.sensory.categories.map(cat => cat.icon);
+export const SENSORY_SLICE_DESCRIPTIONS = CATEGORY_PRESETS.sensory.categories.map(cat => cat.description);
 
 // Emoji categories for the emoji picker
 export const EMOJI_CATEGORIES = {
@@ -160,24 +172,37 @@ export const EMOJI_CATEGORIES = {
   'Miscellaneous': ['♻️', '🔄', '🔁', '🔂', '⏩', '⏪', '⏫', '⏬', '◀️', '▶️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️', '⤴️', '⤵️', '🔀', '🔤', '➕', '➖', '➗', '✖️', '♾️', '💲', '💱', '™️', '©️', '®️', '〰️', '➰', '➿', '🔚', '🔙', '🔛', '🔝', '🔜', '🔒', '🔓', '🔏', '🔐', '🔑', '🗝️', '🔨', '🪓', '⛏️', '⚒️', '🛠️', '🗡️', '⚔️', '💣', '🪃', '🏹', '🛡️', '🪚', '🔧', '🪛', '🔩', '⚙️', '🗜️', '⚖️', '🦯', '🔗', '⛓️', '🪝', '🧰', '🧲', '🪜', '⚗️', '🧪', '🧫', '🧬', '🔬', '🔭', '📡', '💊', '🩸', '🩹', '🩼', '🩺', '🪶']
 };
 
-// Helper function to create default categories from arrays
-export const createDefaultCategories = (): ProfileCategory[] => {
-  return DEFAULT_SLICE_LABELS.map((label, index) => ({
-    id: `default-${index}`,
-    name: label,
-    description: DEFAULT_SLICE_DESCRIPTIONS[index] || `Description for ${label}`,
-    icon: DEFAULT_SLICE_ICONS[index] || '❓',
-    color: DEFAULT_SLICE_COLORS[index] || '#e2e8f0'
+// Helper functions to create categories from presets
+export function createCategoriesFromPreset(presetKey: keyof typeof CATEGORY_PRESETS): ProfileCategory[] {
+  const preset = CATEGORY_PRESETS[presetKey];
+  return preset.categories.map((category, index) => ({
+    id: `category-${index + 1}`,
+    name: category.name,
+    description: category.description,
+    icon: category.icon,
+    color: DEFAULT_SLICE_COLORS[index % DEFAULT_SLICE_COLORS.length],
   }));
-};
+}
 
-// Helper function to create sensory categories from arrays
-export const createSensoryCategories = (): ProfileCategory[] => {
-  return SENSORY_SLICE_LABELS.map((label, index) => ({
-    id: `sensory-${index}`,
-    name: label,
-    description: SENSORY_SLICE_DESCRIPTIONS[index] || `Description for ${label}`,
-    icon: SENSORY_SLICE_ICONS[index] || '❓',
-    color: DEFAULT_SLICE_COLORS[index] || '#e2e8f0' // Use default colors as specified
+// Convenience functions for specific presets
+export function createDefaultCategories(): ProfileCategory[] {
+  return createCategoriesFromPreset(DEFAULT_PRESET_KEY);
+}
+
+export function createSensoryCategories(): ProfileCategory[] {
+  return createCategoriesFromPreset('sensory');
+}
+
+// Get list of available presets
+export function getAvailablePresets(): Array<{ key: string; name: string; description: string }> {
+  return Object.entries(CATEGORY_PRESETS).map(([key, preset]) => ({
+    key,
+    name: preset.name,
+    description: preset.description,
   }));
-};
+}
+
+// Get the default categories (alias for convenience)
+export function getDefaultCategories(): ProfileCategory[] {
+  return createDefaultCategories();
+}
